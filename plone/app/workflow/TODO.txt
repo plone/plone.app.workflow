@@ -1,0 +1,32 @@
+========================
+plone.app.workflow to-do
+========================
+
+ Reader/editor roles:
+ 
+    - Add Reader and Editor roles during portal creation, migration
+    - Grant "View" to Reader and "Modify portal content" to editor at site root
+    
+    The sharing page can then be used to assign these (they will be explicitly
+    allowed for anyone with Modify portal content), and they should work for
+    most workflows without needing explicit support (permission settings can 
+    be acquired).
+
+ Sharing page:
+ 
+    - Need to restrict actual roles managed to a meaningful subset and give
+      proper titles
+        - can we use Zope 3 role interfaces for this?
+  
+    - Wire up view to template
+        - need to use :list and :record form elements to send selections
+    - Write update() method which performs the actual updates on form submit
+    - KSS enable finding, adding and changing settings for users/groups
+        - can hide the submit buttons in <noscript> tags in that case
+    
+    - Enable settings for the Anonymous user (aka "Everyone")
+    - Enable settings for the "Logged in" pseudo-user
+        - note, this is not necessarily easy, because it implies messing with 
+          permissions rather than granting local roles!
+          
+    

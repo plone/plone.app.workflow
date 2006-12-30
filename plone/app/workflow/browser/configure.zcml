@@ -1,0 +1,21 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+    <browser:page
+        name="sharing"
+        for="*"
+        template="sharing.pt"
+        class=".sharing.SharingView"
+        permission="cmf.ModifyPortalContent"
+        />
+        
+    <browser:page
+        name="plone_sharing_update"
+        for="*"
+        class=".sharing.SharingView"
+        attribute="update"
+        permission="cmf.ModifyPortalContent"
+        />
+
+</configure>
