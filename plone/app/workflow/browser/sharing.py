@@ -1,7 +1,10 @@
 from Products.Five.browser import BrowserView
 
 from Acquisition import aq_inner, aq_parent
+from AccessControl import Unauthorized
+
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore import permissions
 
 from plone.memoize.instance import memoize
 
@@ -13,26 +16,38 @@ class SharingView(BrowserView):
         """Perform the update and redirect
         """
         
-        # This is a bit complex, since the form hides a lot of complexity
+        # Abort unless the save button was clicked
+        if self.request.get('form.button.Save', None) is not None:
         
-        # - Read the settings for users. If there is nothing selected for a 
-        # user, remove all local roles for that user, else update local roles
-        # as per the settings (note, a missing value in the request means)
-        # the role should be taken away!
+            # - Update the acquire-roles setting
+            inherit = bool(self.request.get('inherit', False))
+            self.update_inherit(inherit)
         
-        # - Ditto for groups
+            # - Read the settings for users. If there is nothing selected for a 
+            # user, remove all local roles for that user, else update local roles
+            # as per the settings (note, a missing value in the request means)
+            # the role should be taken away!
+            
+            # TODO: Missing
         
-        # - If there was no add or user query, redirect back to the view,
-        # else return to @@sharing
+            # - Ditto for groups
+            
+            # TODO: Missing
         
-        if redirect:
-            search_term = self.request.get('search_term', None)
-            users_to_add = self.request.get('add_users', None)
-            groups_to_add = self.request.get('add_groups', None)
+            # - If there was no add or user query, redirect back to the view,
+            # else return to @@sharing
+            
+            if redirect:
+                search_term = self.request.get('search_term', None)
+                users_to_add = self.request.get('add_users', None)
+                groups_to_add = self.request.get('add_groups', None)
         
-            if not search_term and not users_to_add and not groups_to_add:
-                self.request.response.redirect(self.context.absolute_url())
+                if not search_term and not users_to_add and not groups_to_add:
+                    self.request.response.redirect(self.context.absolute_url())
         
+        elif self.request.get('form.button.Cancel', None) is not None:
+            self.request.response.redirect(self.context.absolute_url())
+            
     # View
     
     @memoize
@@ -75,28 +90,88 @@ class SharingView(BrowserView):
         acl_users = getattr(portal, 'acl_users')
         
         info = []
+        
+        # This logic is adapted from computeRoleMap.py
+        
         local_roles = acl_users.getLocalRolesForDisplay(context)
-        inherited_roles = self._inherited_roles()
+        acquired_roles = self._inherited_roles()
+        available_roles = [r['id'] for r in self.roles()]
+
+        # first process acquired roles
+        items = {}
+        for name, roles, rtype, rid in acquired_roles:
+            items[rid] = dict(id       = rid,
+                              name     = name,
+                              type     = rtype,
+                              acquired = roles,
+                              local    = [],)
+                                
+        # second process local roles
+        for name, roles, rtype, rid in local_roles:
+            if items.has_key(rid):
+                items[rid]['local'] = roles
+            else:
+                items[rid] = dict(id       = rid,
+                                  name     = name,
+                                  type     = rtype,
+                                  acquired = [],
+                                  local    = roles,)
+
+        # Sort the list: first Owner role, then groups, then users, and then alphabetically
+
+        dec_users = [('Owner' not in a['local'], a['type'], a['name'], a) for a in items.values()]
+        dec_users.sort()
         
-        # TODO: Need to convert logic from computeRoleMap.py
-        # to here
+        # Add the items to the info dict, assigning full name if possible.
+        # Also, recut roles in the format specified in the docstring
         
+        for d in dec_users:
+            item = a[-1]
+            info_item = dict(id    = item['id'],
+                             type  = item['type'],
+                             title = item['name'],
+                             roles = [])
+                             
+            # Use full name if possible
+            if not item['type'] == 'group':
+                member = portal_membership.getMemberInfo(name)
+                if member is not None and member['fullname']:
+                    info_item['name'] = member['fullname']
+                    
+            # Record role settings
+            for r in available_roles:
+                if r in info['acquired']:
+                    info_item['roles'].append(None)
+                elif r in info['local']:
+                    info_item['roles'].append(True)
+                else:
+                    info_item['roles'].append(False)
+            
+            info.append(info_item)
+            
+
         # Note if a user was selected to be added, must return this with no
         # roles selected
         
+        empty_roles = [False for r in available_roles]
+        
         users_to_add = self.request.get('add_users', [])
         for user_id in users_to_add:
-            m = portal_membership.getMemberById(user_id)
-            info.append(dict(id=m.getId(),
-                             title=m.getProperty('fullname', None) or m.getUserName(),
-                             roles=[]))
+            member = portal_membership.getMemberInfo(user_id)
+            if member is not None:
+                info.append(dict(id    = user_id,
+                                 title = member['fullname'] or member['username'] or user_id,
+                                 type  = 'user',
+                                 roles = empty_roles))
                              
         groups_to_add = self.request.get('add_groups', [])
         for group_id in groups_to_add:
             g = portal_groups.getGroupById(user_id)
-            info.append(dict(id=g.getId(),
-                             title=g.getGroupTitleOrName(),
-                             roles=[]))
+            if g is not None:
+                info.append(dict(id    = g.getId(),
+                                 title = g.getGroupTitleOrName(),
+                                 type  = 'group',
+                                 roles = empty_roles))
                              
         return info
         
@@ -104,10 +179,10 @@ class SharingView(BrowserView):
         """Return True if local roles are inherited here.
         """
         if context is None:
-            context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        acl_users = getattr(portal, 'acl_users')
-        return acl_users.isLocalRoleAcquired(aq_inner(self.context))
+            context = self.context
+        if getattr(aq_inner(context), '__ac_local_roles_block__', None):
+            return False
+        return True
         
     def user_search_results(self):
         """Return search results for a query to add new users
@@ -145,6 +220,8 @@ class SharingView(BrowserView):
                 groups.append(dict(id=g.getId(),
                                    title=g.getGroupTitleOrName()))
         return groups
+        
+    # helper functions
         
     def _inherited_roles(self):
         """Returns a tuple with the acquired local roles."""
@@ -187,3 +264,20 @@ class SharingView(BrowserView):
             result[pos] = tuple(result[pos])
 
         return tuple(result)
+        
+    def update_inherit(self, status=True):
+        """Enable or disable local role acquisition on the context.
+        """
+        context = aq_inner(self.context)
+        portal_membership = getToolByName(context, 'portal_membership')
+        
+        if not portal_membership.checkPermission(permissions.ModifyPortalContent, context):
+            raise Unauthorized
+
+        if not status:
+            context.__ac_local_roles_block__ = True
+        else:
+            if getattr(context, '__ac_local_roles_block__', None):
+                context.__ac_local_roles_block__ = None
+
+        context.reindexObjectSecurity()

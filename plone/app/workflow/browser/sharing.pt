@@ -113,15 +113,16 @@
 <div class="field">
     <input class="noborder"
            type="checkbox"
-           name="use_acquisition:int"
+           name="inherit:int"
            value="1"
            checked="checked"
            id="inherit"
+           tal:attributes="checked python:view.inherited() and 'checked' or None"
            /> 
-    <label for="inherit" i18n:translate="label_use_acquisition">
+    <label for="inherit" i18n:translate="label_inherit_local_roles">
     Inherit permissions from higher levels
     </label>
-    <div class="formHelp" i18n:translate="help_use_acquisition">
+    <div class="formHelp" i18n:translate="help_inherit_local_roles">
         By default, permissions from the container of this item are inherited.
         If you disable this, only the explicitly defined sharing permissions will
         be valid.
@@ -131,8 +132,8 @@
     </div>
 </div>
 
-    <input class="context" type="submit" value="Save" />
-    <input class="standalone" type="submit" value="Cancel" />
+    <input class="context" type="submit" name="form.button.Save" value="Save" />
+    <input class="standalone" type="submit" name="form.button.Cancel" value="Cancel" />
 
 </form>
 
