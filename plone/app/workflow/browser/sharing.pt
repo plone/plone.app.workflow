@@ -45,17 +45,64 @@
 
 <table class="listing" 
        summary="Current sharing permissions" 
+       tal:define="available_roles view/roles"
        i18n:attributes="summary summary_assigned_roles;">
 
     <thead>
         <tr>
             <th i18n:translate="label_name">User/Group</th>
-            <th class="nosort">Read</th>
-            <th class="nosort">Edit</th>
-            <th class="nosort">Review</th>
+            <th class="nosort"
+                tal:repeat="role available_roles"
+                tal:content="role/title"  />
         </tr>
     </thead>
 
+    <tbody>
+        <tal:entries repeat="entry view/role_settings">
+            <tr class="odd"
+                tal:define="is_group python:entry['type'] == 'group'"
+                tal:attributes="class python:repeat['entry'].odd and 'odd' or 'even'">
+                <td>
+                    <img tal:condition="is_group" tal:replace="structure here/group.gif" /> 
+                    <img tal:condition="not:is_group" tal:replace="structure here/user.gif" /> 
+                    <span tal:replace="entry/title" />
+                    <input
+                        type="hidden"
+                        tal:attributes="name string:entries.${entry/id}.id:dict:list;
+                                        value entry/id"
+                
+                        />
+                    <input
+                        type="hidden"
+                        tal:attributes="name string:entries.${entry/id}.type:dict:list;
+                                        value entry/type"
+                
+                        />
+                </td>
+                <td tal:repeat="role available_roles">
+                    <tal:block define="entry_role python:entry['roles'][role['id']]">
+                        <input
+                            type="hidden"
+                            tal:attributes="name string:roles.${role/id}.default:dict:list;
+                                            value entry_role"
+                        
+                            />
+                        <img tal:condition="python:entry_role is None" tal:replace="structure here/confirm_icon.gif">
+                        <tal:block condition="python:entry_role is not None">
+                            <input
+                                type="checkbox"
+                                value="True"
+                                tal:attributes="name string:roles.${role/id}.value:dict:list;
+                                                checked python:entry_role == True and 'checked' or None"
+                            
+                                />
+                        </tal:block>
+                    </tal:block>
+                </td>
+            </tr>
+        </tal:entries>
+    </tbody>
+    
     <!-- Items to note about this section:
          - The placeholder text should of course disappear when the field is selected 
            (I have asked Florian to come up with a generic solution to this).
@@ -72,48 +119,23 @@
                        id="user-group-search"
                        size="30" 
                        style="color: #666" 
+                       name="search_term"
                        value="Type here to add user/group" />
                 <noscript>
-                <input type="submit" 
-                       value="Search"
-                       class="searchButton" />
+                    <input type="submit" 
+                           name="form.button.Search"
+                           value="Search"
+                           class="searchButton" />
                 </noscript>
             </td>
         </tr>
     </tfoot>
-
-    <tbody>
-        <tr class="odd">
-            <td>Everyone</td>
-            <td><img tal:replace="structure here/confirm_icon.gif" /></td>
-            <td><input type="checkbox" /></td>
-            <td><input type="checkbox" /></td>
-        </tr>
-        <tr class="even">
-            <td>Logged-in users</td>
-            <td><img tal:replace="structure here/confirm_icon.gif" /></td>
-            <td><input type="checkbox" /></td>
-            <td><input type="checkbox" /></td>
-        </tr>
-        <tr class="odd">
-            <td><a href=""><img tal:replace="structure here/group.gif" /> Documentation Team</a></td>
-            <td><img tal:replace="structure here/confirm_icon.gif" /></td>
-            <td><img tal:replace="structure here/confirm_icon.gif" /></td>
-            <td><img tal:replace="structure here/confirm_icon.gif" /></td>
-        </tr>
-        <tr class="even">
-            <td><a href=""><img tal:replace="structure here/user.gif" /> John Smith</a></td>
-            <td><input type="checkbox" checked="checked" /></td>
-            <td><input type="checkbox" checked="checked" /></td>
-            <td><input type="checkbox" /></td>
-        </tr>
-    </tbody>
 </table>
 
 <div class="field">
     <input class="noborder"
            type="checkbox"
-           name="inherit:int"
+           name="inherit:boolean"
            value="1"
            checked="checked"
            id="inherit"

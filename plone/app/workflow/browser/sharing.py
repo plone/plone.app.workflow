@@ -66,7 +66,7 @@ class SharingView(BrowserView):
         
         return [dict(id='Reader',   title='View'),
                 dict(id='Editor',   title='Edit'),
-                dict(id='Reviewer', title='Reviewer')]
+                dict(id='Reviewer', title='Review')]
         
     @memoize
     def role_settings(self):
@@ -79,10 +79,12 @@ class SharingView(BrowserView):
          - type (one of 'group' or 'user')
          - roles
          
-        'roles' is a list of settings, one per role as returned by roles(),
-        each containing the values True if the role is explicitly set, False
+        'roles' is a dict of settings, with keys of role ids as returned by 
+        roles(), and values True if the role is explicitly set, False
         if the role is explicitly disabled and None if the role is inherited.
         """
+        
+        context = aq_inner(self.context)
         
         portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
         portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
@@ -126,11 +128,11 @@ class SharingView(BrowserView):
         # Also, recut roles in the format specified in the docstring
         
         for d in dec_users:
-            item = a[-1]
+            item = d[-1]
             info_item = dict(id    = item['id'],
                              type  = item['type'],
                              title = item['name'],
-                             roles = [])
+                             roles = {})
                              
             # Use full name if possible
             if not item['type'] == 'group':
@@ -140,12 +142,12 @@ class SharingView(BrowserView):
                     
             # Record role settings
             for r in available_roles:
-                if r in info['acquired']:
-                    info_item['roles'].append(None)
-                elif r in info['local']:
-                    info_item['roles'].append(True)
+                if r in item['acquired']:
+                    info_item['roles'][r] = None
+                elif r in item['local']:
+                    info_item['roles'][r] = True
                 else:
-                    info_item['roles'].append(False)
+                    info_item['roles'][r] = False
             
             info.append(info_item)
             
