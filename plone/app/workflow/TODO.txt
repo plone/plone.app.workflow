@@ -13,11 +13,7 @@ plone.app.workflow to-do
     be acquired).
 
  Sharing page:
-   
-    - Wire up view to template
-        - need to use :list and :record form elements to send selections
-    - Write update() method which performs the actual updates on form submit
-    
+ 
     - KSS enable finding, adding and changing settings for users/groups
         - can hide the submit buttons in <noscript> tags in that case
     
