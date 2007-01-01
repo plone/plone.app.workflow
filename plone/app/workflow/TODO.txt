@@ -28,5 +28,10 @@ plone.app.workflow to-do
           
     - Need to restrict actual roles managed to a meaningful subset and give
       proper titles (hard coded for now)
+      
+    - Final merge steps:
+        -> Modify ATCT to let the 'sharing' alias point to @@sharing
+        -> Deprecate folder_localrole_form
+        -> Add alias for folder_localrole_form -> @@sharing or use a redirect
 
     

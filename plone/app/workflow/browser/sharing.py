@@ -1,7 +1,7 @@
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from Acquisition import aq_inner, aq_parent
+from Acquisition import aq_inner, aq_parent, aq_base
 from AccessControl import Unauthorized
 
 from Products.CMFCore.utils import getToolByName
@@ -24,7 +24,7 @@ class SharingView(BrowserView):
         form = self.request.form
         submitted = form.get('form.submitted', False)
     
-        submit_button = form.get('form.button.Submit', None) is not None
+        save_button = form.get('form.button.Save', None) is not None
         cancel_button = form.get('form.button.Cancel', None) is not None
     
         if submitted and not cancel_button:
@@ -134,9 +134,20 @@ class SharingView(BrowserView):
         
         for d in dec_users:
             item = d[-1]
+            name = item['name']
+            rid = item['id']
+            
+            if item['type'] == 'user':
+                member = portal_membership.getMemberInfo(rid)
+                if member is not None:
+                    name = member['fullname'] or member['username'] or name
+            elif item['type'] == 'group':
+                g = portal_groups.getGroupById(rid)
+                name = g.getGroupTitleOrName()
+            
             info_item = dict(id    = item['id'],
                              type  = item['type'],
-                             title = item['name'],
+                             title = name,
                              roles = {})
                              
             # Record role settings
@@ -193,7 +204,7 @@ class SharingView(BrowserView):
         """
         if context is None:
             context = self.context
-        if getattr(aq_inner(context), '__ac_local_roles_block__', None):
+        if getattr(aq_base(context), '__ac_local_roles_block__', None):
             return False
         return True
         
@@ -239,6 +250,10 @@ class SharingView(BrowserView):
     def _inherited_roles(self):
         """Returns a tuple with the acquired local roles."""
         context = aq_inner(self.context)
+        
+        if not self.inherited(context):
+            return []
+        
         portal = getToolByName(context, 'portal_url').getPortalObject()
         result = []
         cont = True
@@ -290,7 +305,7 @@ class SharingView(BrowserView):
         if not status:
             context.__ac_local_roles_block__ = True
         else:
-            if getattr(context, '__ac_local_roles_block__', None):
+            if getattr(aq_base(context), '__ac_local_roles_block__', None):
                 context.__ac_local_roles_block__ = None
 
         context.reindexObjectSecurity()
@@ -306,41 +321,31 @@ class SharingView(BrowserView):
         
         reindex = False
         context = aq_inner(self.context)
-        
-        current_settings = {}
-        for s in self.role_settings():
-            current_settings[s['id']] = s
             
         managed_roles = frozenset([r['id'] for r in self.roles()])
         member_ids_to_clear = []
             
         for s in new_settings:
             user_id = s['id']
-            new_user = not current_settings.has_key(user_id)
             
             existing_roles = frozenset(context.get_local_roles_for_userid(userid=user_id))
-            if new_user:
-                acquired_roles = frozenset()
-            else:
-                acquired_roles = frozenset([r['id'] for r in managed_roles 
-                                            if current_settings[user_id]['roles'][r] is None])
             selected_roles = frozenset(s['roles'])
             
             # We will remove those roles that we are managing and which set
             # on the context, but which were not selected
-            to_remove = managed_roles & existing_roles - selected_roles
+            to_remove = (managed_roles & existing_roles) - selected_roles
             
-            # Leaving us with the roles that we 
-            new_roles = selected_roles | existing_roles - acquired_roles - to_remove
+            # Leaving us with the selected roles, less any roles that we
+            # want to remove
+            new_roles = (selected_roles | existing_roles) - to_remove
             
             # take away roles that we are managing, that were not selected 
             # and which were part of the existing roles
             
-            
             if new_roles:
                 context.manage_setLocalRoles(user_id, list(new_roles))
                 reindex = True
-            elif not new_user:
+            elif existing_roles:
                 member_ids_to_clear.append(user_id)
                 
         if member_ids_to_clear:
