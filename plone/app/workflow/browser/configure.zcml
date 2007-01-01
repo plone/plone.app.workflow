@@ -10,12 +10,4 @@
         permission="cmf.ModifyPortalContent"
         />
         
-    <browser:page
-        name="plone_sharing_update"
-        for="*"
-        class=".sharing.SharingView"
-        attribute="update"
-        permission="cmf.ModifyPortalContent"
-        />
-
 </configure>

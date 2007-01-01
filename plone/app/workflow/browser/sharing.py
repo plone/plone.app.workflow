@@ -1,4 +1,5 @@
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Acquisition import aq_inner, aq_parent
 from AccessControl import Unauthorized
@@ -6,46 +7,51 @@ from AccessControl import Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
 
-from plone.memoize.instance import memoize
+from plone.memoize.instance import memoize, clearafter
 
 class SharingView(BrowserView):
     
     # Actions
     
-    def update(self, redirect=True):
-        """Perform the update and redirect
+    template = ViewPageTemplateFile('sharing.pt')
+    
+    def __call__(self):
+        """Perform the update and redirect if necessary, or render the page
         """
         
-        # Abort unless the save button was clicked
-        if self.request.get('form.button.Save', None) is not None:
+        postback = True
         
-            # - Update the acquire-roles setting
-            inherit = bool(self.request.get('inherit', False))
+        form = self.request.form
+        submitted = form.get('form.submitted', False)
+    
+        submit_button = form.get('form.button.Submit', None) is not None
+        cancel_button = form.get('form.button.Cancel', None) is not None
+    
+        if submitted and not cancel_button:
+            
+            # Update the acquire-roles setting
+            inherit = bool(form.get('inherit', False))
             self.update_inherit(inherit)
-        
-            # - Read the settings for users. If there is nothing selected for a 
-            # user, remove all local roles for that user, else update local roles
-            # as per the settings (note, a missing value in the request means)
-            # the role should be taken away!
+
+            # Update settings for users and groups
+            entries = form.get('entries', [])
+            roles = [r['id'] for r in self.roles()]
+            settings = []
+            for entry in entries:
+                settings.append(
+                    dict(id = entry['id'],
+                         type = entry['type'],
+                         roles = [r for r in roles if entry.get('role_%s' % r, False)]))
+            if settings:
+                self.update_role_settings(settings)
             
-            # TODO: Missing
+        # Other buttons return to the sharing page
+        if save_button or cancel_button:
+            postback = False
         
-            # - Ditto for groups
-            
-            # TODO: Missing
-        
-            # - If there was no add or user query, redirect back to the view,
-            # else return to @@sharing
-            
-            if redirect:
-                search_term = self.request.get('search_term', None)
-                users_to_add = self.request.get('add_users', None)
-                groups_to_add = self.request.get('add_groups', None)
-        
-                if not search_term and not users_to_add and not groups_to_add:
-                    self.request.response.redirect(self.context.absolute_url())
-        
-        elif self.request.get('form.button.Cancel', None) is not None:
+        if postback:
+            return self.template()
+        else:
             self.request.response.redirect(self.context.absolute_url())
             
     # View
@@ -59,10 +65,9 @@ class SharingView(BrowserView):
             - id
             - title
         """
-        # TODO: Should not hardcode this!
         
+        # TODO: Should not hardcode this!
         # Should be possible to whitelist portal roles and provide titles
-        # Can we use Zope 3 role interfaces for this?
         
         return [dict(id='Reader',   title='View'),
                 dict(id='Editor',   title='Edit'),
@@ -134,46 +139,52 @@ class SharingView(BrowserView):
                              title = item['name'],
                              roles = {})
                              
+            # Record role settings
+            have_roles = False
+            for r in available_roles:
+                if r in item['acquired']:
+                    info_item['roles'][r] = None
+                    have_roles = True # we want to show acquired roles
+                elif r in item['local']:
+                    info_item['roles'][r] = True
+                    have_roles = True # at least one role is set
+                else:
+                    info_item['roles'][r] = False
+                    
+            # Abort if we have no useful roles to manage
+            if not have_roles:
+                continue
+                             
             # Use full name if possible
             if not item['type'] == 'group':
                 member = portal_membership.getMemberInfo(name)
                 if member is not None and member['fullname']:
                     info_item['name'] = member['fullname']
                     
-            # Record role settings
-            for r in available_roles:
-                if r in item['acquired']:
-                    info_item['roles'][r] = None
-                elif r in item['local']:
-                    info_item['roles'][r] = True
-                else:
-                    info_item['roles'][r] = False
-            
             info.append(info_item)
-            
 
         # Note if a user was selected to be added, must return this with no
         # roles selected
         
-        empty_roles = [False for r in available_roles]
+        empty_roles = dict([(r, False) for r in available_roles])
         
-        users_to_add = self.request.get('add_users', [])
+        users_to_add = self.request.form.get('add_users', [])
         for user_id in users_to_add:
             member = portal_membership.getMemberInfo(user_id)
             if member is not None:
                 info.append(dict(id    = user_id,
                                  title = member['fullname'] or member['username'] or user_id,
                                  type  = 'user',
-                                 roles = empty_roles))
+                                 roles = empty_roles.copy()))
                              
-        groups_to_add = self.request.get('add_groups', [])
+        groups_to_add = self.request.form.get('add_groups', [])
         for group_id in groups_to_add:
-            g = portal_groups.getGroupById(user_id)
+            g = portal_groups.getGroupById(group_id)
             if g is not None:
-                info.append(dict(id    = g.getId(),
+                info.append(dict(id    = group_id,
                                  title = g.getGroupTitleOrName(),
                                  type  = 'group',
-                                 roles = empty_roles))
+                                 roles = empty_roles.copy()))
                              
         return info
         
@@ -195,7 +206,7 @@ class SharingView(BrowserView):
          - title
          
         """
-        search_term = self.request.get('search_term', None)
+        search_term = self.request.form.get('search_term', None)
         users = []
         existing_users = [u['id'] for u in self.role_settings() if u['type'] == 'user']
         if search_term:
@@ -213,9 +224,9 @@ class SharingView(BrowserView):
         Returns the same values (and uses the same query parameter) as
         user_search_results().
         """
-        search_term = self.request.get('search_term', None)
+        search_term = self.request.form.get('search_term', None)
         groups = []
-        existing_groups = [g['id'] for g in self.group_settings() if u['type'] == 'group']
+        existing_groups = [g['id'] for g in self.role_settings() if g['type'] == 'group']
         if search_term:
             portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
             for g in portal_groups.searchForGroups(name=search_term):
@@ -283,3 +294,58 @@ class SharingView(BrowserView):
                 context.__ac_local_roles_block__ = None
 
         context.reindexObjectSecurity()
+        
+    @clearafter
+    def update_role_settings(self, new_settings):
+        """Update local role settings and reindex object security if necessary.
+        
+        new_settings is a list of dicts with keys id, for the user/group id;
+        type, being either 'user' or 'group'; and roles, containing the list
+        of role ids that are set.
+        """
+        
+        reindex = False
+        context = aq_inner(self.context)
+        
+        current_settings = {}
+        for s in self.role_settings():
+            current_settings[s['id']] = s
+            
+        managed_roles = frozenset([r['id'] for r in self.roles()])
+        member_ids_to_clear = []
+            
+        for s in new_settings:
+            user_id = s['id']
+            new_user = not current_settings.has_key(user_id)
+            
+            existing_roles = frozenset(context.get_local_roles_for_userid(userid=user_id))
+            if new_user:
+                acquired_roles = frozenset()
+            else:
+                acquired_roles = frozenset([r['id'] for r in managed_roles 
+                                            if current_settings[user_id]['roles'][r] is None])
+            selected_roles = frozenset(s['roles'])
+            
+            # We will remove those roles that we are managing and which set
+            # on the context, but which were not selected
+            to_remove = managed_roles & existing_roles - selected_roles
+            
+            # Leaving us with the roles that we 
+            new_roles = selected_roles | existing_roles - acquired_roles - to_remove
+            
+            # take away roles that we are managing, that were not selected 
+            # and which were part of the existing roles
+            
+            
+            if new_roles:
+                context.manage_setLocalRoles(user_id, list(new_roles))
+                reindex = True
+            elif not new_user:
+                member_ids_to_clear.append(user_id)
+                
+        if member_ids_to_clear:
+            context.manage_delLocalRoles(userids=member_ids_to_clear)
+            reindex = True
+        
+        if reindex:
+            self.context.reindexObjectSecurity()

@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       lang="en"
-      metal:use-macro="here/@@standard_macros/page"
+      metal:use-macro="context/@@standard_macros/page"
       i18n:domain="plone">
 
 <head>
@@ -8,7 +8,7 @@
 <body>
 <div metal:fill-slot="body">
 
-<div metal:use-macro="here/document_actions/macros/document_actions">
+<div metal:use-macro="context/document_actions/macros/document_actions">
     Document actions (print, sendto etc)
 </div>
 
@@ -41,14 +41,18 @@
 -->
 
 <form method="POST" 
-      tal:attributes="action string:${context/absolute_url}/@@plone_sharing_update">
+      tal:attributes="action string:${context/absolute_url}/@@sharing">
+      
+      <input type="hidden" name="form.submitted:boolean" value="True" />
 
 <table class="listing" 
        summary="Current sharing permissions" 
-       tal:define="available_roles view/roles"
+       tal:define="available_roles view/roles;
+                   num_columns python:len(available_roles) + 1;
+                   role_settings view/role_settings"
        i18n:attributes="summary summary_assigned_roles;">
 
-    <thead>
+    <thead tal:condition="python:len(role_settings) > 0">
         <tr>
             <th i18n:translate="label_name">User/Group</th>
             <th class="nosort"
@@ -58,43 +62,34 @@
     </thead>
 
     <tbody>
-        <tal:entries repeat="entry view/role_settings">
+        <tal:entries repeat="entry role_settings">
             <tr class="odd"
                 tal:define="is_group python:entry['type'] == 'group'"
                 tal:attributes="class python:repeat['entry'].odd and 'odd' or 'even'">
                 <td>
-                    <img tal:condition="is_group" tal:replace="structure here/group.gif" /> 
-                    <img tal:condition="not:is_group" tal:replace="structure here/user.gif" /> 
+                    <img tal:condition="is_group" tal:replace="structure context/group.gif" /> 
+                    <img tal:condition="not:is_group" tal:replace="structure context/user.gif" /> 
                     <span tal:replace="entry/title" />
                     <input
                         type="hidden"
-                        tal:attributes="name string:entries.${entry/id}.id:dict:list;
-                                        value entry/id"
-                
+                        name="entries.id:records"
+                        tal:attributes="value entry/id"
                         />
                     <input
                         type="hidden"
-                        tal:attributes="name string:entries.${entry/id}.type:dict:list;
-                                        value entry/type"
-                
+                        name="entries.type:records"
+                        tal:attributes="value entry/type"
                         />
                 </td>
                 <td tal:repeat="role available_roles">
                     <tal:block define="entry_role python:entry['roles'][role['id']]">
-                        <input
-                            type="hidden"
-                            tal:attributes="name string:roles.${role/id}.default:dict:list;
-                                            value entry_role"
-                        
-                            />
-                        <img tal:condition="python:entry_role is None" tal:replace="structure here/confirm_icon.gif">
+                        <img tal:condition="python:entry_role is None" tal:replace="structure context/confirm_icon.gif">
                         <tal:block condition="python:entry_role is not None">
                             <input
                                 type="checkbox"
                                 value="True"
-                                tal:attributes="name string:roles.${role/id}.value:dict:list;
+                                tal:attributes="name string:entries.role_${role/id}:records;
                                                 checked python:entry_role == True and 'checked' or None"
-                            
                                 />
                         </tal:block>
                     </tal:block>
@@ -111,9 +106,9 @@
            to enable to test form functionality in the meantime. -->
     <tfoot style="border-top: 1px solid #8CACBB; background-color: #DEE7EC; text-align: center"><!-- XXX: Move to CSS -->
         <tr>
-            <td colspan="4">
+            <td tal:attributes="colspan num_columns">
                 <label for="user-group-search">
-                    <img tal:replace="structure here/add_alternative_icon.gif" />
+                    <img tal:replace="structure context/add_alternative_icon.gif" />
                 </label>
                 <input type="text" 
                        id="user-group-search"
@@ -121,16 +116,59 @@
                        style="color: #666" 
                        name="search_term"
                        value="Type here to add user/group" />
-                <noscript>
-                    <input type="submit" 
-                           name="form.button.Search"
-                           value="Search"
-                           class="searchButton" />
-                </noscript>
+                <input type="submit" 
+                       name="form.button.Search"
+                       value="Search"
+                       class="searchButton" />
             </td>
         </tr>
     </tfoot>
 </table>
+
+<div class="field"
+        tal:define="user_results view/user_search_results;
+                    group_results view/group_search_results;"
+        tal:condition="python:user_results or group_results">
+    <table class="listing">
+        <thead>
+            <tr>
+                <th class="nosort">User or group</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="user user_results">
+                <td>
+                    <input
+                        type="checkbox"
+                        name="add_users:list"
+                        tal:attributes="value user/id"
+                        />
+                    <img tal:replace="structure context/user.gif" />
+                    <span tal:replace="user/title" />
+                </td>
+            </tr>
+            <tr tal:repeat="group group_results">
+                <td>
+                    <input
+                        type="checkbox"
+                        name="add_groups:list"
+                        tal:attributes="value group/id"
+                        />
+                    <img tal:replace="structure context/group.gif" />
+                    <span tal:replace="group/title" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <input type="submit" 
+               name="form.button.Add"
+               value="Add selected"
+               class="context" />
+    </div>
+
+</div>
 
 <div class="field">
     <input class="noborder"
@@ -148,7 +186,7 @@
         By default, permissions from the container of this item are inherited.
         If you disable this, only the explicitly defined sharing permissions will
         be valid.
-        In the overview, the symbol <img tal:replace="structure here/confirm_icon.gif" />
+        In the overview, the symbol <img tal:replace="structure context/confirm_icon.gif" />
         indicates an inherited value.
 
     </div>
