@@ -14,7 +14,7 @@ plone.app.workflow to-do
 
  Sharing page:
  
-    - KSS enable finding, adding and changing settings for users/groups
+    - KSS-enable finding, adding and changing settings for users/groups
         - can hide the submit buttons in <noscript> tags in that case
     
     - Enable settings for the Anonymous user (aka "Everyone")
@@ -24,6 +24,7 @@ plone.app.workflow to-do
           
     - Need to restrict actual roles managed to a meaningful subset and give
       proper titles (hard coded for now)
+    - May also want to be selective about who can manage assign which roles
       
     - Final merge steps:
         -> Modify ATCT to let the 'sharing' alias point to @@sharing

@@ -7,7 +7,7 @@
         for="*"
         template="sharing.pt"
         class=".sharing.SharingView"
-        permission="cmf.ModifyPortalContent"
+        permission="cmf.ChangeLocalRoles"
         />
         
 </configure>
