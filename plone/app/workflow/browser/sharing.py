@@ -89,6 +89,31 @@ class SharingView(BrowserView):
         if the role is explicitly disabled and None if the role is inherited.
         """
         
+        existing_settings = self.existing_role_settings()
+        user_results = self.user_search_results()
+        group_results = self.group_search_results()
+
+        return existing_settings + user_results + group_results
+        
+    def inherited(self, context=None):
+        """Return True if local roles are inherited here.
+        """
+        if context is None:
+            context = self.context
+        if getattr(aq_base(context), '__ac_local_roles_block__', None):
+            return False
+        return True
+        
+    # helper functions
+    
+    @memoize
+    def existing_role_settings(self):
+        """Get current settings for users and groups that have already got
+        at least one of the managed local roles.
+
+        Returns a list of dicts as per role_settings()
+        """
+        
         context = aq_inner(self.context)
         
         portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
@@ -173,79 +198,55 @@ class SharingView(BrowserView):
                     info_item['name'] = member['fullname']
                     
             info.append(info_item)
-
-        # Note if a user was selected to be added, must return this with no
-        # roles selected
-        
-        empty_roles = dict([(r, False) for r in available_roles])
-        
-        users_to_add = self.request.form.get('add_users', [])
-        for user_id in users_to_add:
-            member = portal_membership.getMemberInfo(user_id)
-            if member is not None:
-                info.append(dict(id    = user_id,
-                                 title = member['fullname'] or member['username'] or user_id,
-                                 type  = 'user',
-                                 roles = empty_roles.copy()))
-                             
-        groups_to_add = self.request.form.get('add_groups', [])
-        for group_id in groups_to_add:
-            g = portal_groups.getGroupById(group_id)
-            if g is not None:
-                info.append(dict(id    = group_id,
-                                 title = g.getGroupTitleOrName(),
-                                 type  = 'group',
-                                 roles = empty_roles.copy()))
-                             
+            
         return info
-        
-    def inherited(self, context=None):
-        """Return True if local roles are inherited here.
-        """
-        if context is None:
-            context = self.context
-        if getattr(aq_base(context), '__ac_local_roles_block__', None):
-            return False
-        return True
         
     def user_search_results(self):
         """Return search results for a query to add new users
         
-        Returns a list of dicts, with keys:
-        
-         - id
-         - title
-         
+        Returns a list of dicts, as per role_settings()
         """
         search_term = self.request.form.get('search_term', None)
-        users = []
-        existing_users = [u['id'] for u in self.role_settings() if u['type'] == 'user']
-        if search_term:
-            portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
-            for m in portal_membership.searchForMembers(name=search_term):
-                if m.getId() not in existing_users:
-                    users.append(dict(id=m.getId(),
-                                      title=m.getProperty('fullname', None) or m.getUserName()))
-        return users
+        if not search_term:
+            return []
+            
+        existing_users = [u['id'] for u in self.existing_role_settings() if u['type'] == 'user']
+        empty_roles = dict([(r['id'], False) for r in self.roles()])
+        info = []
         
-    
+        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
+        for m in portal_membership.searchForMembers(name=search_term):
+            user_id = m.getId()
+            if user_id not in existing_users:
+                info.append(dict(id    = user_id,
+                                 title = m.getProperty('fullname', None) or m.getUserName(),
+                                 type  = 'user',
+                                 roles = empty_roles.copy()))
+        return info
+        
     def group_search_results(self):
         """Return search results for a query to add new groups
         
-        Returns the same values (and uses the same query parameter) as
-        user_search_results().
+        Returns a list of dicts, as per role_settings()
         """
-        search_term = self.request.form.get('search_term', None)
-        groups = []
-        existing_groups = [g['id'] for g in self.role_settings() if g['type'] == 'group']
-        if search_term:
-            portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
-            for g in portal_groups.searchForGroups(name=search_term):
-                groups.append(dict(id=g.getId(),
-                                   title=g.getGroupTitleOrName()))
-        return groups
         
-    # helper functions
+        search_term = self.request.form.get('search_term', None)
+        if not search_term:
+            return []
+            
+        existing_groups = [g['id'] for g in self.existing_role_settings() if g['type'] == 'group']
+        empty_roles = dict([(r['id'], False) for r in self.roles()])
+        info = []
+        
+        portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
+        for g in portal_groups.searchForGroups(name=search_term):
+            group_id = g.getId()
+            if group_id not in existing_groups:
+                info.append(dict(id    = group_id,
+                                 title = g.getGroupTitleOrName(),
+                                 type  = 'group',
+                                 roles = empty_roles.copy()))
+        return info
         
     def _inherited_roles(self):
         """Returns a tuple with the acquired local roles."""
