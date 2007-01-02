@@ -22,9 +22,7 @@ plone.app.workflow to-do
         - note, this is not necessarily easy, because it implies messing with 
           permissions rather than granting local roles!
           
-    - Need to restrict actual roles managed to a meaningful subset and give
-      proper titles (hard coded for now)
-    - May also want to be selective about who can manage assign which roles
+    - May want to be selective about who can manage assign which roles
       
     - Final merge steps:
         -> Modify ATCT to let the 'sharing' alias point to @@sharing
