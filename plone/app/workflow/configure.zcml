@@ -5,4 +5,20 @@
     
     <include package=".browser" />
     
+    <!-- Local roles managed in the @@sharing view -->
+    <utility
+        name="Reader"
+        factory=".localroles.ReaderRole"
+        />
+        
+    <utility
+        name="Editor"
+        factory=".localroles.EditorRole"
+        />
+        
+    <utility
+        name="Reviewer"
+        factory=".localroles.ReviewerRole"
+        />
+    
 </configure>

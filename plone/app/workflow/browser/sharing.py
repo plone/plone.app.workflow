@@ -1,3 +1,5 @@
+from zope.component import getUtilitiesFor
+
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
@@ -8,6 +10,8 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
 
 from plone.memoize.instance import memoize, clearafter
+
+from plone.app.workflow.interfaces import ISharingPageRole
 
 class SharingView(BrowserView):
     
@@ -66,12 +70,11 @@ class SharingView(BrowserView):
             - title
         """
         
-        # TODO: Should not hardcode this!
-        # Should be possible to whitelist portal roles and provide titles
-        
-        return [dict(id='Reader',   title='View'),
-                dict(id='Editor',   title='Edit'),
-                dict(id='Reviewer', title='Review')]
+        pairs = []
+        for name, utility in getUtilitiesFor(ISharingPageRole):
+            pairs.append(dict(id = name, title = utility.title))
+        pairs.sort(lambda x, y: cmp(x['id'], y['id']))
+        return pairs
         
     @memoize
     def role_settings(self):

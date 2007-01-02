@@ -63,9 +63,9 @@
 
     <tbody>
         <tal:entries repeat="entry role_settings">
-            <tr class="odd"
-                tal:define="is_group python:entry['type'] == 'group'"
-                tal:attributes="class python:repeat['entry'].odd and 'odd' or 'even'">
+            <tr tal:define="is_group python:entry['type'] == 'group';
+                            oddrow repeat/entry/odd;"
+                tal:attributes="class python:oddrow and 'odd' or 'even'">
                 <td>
                     <img tal:condition="is_group" tal:replace="structure context/group.gif" /> 
                     <img tal:condition="not:is_group" tal:replace="structure context/user.gif" /> 

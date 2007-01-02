@@ -5,7 +5,6 @@
     <browser:page
         name="sharing"
         for="*"
-        template="sharing.pt"
         class=".sharing.SharingView"
         permission="cmf.ChangeLocalRoles"
         />
