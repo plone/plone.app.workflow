@@ -18,7 +18,6 @@ class SharingView(BrowserView):
     # Actions
     
     template = ViewPageTemplateFile('sharing.pt')
-    magic_roles = ('Authenticated', 'Anonymous',)
     
     def __call__(self):
         """Perform the update and redirect if necessary, or render the page
@@ -72,26 +71,13 @@ class SharingView(BrowserView):
         """
         context = aq_inner(self.context)
         portal_membership = getToolByName(context, 'portal_membership')
-        member = portal_membership.getAuthenticatedMember()
-        
-        roles_in_context = set(member.getRolesInContext(context))
-        context_roles = [r for r in context.valid_roles() if r not in self.magic_roles]
         
         pairs = []
         
-        # A manager can manage all roles; use names where possible
-        if portal_membership.checkPermission(permissions.ManagePortal, context):
-            for role in context_roles:
-                utility = queryUtility(ISharingPageRole, name=role, default=None)
-                title = role
-                if utility is not None:
-                    title = utility.title
-                pairs.append(dict(id = role, title = title))
-        else:
-            for name, utility in getUtilitiesFor(ISharingPageRole):
-                overlapping_roles = set(utility.required_roles) & roles_in_context
-                if not utility.required_roles or overlapping_roles:
-                    pairs.append(dict(id = name, title = utility.title))
+        for name, utility in getUtilitiesFor(ISharingPageRole):
+            permission = utility.required_permission
+            if permission is None or portal_membership.checkPermission(permission, context):
+                pairs.append(dict(id = name, title = utility.title))
                 
         pairs.sort(lambda x, y: cmp(x['id'], y['id']))
         return pairs
