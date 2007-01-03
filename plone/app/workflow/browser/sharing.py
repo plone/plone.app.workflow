@@ -233,16 +233,12 @@ class SharingView(BrowserView):
         if not search_term:
             return []
             
-        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
-        member = portal_membership.getAuthenticatedMember()
-        
         existing_users = set([u['id'] for u in self.existing_role_settings() 
                                 if u['type'] == 'user'])
-        existing_users.add(member.getId())
-        
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
+        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
         for m in portal_membership.searchForMembers(name=search_term):
             user_id = m.getId()
             if user_id not in existing_users:
