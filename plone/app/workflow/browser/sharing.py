@@ -1,4 +1,4 @@
-from zope.component import getUtilitiesFor
+from zope.component import getUtilitiesFor, queryUtility
 
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -18,6 +18,7 @@ class SharingView(BrowserView):
     # Actions
     
     template = ViewPageTemplateFile('sharing.pt')
+    magic_roles = ('Authenticated', 'Anonymous',)
     
     def __call__(self):
         """Perform the update and redirect if necessary, or render the page
@@ -69,10 +70,29 @@ class SharingView(BrowserView):
             - id
             - title
         """
+        context = aq_inner(self.context)
+        portal_membership = getToolByName(context, 'portal_membership')
+        member = portal_membership.getAuthenticatedMember()
+        
+        roles_in_context = set(member.getRolesInContext(context))
+        context_roles = [r for r in context.valid_roles() if r not in self.magic_roles]
         
         pairs = []
-        for name, utility in getUtilitiesFor(ISharingPageRole):
-            pairs.append(dict(id = name, title = utility.title))
+        
+        # A manager can manage all roles; use names where possible
+        if portal_membership.checkPermission(permissions.ManagePortal, context):
+            for role in context_roles:
+                utility = queryUtility(ISharingPageRole, name=role, default=None)
+                title = role
+                if utility is not None:
+                    title = utility.title
+                pairs.append(dict(id = role, title = title))
+        else:
+            for name, utility in getUtilitiesFor(ISharingPageRole):
+                overlapping_roles = set(utility.required_roles) & roles_in_context
+                if not utility.required_roles or overlapping_roles:
+                    pairs.append(dict(id = name, title = utility.title))
+                
         pairs.sort(lambda x, y: cmp(x['id'], y['id']))
         return pairs
         
@@ -213,11 +233,16 @@ class SharingView(BrowserView):
         if not search_term:
             return []
             
-        existing_users = [u['id'] for u in self.existing_role_settings() if u['type'] == 'user']
+        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
+        member = portal_membership.getAuthenticatedMember()
+        
+        existing_users = set([u['id'] for u in self.existing_role_settings() 
+                                if u['type'] == 'user'])
+        existing_users.add(member.getId())
+        
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
-        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
         for m in portal_membership.searchForMembers(name=search_term):
             user_id = m.getId()
             if user_id not in existing_users:
@@ -237,7 +262,8 @@ class SharingView(BrowserView):
         if not search_term:
             return []
             
-        existing_groups = [g['id'] for g in self.existing_role_settings() if g['type'] == 'group']
+        existing_groups = set([g['id'] for g in self.existing_role_settings() 
+                                if g['type'] == 'group'])
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         

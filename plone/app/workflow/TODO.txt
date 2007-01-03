@@ -12,11 +12,10 @@ plone.app.workflow to-do
         - note, this is not necessarily easy, because there is no user for
           this; it may be possible to make "all users" pseudo-group using
           PAS.
-          
-    - May want to be selective about who can manage assign which roles
-    - May want Manager to be able to manage all roles?
       
     - Final merge steps:
         -> Modify ATCT to let the 'sharing' alias point to @@sharing
-        -> Deprecate folder_localrole_form
-        -> Add alias for folder_localrole_form -> @@sharing or use a redirect
+        -> Also requires migration (can blanket migrate all aliases and
+            actions pointing to folder_localrole_form?)
+        -> Move folder_localrole_form to plone_deprecated
+        -> Add alias for folder_localrole_form -> @@sharing

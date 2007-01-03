@@ -10,3 +10,8 @@ class ISharingPageRole(Interface):
     
     title = schema.TextLine(title=u"A friendly name for the role")
     
+    required_roles = schema.Tuple(title=u"List of roles acceptable in managing this local role",
+                                  description=u"An empty list means any role can manage this local role",
+                                  required=False,
+                                  value_type=schema.TextLine(title=u""))
+    
