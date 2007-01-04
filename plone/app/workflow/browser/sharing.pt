@@ -22,24 +22,6 @@
 </p>
 
 
-<!--
-  Comments:
-  - This form is totally non-functional at the moment, use folder_localrole_form
-    if you want to get the code from the earlier version. It had so much crap in
-    it that the only thing that made sense to me was to start from scratch :)
-  - The list of roles will most likely have to be a whitelist of roles we want
-    to be accessible as local roles. 90% of the roles do not make a lot of sense
-    as local roles.
-  - "Everyone" in the table below == Anonymous. It should be possible to give the 
-    reader/editor role to anonymous users. We might have to make this a global 
-    option, since it is a bit scary, and you wouldn't want it available in an 
-    intranet, for instance. We can drop this feature if it's painful for 3.0
-  - "Logged-in users" == Member role or Authenticated, not sure what makes most 
-    sense
-    ~limi, Dec 16, 2006
-    
--->
-
 <form method="POST" 
       tal:attributes="action string:${context/absolute_url}/@@sharing">
       
@@ -98,12 +80,6 @@
         </tal:entries>
     </tbody>
     
-    <!-- Items to note about this section:
-         - The placeholder text should of course disappear when the field is selected 
-           (I have asked Florian to come up with a generic solution to this).
-         - I have placed a noscript tag around the submit button, since it is only
-           supposed to be there when the user agent doesn't have JS, but feel free
-           to enable to test form functionality in the meantime. -->
     <tfoot style="border-top: 1px solid #8CACBB; background-color: #DEE7EC; text-align: center"><!-- XXX: Move to CSS -->
         <tr>
             <td tal:attributes="colspan num_columns">
