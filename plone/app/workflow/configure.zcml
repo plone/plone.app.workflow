@@ -21,6 +21,7 @@
         factory=".localroles.ReviewerRole"
         />
         
+    <!--
     <utility
         name="Manager"
         factory=".localroles.ManagerRole"
@@ -35,5 +36,6 @@
         name="Member"
         factory=".localroles.MemberRole"
         />
+    -->
     
 </configure>
