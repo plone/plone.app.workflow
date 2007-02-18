@@ -503,17 +503,61 @@ class TestDefaultWorkflow(PloneTestCase.PloneTestCase):
         self.failUnless(worklist[0] == self.doc)
 
     def testStateTitles(self):
-        state_titles = { 'private': 'Private',
-                        'visible': 'Public Draft',
-                        'pending': 'Pending',
-                        'published': 'Published'
-                        }
+        # Test titles for the following workflows:
+        #community_folder_workflow
+        #community_workflow
+        #folder_workflow
+        #intranet_folder_workflow
+        #intranet_workflow
+        #one_state_workflow
+        #plone_workflow
+        #simple_publication_workflow
+
+        workflow_titles = dict(
+                community_folder_workflow = { 
+ 		   'private':      'Visible and editable only by owner and editor',
+                   'visible':      'Visible but not published',
+                   'published':    'Public'
+                   },
+                community_workflow = { 
+                   'private':      'Visible and editable only by owner',
+                   'pending':      'Waiting for reviewer',
+                   'published':    'Public',
+                   'public_draft': 'Public draft'
+                   },
+                folder_workflow = { 
+                   'private':      'Private',
+                   'visible':      'Public Draft',
+                   'published':    'Published'
+                   },
+                intranet_folder_workflow = { 
+                   'internal':     'Visible only to intranet members',
+                   'private':      'Visible and editable only by owner'
+                   },
+                intranet_workflow = { 
+          	   'private':      'Visible and editable only by owner',
+                   'internal':     'Visible only to intranet members',
+                   'pending':      'Waiting for reviewer',
+                   'internally_published':    'Internally published'
+                   },
+                one_state_workflow = { 
+                   'published':    'Public',
+                   },
+                plone_workflow = { 'private': 'Private',
+                   'visible':      'Public Draft',
+                   'pending':      'Pending',
+                   'published':    'Published'
+                   },
+                simple_publication_workflow = { 
+                   'private':      'Visible and editable only by owner',
+                   'published':    'Public'
+                   },
+        )
         for wf in self.workflow.objectValues():
-            for state_id, title in state_titles.items():
+            for state_id, title in workflow_titles[wf.id].items():
                 state = getattr(wf.states, state_id, None)
                 if state is not None:
                     self.assertEqual(state.title, title)
-
 
 def test_suite():
     from unittest import TestSuite, makeSuite
