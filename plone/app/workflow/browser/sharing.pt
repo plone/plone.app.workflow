@@ -91,7 +91,10 @@
                        size="30" 
                        style="color: #666" 
                        name="search_term"
-                       value="Type here to add user/group" />
+                       title="Type here to add user/group" 
+                       i18n:attributes="title"
+                       class="inputLabel"
+                       value=""/>
                 <input type="submit" 
                        name="form.button.Search"
                        value="Search"
