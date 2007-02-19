@@ -53,10 +53,12 @@ function redirect() {
             <tal:types repeat="type python:[portal.portal_types.getTypeInfo(t) for t in here.getPortalTypes()]">
               <option
                 tal:content="type/Title"
-                tal:attributes="value type/id;">Page (aka. Document)</option>
+                tal:attributes="value type/id;
+                                selected python: view.is_type_selected(type, type_id)">Page (aka. Document)
+              </option>
 
 <tal:comment replace="nothing">
-                    selected python:test(type_id==type.id, 'selected', None);
+                    selected python: test(type_id==type.id, 'selected', None);
 </tal:comment>
 
 
