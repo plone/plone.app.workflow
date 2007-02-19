@@ -5,6 +5,7 @@
 
 <head>
 
+
 <body>
 <div metal:fill-slot="body">
 
@@ -25,6 +26,19 @@
     i18n:translate="description_plone_setup">
          Workflow, visibility and versioning settings for your content types.
 </p>
+
+<script type="text/javascript">
+
+function redirect() {
+    options = document.getElementById("types").childNodes
+
+    for(var i=0; i < options.length; i++) {
+        if(options[i].selected) val=options[i].value
+    }
+    self.location='prefs_types?type_id=' + val
+}
+
+</script>
 
 <form method="POST" 
       tal:attributes="action string:${context/absolute_url}/@@prefs_types">
