@@ -1,0 +1,194 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="context/@@standard_macros/page"
+      i18n:domain="plone">
+
+<head>
+
+<body>
+<div metal:fill-slot="body">
+
+<div metal:use-macro="context/document_actions/macros/document_actions">
+    Document actions (print, sendto etc)
+</div>
+
+<h1 i18n:translate="heading_portal_setup">Type Settings</h1>
+
+<a href=""
+    class="link-parent"
+    tal:attributes="href string: $portal_url/plone_control_panel"
+    i18n:translate="label_up_to_plone_setup">
+        Up to Site Setup
+</a>
+
+<p class="documentDescription"
+    i18n:translate="description_plone_setup">
+         Workflow, visibility and versioning settings for your content types.
+</p>
+
+<form method="POST" 
+      tal:attributes="action string:${context/absolute_url}/@@prefs_types">
+      
+    <input type="hidden" name="form.submitted:boolean" value="True" />
+
+    <fieldset tal:define="type_id python:request.get('type_id', 'Document');
+                          type_obj python:portal.portal_types[type_id]">
+
+        <legend>
+          <select onchange="javascript:redirect()" id="types" name="type_id">
+            <tal:types repeat="type python:[portal.portal_types.getTypeInfo(t) for t in here.getPortalTypes()]">
+              <option
+                tal:content="type/Title"
+                tal:attributes="value type/id;">Page (aka. Document)</option>
+
+<tal:comment replace="nothing">
+                    selected python:test(type_id==type.id, 'selected', None);
+</tal:comment>
+
+
+            </tal:types>
+            </select>
+        </legend>
+
+
+        <label>Title</label>
+        <input type="text" value="Page"
+            tal:attributes="value type_obj/Title"/>
+        
+        <div style="margin: 1em 0">
+            <input type="checkbox"
+                   name="addable"
+                   checked="checked">
+
+<tal:comment replace="nothing">
+                   tal:attributes="checked python:test(type_obj.global_allow, 'checkbox', None)"
+</tal:comment>
+
+              <label>Addable</label>
+              <input type="checkbox"
+                     name="allow_discussion"
+                     checked="checked">
+
+<tal:comment replace="nothing">
+                     tal:attributes="checked python:test(type_obj.allow_discussion, 'checkbox', None)"
+</tal:comment>
+
+
+            <label>Allow comments</label>
+            <input type="checkbox"
+                   name="enable_versioning"
+                   tal:define="isVersionable 
+                       python:type_obj.id in here.portal_repository.getVersionableContentTypes()">
+
+<tal:comment replace="nothing">
+                   tal:attributes="checked python:test(isVersionable, 'checkbox', None)"
+</tal:comment>
+
+            <label>Enable versioning</label>
+            <input type="checkbox"
+                   name="visibility"
+                   checked="checked"
+                   tal:define="blacklisted site_properties/types_not_searched;">
+<tal:comment replace="nothing">
+                   tal:attributes="checked python:test(type_obj.id not in blacklisted, 'checkbox', None)"
+</tal:comment>
+            <label>Visible in searches</label>
+        </div>
+
+        <div style="float: left">
+            <label>Current workflow</label><br />
+            <span tal:content="python:wtool.getChainForPortalType(type_id)[0]"
+                  tal:on-error="nothing">Community Workflow</span>
+        </div>
+
+        <div style="float: left; margin-left:3em">
+            <label>New workflow</label><br />
+            <select>
+                <option>No change</option>
+                <tal:wfs repeat="workflow wtool/listWorkflows">
+                    <option tal:content="workflow">Intranet Workflow</option>
+                </tal:wfs>
+                <option>No Workflow</option>
+            </select>
+        </div>
+        <!-- This only shows up if you actually selected a change in the workflow -->
+        <div class="visualClear">
+            <label>State Mapping</label>
+            <div class="formHelp">
+                When changing workflows, you have to select a state equivalent in the new workflow.
+            </div>
+
+            <table class="listing">
+                <thead>
+                    <tr>
+                        <th>Old State</th>
+                        <th>New State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="odd">
+                        <td>Published</td>
+                        <td>
+                            <select>
+                                <option selected="selected">Published</option>
+                                <option>Public Draft</option>
+                                <option>Pending</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr class="even">
+                        <td>Public Draft</td>
+                        <td>
+                            <select>
+                                <option>Published</option>
+                                <option selected="selected">Public Draft</option>
+                                <option>Pending</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr class="odd">
+                        <td>Pending</td>
+                        <td>
+                            <select>
+                                <option>Published</option>
+                                <option>Public Draft</option>
+                                <option selected="selected">Pending</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr class="even">
+                        <td>Hidden</td>
+                        <td>
+                            <select>
+                                <option></option>
+                                <option>Published</option>
+                                <option>Public Draft</option>
+                                <option>Pending</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </fieldset>
+
+    <div class="formControls">
+      <input type="submit" value="Cancel" name="form.button.Cancel" class="standalone" />
+      <input type="submit" value="Apply" name="form.button.Apply" class="context" />
+        
+        <!-- This only shows up if changes were made to the workflow settings, since the remapping
+             could be expensive --> 
+        <img tal:replace="structure here/info_icon.gif" />
+        <span style="color: red">This may take a long time, and may slow down Plone significantly.</span>
+    </div>
+
+</form>
+
+</div>
+
+</body>
+</html>

@@ -8,5 +8,12 @@
         class=".sharing.SharingView"
         permission="cmf.ChangeLocalRoles"
         />
+
+    <browser:page
+        name="prefs_types"
+        for="*"
+        class=".prefs_types.PrefsTypesView"
+        permission="cmf.ChangeLocalRoles"
+        />
         
 </configure>

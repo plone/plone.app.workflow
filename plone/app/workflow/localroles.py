@@ -25,20 +25,20 @@ class ReviewerRole(object):
     
 # Only managers can manage these
     
-# class ManagerRole(object):
-#     implements(ISharingPageRole)
-#     
-#     title = u"Manage"
-#     required_permission = 'Manage portal'
-#     
-# class OwnerRole(object):
-#     implements(ISharingPageRole)
-#     
-#     title = u"Own"
-#     required_permission = 'Manage portal'
-#     
-# class MemberRole(object):
-#     implements(ISharingPageRole)
-#     
-#     title = u"Member"
-#     required_permission = 'Manage portal'
+class ManagerRole(object):
+    implements(ISharingPageRole)
+    
+    title = u"Manage"
+    required_permission = 'Manage portal'
+    
+class OwnerRole(object):
+    implements(ISharingPageRole)
+    
+    title = u"Own"
+    required_permission = 'Manage portal'
+    
+class MemberRole(object):
+    implements(ISharingPageRole)
+    
+    title = u"Member"
+    required_permission = 'Manage portal'
