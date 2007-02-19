@@ -111,8 +111,13 @@ function redirect() {
 
         <div style="float: left">
             <label>Current workflow</label><br />
-            <span tal:content="python:wtool.getChainForPortalType(type_id)[0]"
-                  tal:on-error="nothing">Community Workflow</span>
+            <span tal:content="python: view.current_workflow(type_id)[0]">Community Workflow</span>
+
+<tal:comment replace="nothing">
+            <span tal:content="python:wtool.getChainForPortalType(type_id)[0]">Community Workflow</span>
+                  tal:on-error="nothing" 
+</tal:comment>
+
         </div>
 
         <div style="float: left; margin-left:3em">

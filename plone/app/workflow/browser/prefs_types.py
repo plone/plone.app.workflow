@@ -59,6 +59,14 @@ class PrefsTypesView(BrowserView):
             self.request.response.redirect(self.context.absolute_url())
             
     # View
+
+    @memoize
+    def current_workflow(self, type_id):
+        """Given the portal type return the current workflow
+        """
+        context = aq_inner(self.context)
+        portal_workflow = getToolByName(context, 'portal_workflow')
+        return portal_workflow.getChainForPortalType(type_id[0])
     
     @memoize
     def roles(self):

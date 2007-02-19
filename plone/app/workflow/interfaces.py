@@ -12,15 +12,3 @@ class ISharingPageRole(Interface):
     
     required_permission = schema.TextLine(title=u"Permission required to manag this local role",
                                           required=False)
-    
-class IPrefsTypesRole(Interface):
-    """A named utility providing information about types that are managed
-    by the prefs_types page.
-    
-    """
-    
-    title = schema.TextLine(title=u"A friendly name for the role")
-    
-    required_permission = schema.TextLine(title=u"Permission required to manag this local role",
-                                          required=False)
-    
