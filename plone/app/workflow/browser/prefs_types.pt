@@ -43,12 +43,21 @@ function redirect() {
 <script type="text/javascript">
 
 function redirect_new_workflow() {
-    options = document.getElementById("workflows")
 
-    for(var i=0; i < options.length; i++) {
-        if(options[i].selected) val=options[i].value
+    options_types = document.getElementById("types").childNodes
+
+    options_workflows = document.getElementById("workflows")
+
+    for(var i=0; i < options_types.length; i++) {
+        if(options_types[i].selected) val_types=options_types[i].value
     }
-    self.location='prefs_types?wf_id=' + val
+
+    for(var i=0; i < options_workflows.length; i++) {
+        if(options_workflows[i].selected) val_workflows=options_workflows[i].value
+    }
+
+
+    self.location='prefs_types?type_id=' + val_types + '&wf_id=' + val_workflows 
 }
 
 </script>
@@ -62,9 +71,14 @@ function redirect_new_workflow() {
     <input type="hidden" name="form.submitted:boolean" value="True" />
 
     <fieldset tal:define="type_id python:request.get('type_id', 'Document');
-                          type_obj python:portal.portal_types[type_id]">
+                            type_obj python:portal.portal_types[type_id]">
 
-        <legend>
+<tal:comment replace="nothing">
+python:request.get('type_id', 'Document');
+</tal:comment>
+
+        <legend >
+
           <select onchange="javascript:redirect()" id="types" name="type_id">
             <tal:types repeat="type python:[portal.portal_types.getTypeInfo(t) for t in here.getPortalTypes()]">
               <option
