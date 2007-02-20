@@ -153,15 +153,15 @@ python:request.get('type_id', 'Document');
             </select>
         </div>
 
+          <tal:block tal:condition="exists: request/wf_id" >
+            <tal:another_block tal:condition="python: request.wf_id != 'No change'">
+
         <!-- This only shows up if you actually selected a change in the workflow -->
 
         <div class="visualClear" tal:define="wf_id python:request.get('wf_id', 'No change')">
 
-          <tal:block tal:condition="exists: request/wf_id" >
 
-            <tal:another_block tal:condition="python: request.wf_id != 'No change'">
-
-            <label tal:content="python: request.wf_id" >State Mapping</label>
+            <label>State Mapping</label>
 
             <div class="formHelp">
                 When changing workflows, you have to select a state equivalent in the new workflow.
@@ -197,14 +197,9 @@ python:request.get('type_id', 'Document');
             </table>
 
 
-            </tal:another_block>
-          </tal:block>
         </div>
 
-
-    </fieldset>
-
-    <div tal:condition="nothing" class="formControls">
+    <div class="formControls">
       <input type="submit" value="Cancel" name="form.button.Cancel" class="standalone" />
       <input type="submit" value="Apply" name="form.button.Apply" class="context" />
         
@@ -213,6 +208,13 @@ python:request.get('type_id', 'Document');
         <img tal:replace="structure here/info_icon.gif" />
         <span style="color: red">This may take a long time, and may slow down Plone significantly.</span>
     </div>
+
+            </tal:another_block>
+          </tal:block>
+
+
+    </fieldset>
+
 
 </form>
 
