@@ -68,7 +68,7 @@ class PrefsTypesView(BrowserView):
         portal_workflow = getToolByName(context, 'portal_workflow')
         try: 
             return portal_workflow.getChainForPortalType(type_id)[0]
-        except:
+        except IndexError:
             return ''
 
     @memoize
