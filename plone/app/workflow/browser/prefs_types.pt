@@ -165,7 +165,7 @@ function redirect_new_workflow() {
             <table class="listing" 
                 tal:define="wf_id python:request.get('wf_id', 'plone_workflow');
                             states python:view.states_for_new_workflow(wf_id);
-                            old_states python:view.states_for_current_workflow(type_id)">
+                            old_states python:view.states_for_current_workflow(type_id);">
                 <thead>
                     <tr>
                         <th>Old State</th>
@@ -175,9 +175,11 @@ function redirect_new_workflow() {
 
                 <tbody tal:repeat="old_state old_states">
 
-                    <tr> 
+                    <tr tal:attributes="class python:oddrow and 'odd' or 'even'"
+                        tal:define="oddrow repeat/old_state/odd;">
+
                         <td tal:content="old_state"> Published </td>
-                        <td >
+                        <td tal:attributes="class python:oddrow and 'odd' or 'even'">
                             <select>
                               <tal:states repeat="state states">              
                                 <option tal:content="state">Pending</option>
@@ -193,7 +195,7 @@ function redirect_new_workflow() {
 
     </fieldset>
 
-    <div class="formControls">
+    <div tal:condition="nothing" class="formControls">
       <input type="submit" value="Cancel" name="form.button.Cancel" class="standalone" />
       <input type="submit" value="Apply" name="form.button.Apply" class="context" />
         
