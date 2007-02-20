@@ -28,46 +28,31 @@
 </p>
 
 <script type="text/javascript">
-
 function redirect() {
     options = document.getElementById("types").childNodes
-
     for(var i=0; i < options.length; i++) {
         if(options[i].selected) val=options[i].value
     }
     self.location='prefs_types?type_id=' + val
 }
-
 </script>
 
 <script type="text/javascript">
-
 function redirect_new_workflow() {
-
     options_types = document.getElementById("types").childNodes
-
     options_workflows = document.getElementById("workflows")
-
     for(var i=0; i < options_types.length; i++) {
         if(options_types[i].selected) val_types=options_types[i].value
     }
-
     for(var i=0; i < options_workflows.length; i++) {
         if(options_workflows[i].selected) val_workflows=options_workflows[i].value
     }
-
-
     self.location='prefs_types?type_id=' + val_types + '&wf_id=' + val_workflows 
 }
-
 </script>
-
-
-
 
 <form method="POST" 
       tal:attributes="action string:${context/absolute_url}/@@prefs_types">
-      
     <input type="hidden" name="form.submitted:boolean" value="True" />
 
     <fieldset tal:define="type_id python:request.get('type_id', 'Document');
@@ -158,7 +143,7 @@ python:request.get('type_id', 'Document');
             <select onchange="javascript:redirect_new_workflow()" id="workflows" name="wf_id">
                 <option>No change</option>
                 <tal:wfs repeat="wf python:portal.portal_workflow.objectValues()"
-                    tal:define="wf_id python:request.get('wf_id', 'plone_workflow')">
+                    tal:define="wf_id python:request.get('wf_id', 'No change')">
                     <option tal:content="python: wf.id"
                             tal:attributes="selected python: view.is_wf_selected(wf, wf_id)">Intranet Workflow
                     </option>
@@ -169,16 +154,21 @@ python:request.get('type_id', 'Document');
         </div>
 
         <!-- This only shows up if you actually selected a change in the workflow -->
-        <div class="visualClear">
 
-            <label>State Mapping</label>
+        <div class="visualClear" tal:define="wf_id python:request.get('wf_id', 'No change')">
+
+          <tal:block tal:condition="exists: request/wf_id" >
+
+            <tal:another_block tal:condition="python: request.wf_id != 'No change'">
+
+            <label tal:content="python: request.wf_id" >State Mapping</label>
+
             <div class="formHelp">
                 When changing workflows, you have to select a state equivalent in the new workflow.
             </div>
 
             <table class="listing" 
-                tal:define="wf_id python:request.get('wf_id', 'plone_workflow');
-                            states python:view.states_for_new_workflow(wf_id);
+                tal:define="states python:view.states_for_new_workflow(wf_id);
                             old_states python:view.states_for_current_workflow(type_id);">
                 <thead>
                     <tr>
@@ -205,7 +195,12 @@ python:request.get('type_id', 'Document');
 
 
             </table>
+
+
+            </tal:another_block>
+          </tal:block>
         </div>
+
 
     </fieldset>
 

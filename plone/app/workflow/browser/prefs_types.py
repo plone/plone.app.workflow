@@ -84,7 +84,10 @@ class PrefsTypesView(BrowserView):
     def states_for_new_workflow(self, wf_id):
         context = aq_inner(self.context)
         portal_workflow = getToolByName(context, 'portal_workflow')
-        return (portal_workflow[wf_id].states.keys())
+        if wf_id == 'No change':
+            return None
+        else:
+            return (portal_workflow[wf_id].states.keys())
 
     @memoize
     def states_for_current_workflow(self, type_id):
@@ -102,7 +105,10 @@ class PrefsTypesView(BrowserView):
         """
         context = aq_inner(self.context)
         portal_workflow = getToolByName(context, 'portal_workflow')
-        if (wf.id == portal_workflow[wf_id].id):
+
+        if wf_id == 'No change':
+            return None
+        elif (wf.id == portal_workflow[wf_id].id):
             return ('selected')
     
     @memoize
