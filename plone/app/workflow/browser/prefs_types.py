@@ -76,8 +76,40 @@ class PrefsTypesView(BrowserView):
         """Has this type been selected in the drop down menu?
         """
         context = aq_inner(self.context)
-        portal = getToolByName(self, 'portal_url').getPortalObject()
-        if (type.Title() == portal.portal_types[type_id].Title()):
+        portal_types = getToolByName(self, 'portal_types')
+        if (type.Title() == portal_types[type_id].Title()):
+            return ('selected')
+
+    @memoize
+    def states_for_new_workflow(self, wf_id):
+        context = aq_inner(self.context)
+        portal_workflow = getToolByName(context, 'portal_workflow')
+        print ('--------------------------------------------------------------------------------')
+        print (portal_workflow[wf_id])
+        print (portal_workflow[wf_id].states.keys())
+        print ('--------------------------------------------------------------------------------')
+        return (portal_workflow[wf_id].states.keys())
+
+    @memoize
+    def states_for_current_workflow(self, type_id):
+        context = aq_inner(self.context)
+        portal_workflow = getToolByName(context, 'portal_workflow')
+
+        try: 
+            return (portal_workflow[portal_workflow.getChainForPortalType(type_id)[0]].states.keys())
+        except:
+            return ''
+
+    @memoize
+    def is_wf_selected(self, wf, wf_id):
+        """Has this workflow been selected in the drop down menu?
+        """
+        context = aq_inner(self.context)
+        portal_workflow = getToolByName(context, 'portal_workflow')
+        if (wf.id == portal_workflow[wf_id].id):
+            print ('--------------------------------------------------------------------------------')
+            print (wf.id, ' == ', portal_workflow[wf_id].id )
+            print ('--------------------------------------------------------------------------------')
             return ('selected')
     
     @memoize
