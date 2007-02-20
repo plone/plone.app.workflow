@@ -66,10 +66,13 @@ class PrefsTypesView(BrowserView):
         """
         context = aq_inner(self.context)
         portal_workflow = getToolByName(context, 'portal_workflow')
-        return portal_workflow.getChainForPortalType(type_id)[0]
+        try: 
+            return portal_workflow.getChainForPortalType(type_id)[0]
+        except:
+            return ''
+
     @memoize
     def is_type_selected(self, type, type_id):
-
         """Has this type been selected in the drop down menu?
         """
         context = aq_inner(self.context)
