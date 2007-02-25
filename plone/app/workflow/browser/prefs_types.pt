@@ -58,10 +58,6 @@ function redirect_new_workflow() {
     <fieldset tal:define="type_id python:request.get('type_id', 'Document');
                             type_obj python:portal.portal_types[type_id]">
 
-<tal:comment replace="nothing">
-python:request.get('type_id', 'Document');
-</tal:comment>
-
         <legend >
 
           <select onchange="javascript:redirect()" id="types" name="type_id">
@@ -71,12 +67,6 @@ python:request.get('type_id', 'Document');
                 tal:attributes="value type/id;
                                 selected python: view.is_type_selected(type, type_id)">Page (aka. Document)
               </option>
-
-
-<tal:comment replace="nothing">
-                    selected python: test(type_id==type.id, 'selected', None);
-</tal:comment>
-
 
             </tal:types>
             </select>
@@ -153,65 +143,64 @@ python:request.get('type_id', 'Document');
             </select>
         </div>
 
-          <tal:block tal:condition="exists: request/wf_id" >
-            <tal:another_block tal:condition="python: request.wf_id != 'No change'">
+        <tal:check_wf_in_request tal:condition="exists: request/wf_id" >
+          <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No change'">
 
-        <!-- This only shows up if you actually selected a change in the workflow -->
+            <!-- This only shows up if you actually selected a change in the workflow -->
 
-        <div class="visualClear" tal:define="wf_id python:request.get('wf_id', 'No change')">
+            <div class="visualClear" tal:define="wf_id python:request.get('wf_id', 'No change')">
+                <label>State Mapping</label>
 
+                <div class="formHelp">
+                    When changing workflows, you have to select a state equivalent in the new workflow.
+                </div>
 
-            <label>State Mapping</label>
+                <table class="listing" 
+                    tal:define="states python:view.states_for_new_workflow(wf_id);
+                                old_states python:view.states_for_current_workflow(type_id);">
+                    <thead>
+                        <tr>
+                            <th>Old State</th>
+                            <th>New State</th>
+                        </tr>
+                    </thead>
 
-            <div class="formHelp">
-                When changing workflows, you have to select a state equivalent in the new workflow.
+                    <tbody tal:repeat="old_state old_states">
+
+                        <tr tal:attributes="class python:oddrow and 'odd' or 'even'"
+                            tal:define="oddrow repeat/old_state/odd;">
+
+                            <td tal:content="old_state"> Published </td>
+                            <td tal:attributes="class python:oddrow and 'odd' or 'even'">
+                                <select>
+                                  <tal:states repeat="state states">              
+                                    <option tal:content="state">Pending</option>
+                                  </tal:states>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
             </div>
 
-            <table class="listing" 
-                tal:define="states python:view.states_for_new_workflow(wf_id);
-                            old_states python:view.states_for_current_workflow(type_id);">
-                <thead>
-                    <tr>
-                        <th>Old State</th>
-                        <th>New State</th>
-                    </tr>
-                </thead>
+          </tal:check_wf_in_request_change_selected>
+        </tal:check_wf_in_request>
 
-                <tbody tal:repeat="old_state old_states">
-
-                    <tr tal:attributes="class python:oddrow and 'odd' or 'even'"
-                        tal:define="oddrow repeat/old_state/odd;">
-
-                        <td tal:content="old_state"> Published </td>
-                        <td tal:attributes="class python:oddrow and 'odd' or 'even'">
-                            <select>
-                              <tal:states repeat="state states">              
-                                <option tal:content="state">Pending</option>
-                              </tal:states>
-                            </select>
-                        </td>
-                    </tr>
-                </tbody>
-
-
-            </table>
-
-
+        <div class="visualClear" style="float:left;margin-top:1em" class="formControls">
+          <input type="submit" value="Cancel" name="form.button.Cancel" class="standalone" />
+          <input type="submit" value="Apply" name="form.button.Apply" class="context" />
+            
+            <!-- This only shows up if changes were made to the workflow settings, since the remapping
+                 could be expensive --> 
+            <tal:check_wf_in_request tal:condition="exists: request/wf_id" >
+              <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No change'">
+                <img tal:replace="structure here/info_icon.gif" />
+                <span style="color: red">This may take a long time, and may slow down Plone significantly.</span>
+              </tal:check_wf_in_request_change_selected>
+            </tal:check_wf_in_request>
         </div>
-
-    <div class="formControls">
-      <input type="submit" value="Cancel" name="form.button.Cancel" class="standalone" />
-      <input type="submit" value="Apply" name="form.button.Apply" class="context" />
-        
-        <!-- This only shows up if changes were made to the workflow settings, since the remapping
-             could be expensive --> 
-        <img tal:replace="structure here/info_icon.gif" />
-        <span style="color: red">This may take a long time, and may slow down Plone significantly.</span>
-    </div>
-
-            </tal:another_block>
-          </tal:block>
-
 
     </fieldset>
 
