@@ -52,7 +52,7 @@ class PrefsTypesView(BrowserView):
         context = aq_inner(self.context)
         portal_workflow = getToolByName(context, 'portal_workflow')
         try: 
-            return portal_workflow.getChainForPortalType(type_id)[0]
+            return ((portal_workflow[portal_workflow.getChainForPortalType(type_id)[0]]).title)
         except IndexError:
             return ''
 
@@ -66,10 +66,40 @@ class PrefsTypesView(BrowserView):
             return ('selected')
 
     @memoize
+    def is_type_globally_allowed(self, type):
+        """Is this type globally allowed? 
+        """
+        return ''
+
+    @memoize
+    def is_type_discussion_allowed(self, type):
+        """Is this type configured to allow discussion?
+        """
+        return ''
+
+    @memoize
+    def is_type_versionable(self, type_id):
+        """Is this type versionable?
+        """
+        context = aq_inner(self.context)
+        portal_repository = getToolByName(context, 'portal_repository')
+        return (type_id in portal_repository.getVersionableContentTypes())
+
+    @memoize
+    def is_type_searchable(self, type_id):
+        """Is this type searchable?
+        """
+        context = aq_inner(self.context)
+        portal_properties = getToolByName(context, 'portal_properties')
+        blacklisted = portal_properties.site_properties.types_not_searched
+        return (type_id not in blacklisted)
+
+ 
+    @memoize
     def states_for_new_workflow(self, wf_id):
         context = aq_inner(self.context)
         portal_workflow = getToolByName(context, 'portal_workflow')
-        if wf_id == 'No change':
+        if wf_id == 'No Change':
             return None
         else:
             return (portal_workflow[wf_id].states.keys())
@@ -91,11 +121,11 @@ class PrefsTypesView(BrowserView):
         context = aq_inner(self.context)
         portal_workflow = getToolByName(context, 'portal_workflow')
 
-        if wf_id == 'No change':
+        if wf_id == 'No Change':
             return None
         elif (wf.id == portal_workflow[wf_id].id):
             return ('selected')
-    
+
     @memoize
     def change_workflow(self):
         """ Changes the workflow on all objects recursively from self """

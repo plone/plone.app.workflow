@@ -80,46 +80,34 @@ function redirect_new_workflow() {
         <div style="margin: 1em 0">
             <input type="checkbox"
                    name="addable"
-                   checked="checked">
+                   checked="checked"
+                   tal:attributes="checked python:view.is_type_globally_allowed(type)">
+            <label>Addable</label>
 
-<tal:comment replace="nothing">
-                   tal:attributes="checked python:test(type_obj.global_allow, 'checkbox', None)"
-</tal:comment>
-
-              <label>Addable</label>
-              <input type="checkbox"
+            <input type="checkbox"
                      name="allow_discussion"
-                     checked="checked">
-
-<tal:comment replace="nothing">
-                     tal:attributes="checked python:test(type_obj.allow_discussion, 'checkbox', None)"
-</tal:comment>
-
-
+                     checked="checked"
+                     tal:attributes="checked python:view.is_type_discussion_allowed(type)">
             <label>Allow comments</label>
+
             <input type="checkbox"
                    name="enable_versioning"
-                   tal:define="isVersionable 
-                       python:type_obj.id in here.portal_repository.getVersionableContentTypes()">
-
-<tal:comment replace="nothing">
-                   tal:attributes="checked python:test(isVersionable, 'checkbox', None)"
-</tal:comment>
-
+                   tal:attributes="checked python:view.is_type_versionable(type_id)">
             <label>Enable versioning</label>
+
             <input type="checkbox"
                    name="visibility"
                    checked="checked"
-                   tal:define="blacklisted site_properties/types_not_searched;">
-<tal:comment replace="nothing">
-                   tal:attributes="checked python:test(type_obj.id not in blacklisted, 'checkbox', None)"
-</tal:comment>
+                   tal:attributes="checked python:view.is_type_searchable(type_id)">
             <label>Visible in searches</label>
+
         </div>
 
         <div style="float: left">
             <label>Current workflow</label><br />
             <span tal:content="python: view.current_workflow(type_id)">Community Workflow</span>
+
+
 
 <tal:comment replace="nothing">
             <span tal:content="python:wtool.getChainForPortalType(type_id)[0]">Community Workflow</span>
@@ -131,9 +119,11 @@ function redirect_new_workflow() {
         <div style="float: left; margin-left:3em">
             <label>New workflow</label><br />
             <select onchange="javascript:redirect_new_workflow()" id="workflows" name="wf_id">
-                <option>No change</option>
+                <option>No Change</option>
+
                 <tal:wfs repeat="wf python:portal.portal_workflow.objectValues()"
-                    tal:define="wf_id python:request.get('wf_id', 'No change')">
+                    tal:define="wf_id python:request.get('wf_id', 'No Change')">
+
                     <option tal:content="python: wf.id"
                             tal:attributes="selected python: view.is_wf_selected(wf, wf_id)">Intranet Workflow
                     </option>
@@ -144,11 +134,11 @@ function redirect_new_workflow() {
         </div>
 
         <tal:check_wf_in_request tal:condition="exists: request/wf_id" >
-          <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No change'">
+          <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No Change'">
 
             <!-- This only shows up if you actually selected a change in the workflow -->
 
-            <div class="visualClear" tal:define="wf_id python:request.get('wf_id', 'No change')">
+            <div class="visualClear" tal:define="wf_id python:request.get('wf_id', 'No Change')">
                 <label>State Mapping</label>
 
                 <div class="formHelp">
@@ -195,7 +185,7 @@ function redirect_new_workflow() {
             <!-- This only shows up if changes were made to the workflow settings, since the remapping
                  could be expensive --> 
             <tal:check_wf_in_request tal:condition="exists: request/wf_id" >
-              <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No change'">
+              <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No Change'">
                 <img tal:replace="structure here/info_icon.gif" />
                 <span style="color: red">This may take a long time, and may slow down Plone significantly.</span>
               </tal:check_wf_in_request_change_selected>
