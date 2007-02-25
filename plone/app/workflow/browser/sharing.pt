@@ -89,12 +89,11 @@
                 <input type="text" 
                        id="user-group-search"
                        size="30" 
-                       style="color: #666" 
                        name="search_term"
-                       title="Type here to add user/group" 
+                       title="Search for user or group" 
                        i18n:attributes="title"
                        class="inputLabel"
-                       value=""/>
+                       value="" />
                 <input type="submit" 
                        name="form.button.Search"
                        value="Search"
