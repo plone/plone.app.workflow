@@ -16,9 +16,10 @@ from plone.app.workflow.interfaces import ISharingPageRole
 class PrefsTypesView(BrowserView):
     
     # Actions
-    
+
     template = ViewPageTemplateFile('prefs_types.pt')
-    
+
+
     def __call__(self):
         """Perform the update and redirect if necessary, or render the page
         """
@@ -31,6 +32,10 @@ class PrefsTypesView(BrowserView):
     
         if submitted and not cancel_button:
             
+            # Update workflow 
+            portal_workflow = getToolByName(self, 'portal_workflow')
+            portal_workflow.setChainForPortalTypes((form['type_id'],), (form['wf_id'],))
+
             # Update workflow state mappings
             self.change_workflow()
 
@@ -152,7 +157,16 @@ class PrefsTypesView(BrowserView):
         portal = getToolByName(aq_inner(self.context), 'portal_url').getPortalObject()
         typestool = getToolByName(self, 'portal_types')
         wftool = getToolByName(self, 'portal_workflow')
+
         cbt = wftool._chains_by_type
+
+        wf_mapping = { ( 'plone_workflow', 'community_workflow') :
+                     { 'private'   : 'private'
+                     , 'visible'   : 'public_draft'
+                     , 'pending'   : 'pending'
+                     , 'published' : 'published'
+                     }
+                 }
      
         def walk(obj):
             num = 0
@@ -162,11 +176,13 @@ class PrefsTypesView(BrowserView):
                 if chain is None or chain:
                     if chain is None:
                         chain = wftool._default_chain
+
                     if hasattr(obj, 'workflow_history'):
                         wf_hist = getattr(obj, 'workflow_history', {})
+
                         for key in wf_hist.keys():
                             for to_wf in chain:
-                                mapping = wf_mapping.get((key,to_wf), {})
+                                mapping = wf_mapping.get((key,'community_workflow'), {})
                                 if mapping:
                                     wf_entries = wf_hist[key]
                                     last_entry = wf_entries[-1]
@@ -196,15 +212,17 @@ class PrefsTypesView(BrowserView):
                 objlist += list(obj.opaqueValues())
             for o in objlist:
                 num += walk(o)
+
             return num
      
         num = 0
         # Iterate over objects, changing the workflow id in the workflow_history
-        objlist = list(self.objectValues())
+        objlist = list(portal.objectValues())
         if hasattr(self, 'opaqueValues'):
             objlist += list(self.opaqueValues())
         for o in objlist:
-            num += walk(o)
+            if o.id == 'front-page': 
+                num += walk(o)
        
         # Return the number of objects for which we changed workflow
         return num 
