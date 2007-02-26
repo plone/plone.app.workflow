@@ -110,7 +110,10 @@ class PrefsTypesView(BrowserView):
         if wf_id == 'No Change':
             return None
         else:
-            return (portal_workflow[wf_id].states.keys())
+            if wf_id == 'No Workflow':
+                return ''
+            else:
+                return (portal_workflow[wf_id].states.keys())
 
     @memoize
     def states_for_current_workflow(self, type_id):
@@ -128,11 +131,17 @@ class PrefsTypesView(BrowserView):
         """
         context = aq_inner(self.context)
         portal_workflow = getToolByName(context, 'portal_workflow')
-
         if wf_id == 'No Change':
-            return None
-        elif (wf.id == portal_workflow[wf_id].id):
-            return ('selected')
+            return ''
+        else:
+            if (wf_id != 'No Workflow'):
+                if (wf.id == portal_workflow[wf_id].id):
+                    return 'selected'
+    @memoize
+    def user_friendly_types(self):
+        plone_tool = getToolByName(self, 'plone_utils')
+        portal_types = plone_tool.getUserFriendlyTypes()
+        return portal_types
 
     @memoize
     def change_workflow(self):

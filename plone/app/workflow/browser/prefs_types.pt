@@ -61,7 +61,7 @@ function redirect_new_workflow() {
         <legend >
 
           <select onchange="javascript:redirect()" id="types" name="type_id">
-            <tal:types repeat="type python:[portal.portal_types.getTypeInfo(t) for t in here.getPortalTypes()]">
+            <tal:types repeat="type python:[portal.portal_types.getTypeInfo(t) for t in view.user_friendly_types()]">
               <option
                 tal:content="type/Title"
                 tal:attributes="value type/id;
@@ -115,6 +115,7 @@ function redirect_new_workflow() {
 
                 <tal:wfs repeat="wf python:portal.portal_workflow.objectValues()"
                     tal:define="wf_id python:request.get('wf_id', 'No Change')">
+
                     <option tal:content="python: view.wf_title_for_id(wf.id)"
                             tal:attributes="selected python: view.is_wf_selected(wf, wf_id);
                                             value python: wf.id">Intranet Workflow
