@@ -43,7 +43,7 @@
         </tr>
     </thead>
 
-    <tbody>
+    <tbody metal:define-macro="user-group-sharing-settings" id="user-group-sharing-settings">
         <tal:entries repeat="entry role_settings">
             <tr tal:define="is_group python:entry['type'] == 'group';
                             oddrow repeat/entry/odd;"
@@ -94,7 +94,8 @@
                        i18n:attributes="title"
                        class="inputLabel"
                        value="" />
-                <input type="submit" 
+                <input type="submit"
+                       id="sharing-save-button" 
                        name="form.button.Search"
                        value="Search"
                        class="searchButton" />

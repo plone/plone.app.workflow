@@ -9,4 +9,11 @@
         permission="cmf.ChangeLocalRoles"
         />
         
+    <browser:page
+        for="*"
+        class=".kss_sharing.KssSharingView"
+        name="updateSharingInfo"
+        attribute="updateSharingInfo"
+        permission="cmf.ChangeLocalRoles"
+      />
 </configure>
