@@ -94,6 +94,14 @@ class PrefsTypesView(BrowserView):
         blacklisted = portal_properties.site_properties.types_not_searched
         return (type_id not in blacklisted)
 
+    @memoize
+    def wf_title_for_id(self, wf_id):
+        context = aq_inner(self.context)
+        portal_workflow = getToolByName(context, 'portal_workflow')
+        try:
+            return (portal_workflow[wf_id].title)
+        except IndexError:
+            return ''
  
     @memoize
     def states_for_new_workflow(self, wf_id):
