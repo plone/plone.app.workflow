@@ -10,7 +10,13 @@ setup(name='plone.app.workflow',
 plone.app.workflow contains workflow- and security-related features for Plone,
 including the sharing view.
 """,
-      classifiers=[], # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
+      classifiers=[
+        "Framework :: Plone",
+        "Framework :: Zope2",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
+        "Programming Language :: Python",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        ],
       keywords='',
       author='Martin Aspeli',
       author_email='plone-developers@lists.sourceforge.net',
