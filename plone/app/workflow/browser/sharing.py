@@ -224,12 +224,11 @@ class SharingView(BrowserView):
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
-        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
-        for m in portal_membership.searchForMembers(name=search_term):
-            user_id = m.getId()
-            if user_id not in existing_users:
-                info.append(dict(id    = user_id,
-                                 title = m.getProperty('fullname', None) or m.getUserName(),
+        pas = getToolByName(aq_inner(self.context), 'acl_users')
+        for userinfo in pas.searchUsers(fullname=search_term):
+            if userinfo['userid'] not in existing_users:
+                info.append(dict(id    = userinfo['userid'],
+                                 title = userinfo.get('title', userinfo['userid']),
                                  type  = 'user',
                                  roles = empty_roles.copy()))
         return info
@@ -249,12 +248,11 @@ class SharingView(BrowserView):
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
-        portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
-        for g in portal_groups.searchForGroups(name=search_term):
-            group_id = g.getId()
-            if group_id not in existing_groups:
-                info.append(dict(id    = group_id,
-                                 title = g.getGroupTitleOrName(),
+        pas = getToolByName(aq_inner(self.context), 'acl_users')
+        for groupinfo in pas.searchGroups(id=search_term):
+            if groupinfo['groupid'] not in existing_groups:
+                info.append(dict(id    = groupinfo['groupid'],
+                                 title = groupinfo.get('title', groupinfo['groupid']),
                                  type  = 'group',
                                  roles = empty_roles.copy()))
         return info
