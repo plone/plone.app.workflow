@@ -1,6 +1,6 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      i18n:domain="plone"><metal:block use-macro="here/global_defines/macros/defines" />
+      i18n:domain="plone">
         <tal:defines define="here nocall:options/instance;
                              view nocall:options/view;
                              available_roles view/roles;
