@@ -74,10 +74,11 @@ function redirect_new_workflow() {
 
 
         <label>Title</label>
-        <input type="text" value="Page"
-            tal:attributes="value type_obj/Title"/>
+
+        <input name="title" type="text" tal:attributes="value type_obj/Title"/>
         
         <div style="margin: 1em 0">
+
             <input type="checkbox"
                    name="addable"
                    checked="checked"
@@ -108,7 +109,7 @@ function redirect_new_workflow() {
             <span tal:content="python: view.current_workflow(type_id)">Community Workflow</span>
         </div>
 
-        <div style="float: left; margin-left:3em">
+        <div style="float: left; margin-top: 1em"> 
             <label>New workflow</label><br />
             <select onchange="javascript:redirect_new_workflow()" id="workflows" name="wf_id">
                 <option value="No Change">No Change</option>
@@ -126,8 +127,8 @@ function redirect_new_workflow() {
             </select>
         </div>
 
-        <tal:check_wf_in_request tal:condition="exists: request/wf_id" >
-          <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No Change'">
+        <tal:check_wf_in_request                 tal:condition="exists: request/wf_id" >
+        <tal:check_wf_in_request_change_selected tal:condition="python: request.wf_id != 'No Change'">
 
             <!-- This only shows up if you actually selected a change in the workflow -->
 
@@ -168,7 +169,14 @@ function redirect_new_workflow() {
 
             </div>
 
-          </tal:check_wf_in_request_change_selected>
+        </tal:check_wf_in_request_change_selected>
+        </tal:check_wf_in_request>
+
+        <tal:check_wf_in_request                     tal:condition="exists: request/wf_id" >
+        <tal:check_wf_in_request_change_selected_not tal:condition="python: request.wf_id == 'No Change'">
+
+
+        </tal:check_wf_in_request_change_selected_not>
         </tal:check_wf_in_request>
 
         <div class="visualClear" style="float:left;margin-top:1em" class="formControls">

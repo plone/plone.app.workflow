@@ -29,15 +29,30 @@ class PrefsTypesView(BrowserView):
         submitted = form.get('form.submitted', False)
         save_button = form.get('form.button.Save', None) is not None
         cancel_button = form.get('form.button.Cancel', None) is not None
-    
+
         if submitted and not cancel_button:
-            
+
+            # Update content type title
+            plone_tool = getToolByName(self, 'plone_utils')
+            types_tool = getToolByName(self, 'portal_types')
+            type_id = form['type_id']
+            title = form['title']
+            #types_list = plone_tool.getUserFriendlyTypes()
+            types_dict = types_tool.listTypeTitles()
+            if type_id in types_dict:
+                if types_dict[type_id] != title:
+                    #print ("setting title for ", title)
+                    ti = types_tool.getTypeInfo(type_id)
+                    ti.title = title
+
             # Update workflow 
-            portal_workflow = getToolByName(self, 'portal_workflow')
-            portal_workflow.setChainForPortalTypes((form['type_id'],), (form['wf_id'],))
+            #portal_workflow = getToolByName(self, 'portal_workflow')
+            #portal_workflow.setChainForPortalTypes((form['type_id'],), (form['wf_id'],))
 
             # Update workflow state mappings
-            self.change_workflow()
+            #self.change_workflow()
+            #self.request.response.redirect(self.context.absolute_url())
+            return self.template()
 
         # Other buttons return to the sharing page
         if save_button or cancel_button:
