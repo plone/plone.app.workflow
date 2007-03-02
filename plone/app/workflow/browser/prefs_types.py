@@ -95,10 +95,13 @@ class PrefsTypesView(BrowserView):
             return (ti.getProperty('global_allow'))
 
     @memoize
-    def is_type_discussion_allowed(self, type):
+    def is_type_discussion_allowed(self, type_id):
         """Is this type configured to allow discussion?
         """
-        return ''
+        portal_types = getToolByName(self, 'portal_types')
+        ti = portal_types.getTypeInfo(type_id)
+        if ('allow_discussion' in ti.propertyIds()):
+            return (ti.getProperty('allow_discussion'))
 
     @memoize
     def is_type_versionable(self, type_id):
