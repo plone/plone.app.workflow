@@ -86,10 +86,13 @@ class PrefsTypesView(BrowserView):
             return ('selected')
 
     @memoize
-    def is_type_globally_allowed(self, type):
+    def is_type_globally_allowed(self, type_id):
         """Is this type globally allowed? 
         """
-        return ''
+        portal_types = getToolByName(self, 'portal_types')
+        ti = portal_types.getTypeInfo(type_id)
+        if ('global_allow' in ti.propertyIds()):
+            return (ti.getProperty('global_allow'))
 
     @memoize
     def is_type_discussion_allowed(self, type):
