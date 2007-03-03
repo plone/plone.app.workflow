@@ -12,4 +12,3 @@ class ISharingPageRole(Interface):
     
     required_permission = schema.TextLine(title=u"Permission required to manag this local role",
                                           required=False)
-    
