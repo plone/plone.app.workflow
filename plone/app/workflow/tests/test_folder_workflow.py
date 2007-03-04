@@ -6,7 +6,7 @@ import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
-from Products.CMFPlone.tests import PloneTestCase
+from base import WorkflowTestCase
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 
@@ -17,7 +17,7 @@ from Products.CMFCore.permissions import ListFolderContents
 from Products.CMFCore.permissions import ModifyPortalContent
 
 
-class TestFolderWorkflow(PloneTestCase.PloneTestCase):
+class TestFolderWorkflow(WorkflowTestCase):
 
     def afterSetUp(self):
         self.catalog = self.portal.portal_catalog

@@ -7,6 +7,7 @@ if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Products.CMFPlone.tests import PloneTestCase
+from base import WorkflowTestCase
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 
@@ -19,7 +20,7 @@ from Products.CMFCalendar.permissions import ChangeEvents
 default_user = PloneTestCase.default_user
 
 
-class TestDefaultWorkflow(PloneTestCase.PloneTestCase):
+class TestDefaultWorkflow(WorkflowTestCase):
 
     def afterSetUp(self):
         self.catalog = self.portal.portal_catalog
