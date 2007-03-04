@@ -63,7 +63,9 @@ def remap_workflow(context, type_ids, chain, state_map={}):
         
         old_state = None
         if old_wf is not None:
-            old_state = portal_workflow.getStatusOf(old_wf.getId(), obj).get('review_state', None)
+            old_status = portal_workflow.getStatusOf(old_wf.getId(), obj)
+            if old_status is not None:
+                old_state = old_status.get('review_state', None)
             
         # Now add a transition
         for new_wf_name in target_chain:
