@@ -2,10 +2,6 @@
 # Tests the folder workflow
 #
 
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
 from base import WorkflowTestCase
 
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -447,6 +443,3 @@ def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(TestFolderWorkflow))
     return suite
-    
-if __name__ == '__main__':
-    framework()
