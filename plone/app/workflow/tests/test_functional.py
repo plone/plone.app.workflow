@@ -5,7 +5,7 @@ from Testing.ZopeTestCase import FunctionalDocFileSuite
 from base import WorkflowFunctionalTestCase
 
 def test_suite():
-    tests = ['OneStateWorkflow.txt',]
+    tests = ['onestateworkflow.txt',]
     suite = TestSuite()
     for test in tests:
         suite.addTest(FunctionalDocFileSuite(test,
