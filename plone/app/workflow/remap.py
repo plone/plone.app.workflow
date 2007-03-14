@@ -1,12 +1,14 @@
 import transaction
+from zope.component import getUtility
+
+from DateTime import DateTime
+
+from Products.CMFCore.interfaces import ICatalogTool
+from Products.CMFCore.interfaces import IConfigurableWorkflowTool
 
 SAVE_THRESHOLD = 100 # Do a savepoint every so often
 _marker = object()
 
-from Products.CMFCore.utils import getToolByName
-from Globals import PersistentMapping
-from Acquisition import aq_base
-from DateTime import DateTime
 
 def remap_workflow(context, type_ids, chain, state_map={}):
     """Change the workflow for each type in type_ids to use the workflow
@@ -15,7 +17,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     state of the new workflow.
     """
     
-    portal_workflow = getToolByName(context, 'portal_workflow')
+    portal_workflow = getUtility(IConfigurableWorkflowTool)
     
     default_chain = portal_workflow.getDefaultChain()
     chains_by_type = dict(portal_workflow.listChainOverrides())
@@ -46,7 +48,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     if target_chain is None:
         target_chain = default_chain
     
-    portal_catalog = getToolByName(context, 'portal_catalog')
+    portal_catalog = getUtility(ICatalogTool)
     
     # Then update the state of each
     remapped_count = 0

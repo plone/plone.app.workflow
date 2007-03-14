@@ -1,23 +1,11 @@
 from zope.interface import implements
-from zope.component import getUtility, getMultiAdapter
-
-from Acquisition import aq_inner
-
-from Products.CMFCore.utils import getToolByName
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.component import getMultiAdapter
 
 from kss.core.interfaces import IKSSView
 from plone.app.kss.azaxview import AzaxBaseView as base
 
-from plone.portlets.interfaces import IPortletManager
-from plone.portlets.interfaces import IPortletManagerRenderer
-
-from plone.portlets.utils import unhashPortletInfo
-from plone.app.portlets.utils import assignment_mapping_from_key
-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from zope.component import getMultiAdapter
 
 class KssSharingView(base):
     """Kss view for sharing page.

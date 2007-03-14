@@ -1,17 +1,20 @@
-from zope.component import getUtilitiesFor, queryUtility
+from plone.memoize.instance import memoize, clearafter
 
-from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.component import getUtility
+from zope.component import getUtilitiesFor
 
 from Acquisition import aq_inner, aq_parent, aq_base
 from AccessControl import Unauthorized
 
-from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
-
-from plone.memoize.instance import memoize, clearafter
+from Products.CMFCore.interfaces import IMembershipTool
+from Products.CMFCore.interfaces import ISiteRoot
+from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.PlonePAS.interfaces.group import IGroupTool
 
 from plone.app.workflow.interfaces import ISharingPageRole
+
 
 class SharingView(BrowserView):
     
@@ -70,7 +73,7 @@ class SharingView(BrowserView):
             - title
         """
         context = aq_inner(self.context)
-        portal_membership = getToolByName(context, 'portal_membership')
+        portal_membership = getUtility(IMembershipTool)
         
         pairs = []
         
@@ -125,9 +128,9 @@ class SharingView(BrowserView):
         
         context = aq_inner(self.context)
         
-        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
-        portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
-        portal = getToolByName(aq_inner(self.context), 'portal_url').getPortalObject()
+        portal_membership = getUtility(IMembershipTool)
+        portal_groups = getUtility(IGroupTool)
+        portal = getUtility(ISiteRoot)
         acl_users = getattr(portal, 'acl_users')
         
         info = []
@@ -223,8 +226,9 @@ class SharingView(BrowserView):
                                 if u['type'] == 'user'])
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
-        
-        pas = getToolByName(aq_inner(self.context), 'acl_users')
+
+        portal = getUtility(ISiteRoot)
+        pas = getattr(portal, 'acl_users')
         for userinfo in pas.searchUsers(fullname=search_term):
             if userinfo['userid'] not in existing_users:
                 info.append(dict(id    = userinfo['userid'],
@@ -247,8 +251,9 @@ class SharingView(BrowserView):
                                 if g['type'] == 'group'])
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
-        
-        pas = getToolByName(aq_inner(self.context), 'acl_users')
+
+        portal = getUtility(ISiteRoot)
+        pas = getattr(portal, 'acl_users')
         for groupinfo in pas.searchGroups(id=search_term):
             if groupinfo['groupid'] not in existing_groups:
                 info.append(dict(id    = groupinfo['groupid'],
@@ -264,7 +269,7 @@ class SharingView(BrowserView):
         if not self.inherited(context):
             return []
         
-        portal = getToolByName(context, 'portal_url').getPortalObject()
+        portal = getUtility(ISiteRoot)
         result = []
         cont = True
         if portal != context:
@@ -307,7 +312,7 @@ class SharingView(BrowserView):
         """Enable or disable local role acquisition on the context.
         """
         context = aq_inner(self.context)
-        portal_membership = getToolByName(context, 'portal_membership')
+        portal_membership = getUtility(IMembershipTool)
         
         if not portal_membership.checkPermission(permissions.ModifyPortalContent, context):
             raise Unauthorized
