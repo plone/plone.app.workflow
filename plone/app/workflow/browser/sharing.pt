@@ -23,7 +23,7 @@
     You can control who can view and edit your item using the list below.
 </p>
 
-<form method="POST" 
+<form method="post" 
       tal:attributes="action string:${context/absolute_url}/@@sharing">
       
       <input type="hidden" name="form.submitted:boolean" value="True" />
