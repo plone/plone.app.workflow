@@ -137,7 +137,7 @@ class SharingView(BrowserView):
         
         # This logic is adapted from computeRoleMap.py
         
-        local_roles = acl_users.getLocalRolesForDisplay(context)
+        local_roles = acl_users._getLocalRolesForDisplay(context)
         acquired_roles = self._inherited_roles()
         available_roles = [r['id'] for r in self.roles()]
 
@@ -277,7 +277,7 @@ class SharingView(BrowserView):
             while cont:
                 if not getattr(parent, 'acl_users', False):
                     break
-                userroles = parent.acl_users.getLocalRolesForDisplay(parent)
+                userroles = parent.acl_users._getLocalRolesForDisplay(parent)
                 for user, roles, role_type, name in userroles:
                     # Find user in result
                     found = 0
