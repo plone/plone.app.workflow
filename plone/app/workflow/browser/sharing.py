@@ -12,9 +12,12 @@ from Products.CMFCore.interfaces import ISiteRoot
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.PlonePAS.interfaces.group import IGroupTool
+from Products.CMFPlone import PloneMessageFactory as _
 
 from plone.app.workflow.interfaces import ISharingPageRole
 
+AUTH_GROUP = 'AuthenticatedUsers'
+STICKY = (AUTH_GROUP,)
 
 class SharingView(BrowserView):
     
@@ -125,7 +128,6 @@ class SharingView(BrowserView):
 
         Returns a list of dicts as per role_settings()
         """
-        
         context = aq_inner(self.context)
         
         portal_membership = getUtility(IMembershipTool)
@@ -135,7 +137,7 @@ class SharingView(BrowserView):
         
         info = []
         
-        # This logic is adapted from computeRoleMap.py
+        # # This logic is adapted from computeRoleMap.py
         
         local_roles = acl_users.getLocalRolesForDisplay(context)
         acquired_roles = self._inherited_roles()
@@ -147,6 +149,7 @@ class SharingView(BrowserView):
             items[rid] = dict(id       = rid,
                               name     = name,
                               type     = rtype,
+                              sitewide = [],
                               acquired = roles,
                               local    = [],)
                                 
@@ -158,12 +161,26 @@ class SharingView(BrowserView):
                 items[rid] = dict(id       = rid,
                                   name     = name,
                                   type     = rtype,
+                                  sitewide = [],
                                   acquired = [],
                                   local    = roles,)
 
-        # Sort the list: first Owner role, then groups, then users, and then alphabetically
+        # Make sure we always get the authenticated users virtual group
+        if AUTH_GROUP not in items:
+            items[AUTH_GROUP] = dict(id = AUTH_GROUP,
+                                     name = _(u'Authenticated Users'),
+                                     type  = 'group',
+                                     sitewide = [],
+                                     acquired = [],
+                                     local = [],)
 
-        dec_users = [('Owner' not in a['local'], a['type'], a['name'], a) for a in items.values()]
+        # Sort the list: first the authenticated users virtual group, then 
+        # all other groups and then all users, alphabetically
+
+        dec_users = [( a['id'] not in STICKY,
+                       a['type'], 
+                       a['name'],
+                       a) for a in items.values()]
         dec_users.sort()
         
         # Add the items to the info dict, assigning full name if possible.
@@ -181,6 +198,10 @@ class SharingView(BrowserView):
             elif item['type'] == 'group':
                 g = portal_groups.getGroupById(rid)
                 name = g.getGroupTitleOrName()
+                
+                # This isn't a proper group, so it needs special treatment :(
+                if rid == AUTH_GROUP:
+                    name = _(u'Authenticated Users')
             
             info_item = dict(id    = item['id'],
                              type  = item['type'],
@@ -199,17 +220,8 @@ class SharingView(BrowserView):
                 else:
                     info_item['roles'][r] = False
                     
-            # Abort if we have no useful roles to manage
-            if not have_roles:
-                continue
-                             
-            # Use full name if possible
-            if not item['type'] == 'group':
-                member = portal_membership.getMemberInfo(name)
-                if member is not None and member['fullname']:
-                    info_item['name'] = member['fullname']
-                    
-            info.append(info_item)
+            if have_roles or rid in STICKY:
+                info.append(info_item)
             
         return info
         
