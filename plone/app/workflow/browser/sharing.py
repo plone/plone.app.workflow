@@ -168,7 +168,7 @@ class SharingView(BrowserView):
         # Make sure we always get the authenticated users virtual group
         if AUTH_GROUP not in items:
             items[AUTH_GROUP] = dict(id = AUTH_GROUP,
-                                     name = _(u'Authenticated Users'),
+                                     name = _(u'Logged-in users'),
                                      type  = 'group',
                                      sitewide = [],
                                      acquired = [],
@@ -201,7 +201,7 @@ class SharingView(BrowserView):
                 
                 # This isn't a proper group, so it needs special treatment :(
                 if rid == AUTH_GROUP:
-                    name = _(u'Authenticated Users')
+                    name = _(u'Logged-in users')
             
             info_item = dict(id    = item['id'],
                              type  = item['type'],
