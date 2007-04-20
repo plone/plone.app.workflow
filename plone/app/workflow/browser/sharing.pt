@@ -14,10 +14,16 @@
     "<span tal:content="object_title" tal:omit-tag="" i18n:name="folder">title</span>"
 </h1>
 
-<div tal:condition="here/@@plone/isDefaultPageInFolder">
-   <b>You are adjusting the sharing privileges for a default view in a container, to adjust them for the entire container, go</b>
-   <a href="" title="sharing contents" tal:attributes="href python:'/'.join(here.aq_inner.aq_parent.getPhysicalPath()) + '/sharing'">here</a>.
-</div>
+<dl class="portalMessage info">
+    <dt i18n:translate="">
+        Info
+    </dt>
+    <dd i18n:translate="help_sharing_page_default_page">
+        You are adjusting the sharing privileges for a default view in a container.
+        To adjust them for the entire container, go
+        <a tal:attributes="href string:${context/aq_parent/absolute_url}/sharing'">here</a>
+    </dd>
+</dl>
 
 <p class="documentDescription">
     You can control who can view and edit your item using the list below.
