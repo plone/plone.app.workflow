@@ -21,8 +21,11 @@
     </dt>
     <dd i18n:translate="help_sharing_page_default_page">
         You are adjusting the sharing privileges for a default view in a container.
-        To adjust them for the entire container, go
-        <a tal:attributes="href string:${context_state/folder}/sharing'">here</a>
+        To adjust them for the entire container,
+        <a i18n:name="go_here"
+           i18n:translate="help_sharing_go_here"
+           tal:define="folder context_state/folder"
+           tal:attributes="href string:${folder/absolute_url}/sharing">go here</a>.
     </dd>
 </dl>
 
