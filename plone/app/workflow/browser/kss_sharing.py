@@ -1,10 +1,10 @@
 from zope.interface import implements
 from zope.component import getMultiAdapter
 
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
 from kss.core.interfaces import IKSSView
 from plone.app.kss.azaxview import AzaxBaseView as base
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 
 class KssSharingView(base):
