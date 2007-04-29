@@ -5,6 +5,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Acquisition import aq_inner, aq_parent, aq_base
 from AccessControl import Unauthorized
+from zExceptions import Forbidden
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
@@ -36,6 +37,9 @@ class SharingView(BrowserView):
         cancel_button = form.get('form.button.Cancel', None) is not None
     
         if submitted and not cancel_button:
+
+            if not self.request.get('REQUEST_METHOD','GET') == 'POST':
+                raise Forbidden
             
             # Update the acquire-roles setting
             inherit = bool(form.get('inherit', False))
