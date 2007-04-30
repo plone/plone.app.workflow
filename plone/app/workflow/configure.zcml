@@ -17,6 +17,11 @@
         />
         
     <utility
+        name="Contributor"
+        factory=".localroles.ContributorRole"
+        />
+        
+    <utility
         name="Reviewer"
         factory=".localroles.ReviewerRole"
         />

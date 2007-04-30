@@ -17,6 +17,12 @@ class EditorRole(object):
     title = _(u"Can edit")
     required_permission = None
     
+class ContributorRole(object):
+    implements(ISharingPageRole)
+    
+    title = _(u"Can add")
+    required_permission = None
+    
 class ReviewerRole(object):
     implements(ISharingPageRole)
     
