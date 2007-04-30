@@ -15,17 +15,16 @@ class KssSharingView(base):
     template = ViewPageTemplateFile('sharing.pt')
     macro_wrapper = ViewPageTemplateFile('macro_wrapper.pt')
     
-    def updateSharingInfo(self, search_term='', form_vars={}):
-    
+    def updateSharingInfo(self, search_term=''):
+
         sharing = getMultiAdapter((self.context, self.request,), name="sharing")
     
-        inherit = bool(form_vars.get('inherit', False))
+        inherit = bool(self.request.form.get('inherit', False))
         sharing.update_inherit(inherit)
         
-        # XXX: This doesn't work because the request marshalling appears to
-        # be wrong, especially when there are multiple rows with things 
-        # selected.
-        entries = form_vars.get('entries', [])
+        # Extract currently selected setting from the form
+        # to take these into account (also on re-submit of the form).
+        entries = self.request.form.get('entries', [])
         
         roles = [r['id'] for r in sharing.roles()]
         settings = []
@@ -41,16 +40,12 @@ class KssSharingView(base):
         # use macro in sharing.pt for that
 
         # get the html from a macro
-        the_id = 'user-group-sharing-settings'
         ksscore = self.getCommandSet('core')
-        macro = self.template.macros[the_id]
-        res = self.macro_wrapper(the_macro=macro, instance=self.context, view=sharing)
-        
-        # self.macroContent does not work, it used restrictedTraverse
-        ksscore.replaceHTML(ksscore.getHtmlIdSelector(the_id), res)
-        the_id = 'user-group-sharing-head'
-        macro = self.template.macros[the_id]
-        res = self.macro_wrapper(the_macro=macro, instance=self.context, view=sharing)
-        ksscore.replaceHTML(ksscore.getHtmlIdSelector(the_id), res)
+
+        for the_id in ['user-group-sharing-settings', 'user-group-sharing-head']:
+            macro = self.template.macros[the_id]
+            res = self.macro_wrapper(the_macro=macro, instance=self.context, view=sharing)
+            ksscore.replaceHTML(ksscore.getHtmlIdSelector(the_id), res)
+
         return self.render()
 
