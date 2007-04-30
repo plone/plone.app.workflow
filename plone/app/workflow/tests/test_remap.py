@@ -43,9 +43,9 @@ class TestRemapWorkflow(WorkflowTestCase):
         self.assertEquals(self._chain(self.portal.d2), ('community_workflow',))
         self.assertEquals(self._chain(self.portal.n1), ('community_workflow',))
                        
-        self.assertEquals(self._state(self.portal.d1), 'public_draft')
-        self.assertEquals(self._state(self.portal.d2), 'public_draft')
-        self.assertEquals(self._state(self.portal.n1), 'public_draft')
+        self.assertEquals(self._state(self.portal.d1), 'visible')
+        self.assertEquals(self._state(self.portal.d2), 'visible')
+        self.assertEquals(self._state(self.portal.n1), 'visible')
         
     def test_remap_with_partial_state_map(self):
         remap_workflow(self.portal, 
@@ -58,7 +58,7 @@ class TestRemapWorkflow(WorkflowTestCase):
         self.assertEquals(self._chain(self.portal.n1), ('community_workflow',))
                        
         self.assertEquals(self._state(self.portal.d1), 'published')
-        self.assertEquals(self._state(self.portal.d2), 'public_draft')
+        self.assertEquals(self._state(self.portal.d2), 'visible')
         self.assertEquals(self._state(self.portal.n1), 'published')
         
     def test_remap_to_no_workflow(self):
@@ -77,7 +77,7 @@ class TestRemapWorkflow(WorkflowTestCase):
                        chain=('community_workflow',))
                        
         self.assertEquals(self._chain(self.portal.i1), ('community_workflow',))
-        self.assertEquals(self._state(self.portal.i1), 'public_draft')
+        self.assertEquals(self._state(self.portal.i1), 'visible')
 
 def test_suite():
     from unittest import TestSuite, makeSuite
