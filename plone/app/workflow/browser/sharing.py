@@ -58,7 +58,7 @@ class SharingView(BrowserView):
                 self.update_role_settings(settings)
             
         # Other buttons return to the sharing page
-        if save_button or cancel_button:
+        if cancel_button:
             postback = False
         
         if postback:
