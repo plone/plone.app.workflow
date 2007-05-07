@@ -45,9 +45,9 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
 
     # Check some forbidden transitions
 
-    def testOwnerCorrectStatePublishDocument(self):
+    def testOwnerCannotPublishDocument(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
-        self.assertRaises(WorkflowException, self.workflow.doActionFor, self.doc, 'private')
+        self.assertRaises(WorkflowException, self.workflow.doActionFor, self.doc, 'publish')
 
     # Check view permission
 
@@ -76,10 +76,14 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.failIf(checkPerm(View, self.doc))
 
     def testViewIsNotAcquiredInPublishedState(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), '')   # not checked
 
     def testViewPublishedDocument(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
         self.login(default_user)
@@ -127,10 +131,14 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.failIf(checkPerm(AccessContentsInformation, self.doc))
 
     def testAccessContentsInformationIsNotAcquiredInPublishedState(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), '') # not checked
 
     def testAccessContentsInformationPublishedDocument(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
         self.login(default_user)
@@ -178,10 +186,14 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.failIf(checkPerm(ModifyPortalContent, self.doc))
 
     def testModifyPortalContentIsNotAcquiredInPublishedState(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishedDocument(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is denied
         self.login(default_user)
@@ -230,10 +242,14 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.failIf(checkPerm(ChangeEvents, self.ev))
 
     def testChangeEventsIsNotAcquiredInPublishedState(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.ev, 'publish')
         self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
 
     def testModifyPublishEvent(self):
+        # transition requires Review portal content
+        self.login('manager')
         self.workflow.doActionFor(self.ev, 'publish')
         # Owner is denied
         self.login(default_user)
