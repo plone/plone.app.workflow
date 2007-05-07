@@ -36,11 +36,11 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
 
     # Check allowed transitions: two for simple publication workflow
 
-    def testOwnerPublishAPrivateDocumentAndViceversa(self):
+    def testOwnerSubmitAPrivateDocumentAndRetract(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
-        self.workflow.doActionFor(self.doc, 'publish')
-        self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'published')
-        self.workflow.doActionFor(self.doc, 'make_private')
+        self.workflow.doActionFor(self.doc, 'submit')
+        self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'pending')
+        self.workflow.doActionFor(self.doc, 'retract')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
 
     # Check some forbidden transitions
