@@ -11,7 +11,7 @@
         
     <browser:page
         for="*"
-        class=".kss_sharing.KssSharingView"
+        class=".kss_sharing.KSSSharingView"
         name="updateSharingInfo"
         attribute="updateSharingInfo"
         permission="cmf.ChangeLocalRoles"
