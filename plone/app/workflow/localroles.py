@@ -8,25 +8,25 @@ from Products.CMFPlone import PloneMessageFactory as _
 class ReaderRole(object):
     implements(ISharingPageRole)
     
-    title = _(u"Can view")
+    title = _(u"title_can_view", default=u"Can view")
     required_permission = None
     
 class EditorRole(object):
     implements(ISharingPageRole)
     
-    title = _(u"Can edit")
+    title = _(u"title_can_edit", default=u"Can edit")
     required_permission = None
     
 class ContributorRole(object):
     implements(ISharingPageRole)
     
-    title = _(u"Can add")
+    title = _(u"title_can_add", default=u"Can add")
     required_permission = None
     
 class ReviewerRole(object):
     implements(ISharingPageRole)
     
-    title = _(u"Can review")
+    title = _(u"title_can_review", default=u"Can review")
     required_permission = None
     
 # Only managers can manage these
