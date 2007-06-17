@@ -132,7 +132,9 @@
         By default, permissions from the container of this item are inherited.
         If you disable this, only the explicitly defined sharing permissions will
         be valid.
-        In the overview, the symbol <img tal:replace="structure context/confirm_icon.gif" />
+        In the overview, the symbol
+        <img i18n:name="image_confirm_icon"
+             tal:replace="structure context/confirm_icon.gif" />
         indicates an inherited value.
 
     </div>
