@@ -28,9 +28,9 @@ class ReviewerRole(object):
     
     title = _(u"title_can_review", default=u"Can review")
     required_permission = None
-    
+
 # Only managers can manage these
-    
+
 # class ManagerRole(object):
 #     implements(ISharingPageRole)
 #     
