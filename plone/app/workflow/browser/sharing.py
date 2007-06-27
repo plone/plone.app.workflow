@@ -241,8 +241,8 @@ class SharingView(BrowserView):
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
-        pas = getToolByName(aq_inner(self.context), 'acl_users')
-        for userinfo in pas.searchUsers(fullname=search_term):
+        hunter = aq_inner(self.context).restrictedTraverse("@@pas_search")
+        for userinfo in hunter.searchUsers(fullname=search_term):
             if userinfo['userid'] not in existing_users:
                 info.append(dict(id    = userinfo['userid'],
                                  title = userinfo.get('title', userinfo['userid']),
@@ -265,8 +265,8 @@ class SharingView(BrowserView):
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
-        pas = getToolByName(aq_inner(self.context), 'acl_users')
-        for groupinfo in pas.searchGroups(id=search_term):
+        hunter = aq_inner(self.context).restrictedTraverse("@@pas_search")
+        for userinfo in hunter.searchGroups(id=search_term):
             if groupinfo['groupid'] not in existing_groups:
                 info.append(dict(id    = groupinfo['groupid'],
                                  title = groupinfo.get('title', groupinfo['groupid']),
