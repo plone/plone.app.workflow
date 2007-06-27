@@ -266,7 +266,7 @@ class SharingView(BrowserView):
         info = []
         
         hunter = aq_inner(self.context).restrictedTraverse("@@pas_search")
-        for userinfo in hunter.searchGroups(id=search_term):
+        for groupinfo in hunter.searchGroups(id=search_term):
             if groupinfo['groupid'] not in existing_groups:
                 info.append(dict(id    = groupinfo['groupid'],
                                  title = groupinfo.get('title', groupinfo['groupid']),
