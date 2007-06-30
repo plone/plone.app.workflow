@@ -503,7 +503,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testStateTitles(self):
         state_titles = { 'private': 'Private',
-                        'visible': 'Public Draft',
+                        'visible': 'Public draft',
                         'pending': 'Pending',
                         'published': 'Published'
                         }

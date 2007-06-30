@@ -68,12 +68,12 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(View, self.doc))
-        # Editor is denied
+        # Editor is allowed
         self.login('editor')
-        self.failIf(checkPerm(View, self.doc))
-        # Reader is denied
+        self.failUnloess(checkPerm(View, self.doc))
+        # Reader is allowed
         self.login('reader')
-        self.failIf(checkPerm(View, self.doc))
+        self.failUnless(checkPerm(View, self.doc))
 
     def testViewIsNotAcquiredInPublishedState(self):
         # transition requires Review portal content
@@ -123,12 +123,12 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(AccessContentsInformation, self.doc))
-        # Editor is denied
+        # Editor is allowed
         self.login('editor')
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
-        # Reader is denied
+        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        # Reader is allowed
         self.login('reader')
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
+        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
 
     def testAccessContentsInformationIsNotAcquiredInPublishedState(self):
         # transition requires Review portal content
