@@ -70,7 +70,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.failIf(checkPerm(View, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnloess(checkPerm(View, self.doc))
+        self.failUnless(checkPerm(View, self.doc))
         # Reader is allowed
         self.login('reader')
         self.failUnless(checkPerm(View, self.doc))
