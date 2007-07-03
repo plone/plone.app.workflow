@@ -40,7 +40,7 @@
 
     <div class="field">
         <input type="text" 
-               id="user-group-search"
+               id="sharing-user-group-search"
                size="30" 
                name="search_term"
                title="Search for user or group" 
@@ -51,7 +51,7 @@
                id="sharing-save-button" 
                name="form.button.Search"
                value="Search"
-               class="searchButton" />
+               class="searchButton allowMultiSubmit" />
     </div>
 
 <table
@@ -93,13 +93,14 @@
                 </td>
                 <td tal:repeat="role available_roles">
                     <tal:block define="entry_role python:entry['roles'][role['id']]">
-                        <img tal:condition="python:entry_role is None" tal:replace="structure context/confirm_icon.gif">
-                        <tal:block condition="python:entry_role is not None">
+                        <img tal:condition="python:entry_role == 'global'" tal:replace="structure context/site_icon.gif">
+                        <img tal:condition="python:entry_role == 'acquired'" tal:replace="structure context/confirm_icon.gif">
+                        <tal:block condition="python:entry_role in (True, False)">
                             <input
                                 type="checkbox"
                                 value="True"
                                 tal:attributes="name string:entries.role_${role/id}:records;
-                                                checked python:entry_role == True and 'checked' or None"
+                                                checked python:entry_role and 'checked' or None"
                                 />
                         </tal:block>
                     </tal:block>
@@ -129,8 +130,11 @@
         In the overview, the symbol
         <img i18n:name="image_confirm_icon"
              tal:replace="structure context/confirm_icon.gif" />
-        indicates an inherited value.
-
+        indicates an inherited value. Similarly, the symbol
+        <img i18n:name="image_link_icon"
+             tal:replace="structure context/site_icon.gif" /> 
+        indicates a global role. These are managed by a site administrator 
+        via the Plone Site Settings.
     </div>
 </div>
 

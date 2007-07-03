@@ -1,4 +1,4 @@
-from zope.component import getUtilitiesFor, queryUtility
+from zope.component import getUtilitiesFor, queryUtility, getMultiAdapter
 
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -139,7 +139,7 @@ class SharingView(BrowserView):
         
         info = []
         
-        # # This logic is adapted from computeRoleMap.py
+        # This logic is adapted from computeRoleMap.py
         
         local_roles = acl_users.getLocalRolesForDisplay(context)
         acquired_roles = self._inherited_roles()
@@ -192,14 +192,17 @@ class SharingView(BrowserView):
             item = d[-1]
             name = item['name']
             rid = item['id']
+            global_roles = set()
             
             if item['type'] == 'user':
-                member = portal_membership.getMemberInfo(rid)
+                member = acl_users.getUserById(rid)
                 if member is not None:
-                    name = member['fullname'] or member['username'] or name
+                    name = member.getProperty('fullname') or member.getUserName() or name
+                    global_roles = set(member.getRoles())
             elif item['type'] == 'group':
                 g = portal_groups.getGroupById(rid)
                 name = g.getGroupTitleOrName()
+                global_roles = set(g.getRoles())
                 
                 # This isn't a proper group, so it needs special treatment :(
                 if rid == AUTH_GROUP:
@@ -213,8 +216,10 @@ class SharingView(BrowserView):
             # Record role settings
             have_roles = False
             for r in available_roles:
-                if r in item['acquired']:
-                    info_item['roles'][r] = None
+                if r in global_roles:
+                    info_item['roles'][r] = 'global'
+                elif r in item['acquired']:
+                    info_item['roles'][r] = 'acquired'
                     have_roles = True # we want to show acquired roles
                 elif r in item['local']:
                     info_item['roles'][r] = True
@@ -232,6 +237,9 @@ class SharingView(BrowserView):
         
         Returns a list of dicts, as per role_settings()
         """
+        context = aq_inner(self.context)
+        acl_users = getToolByName(context, 'acl_users')
+        
         search_term = self.request.form.get('search_term', None)
         if not search_term:
             return []
@@ -241,13 +249,19 @@ class SharingView(BrowserView):
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
-        hunter = aq_inner(self.context).restrictedTraverse("@@pas_search")
+        hunter = getMultiAdapter((context, self.request), name='pas_search')
         for userinfo in hunter.searchUsers(fullname=search_term):
-            if userinfo['userid'] not in existing_users:
-                info.append(dict(id    = userinfo['userid'],
-                                 title = userinfo.get('title', userinfo['userid']),
+            userid = userinfo['userid']
+            if userid not in existing_users:
+                user = acl_users.getUserById(userid)
+                roles = empty_roles.copy()
+                for r in user.getRoles():
+                    if r in roles:
+                        roles[r] = 'global'
+                info.append(dict(id    = userid,
+                                 title = user.getProperty('fullname') or user.getUserName() or userid,
                                  type  = 'user',
-                                 roles = empty_roles.copy()))
+                                 roles = roles))
         return info
         
     def group_search_results(self):
@@ -255,6 +269,8 @@ class SharingView(BrowserView):
         
         Returns a list of dicts, as per role_settings()
         """
+        context = aq_inner(self.context)
+        portal_groups = getToolByName(context, 'portal_groups')
         
         search_term = self.request.form.get('search_term', None)
         if not search_term:
@@ -265,13 +281,19 @@ class SharingView(BrowserView):
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
-        hunter = aq_inner(self.context).restrictedTraverse("@@pas_search")
+        hunter = getMultiAdapter((context, self.request), name='pas_search')
         for groupinfo in hunter.searchGroups(id=search_term):
-            if groupinfo['groupid'] not in existing_groups:
-                info.append(dict(id    = groupinfo['groupid'],
-                                 title = groupinfo.get('title', groupinfo['groupid']),
+            groupid = groupinfo['groupid']
+            if groupid not in existing_groups:
+                group = portal_groups.getGroupById(groupid)
+                roles = empty_roles.copy()
+                for r in group.getRoles():
+                    if r in roles:
+                        roles[r] = 'global'                
+                info.append(dict(id    = groupid,
+                                 title = group.getGroupTitleOrName(),
                                  type  = 'group',
-                                 roles = empty_roles.copy()))
+                                 roles = roles))
         return info
         
     def _inherited_roles(self):
