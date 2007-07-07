@@ -15,6 +15,9 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     state of the new workflow.
     """
     
+    if chain is None:
+        chain = '(Default)'
+
     portal_workflow = getToolByName(context, 'portal_workflow')
     
     default_chain = portal_workflow.getDefaultChain()
@@ -24,27 +27,36 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     old_chains = dict([(t, chains_by_type.get(t, default_chain)) for t in type_ids])
 
     # Update the workflow chain in portal_workflows.
-    portal_workflow.setChainForPortalTypes(type_ids, chain)
+    if chain=='(Default)':
+        # The workflow tool has no API to do this
+        cbt=portal_workflow._chains_by_type
+        for type in type_ids:
+            if cbt.has_key(type):
+                del cbt[type]
+    else:
+        portal_workflow.setChainForPortalTypes(type_ids, chain)
 
-    # If we were setting to the "no workflow" chain, there are no updates
+    # If we were setting to the empty "no workflow" chain, there are no updates
     # to be made. Security will be left as it was.
-    if chain is not None and len(chain) == 0:
+    if len(chain) == 0:
         return
     
     # Otherwise, we need to remap
     
     chain_workflows = {}
-    if chain is not None:
-        for c in chain:
+
+    if chain=='(Default)':
+        chain = default_chain
+    for c in chain:
+        if c not in chain_workflows:
             chain_workflows[c] = getattr(portal_workflow, c)
+
     for oc in old_chains.values():
+        if oc=='(Default)':
+            oc = default_chain
         for c in oc:
             if c not in chain_workflows:
                 chain_workflows[c] = getattr(portal_workflow, c)
-    
-    target_chain = chain
-    if target_chain is None:
-        target_chain = default_chain
     
     portal_catalog = getToolByName(context, 'portal_catalog')
     
@@ -68,7 +80,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
                 old_state = old_status.get('review_state', None)
             
         # Now add a transition
-        for new_wf_name in target_chain:
+        for new_wf_name in chain:
             new_wf = chain_workflows[new_wf_name]
             new_status = { 'action'       : None,
                            'actor'        : None, 
