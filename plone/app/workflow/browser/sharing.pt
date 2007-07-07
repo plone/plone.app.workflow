@@ -96,7 +96,7 @@
                         <img tal:condition="python:entry_role == 'global'" tal:replace="structure context/site_icon.gif">
                         <img tal:condition="python:entry_role == 'acquired'" tal:replace="structure context/confirm_icon.gif">
                         <tal:block condition="python:entry_role in (True, False)">
-                            <input
+                            <input class="noborder"
                                 type="checkbox"
                                 value="True"
                                 tal:attributes="name string:entries.role_${role/id}:records;
