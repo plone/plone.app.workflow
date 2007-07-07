@@ -37,11 +37,11 @@ class TestRemapWorkflow(WorkflowTestCase):
     def test_remap_multiple_no_state_map(self):
         remap_workflow(self.portal, 
                        type_ids=('Document','News Item',), 
-                       chain=('community_workflow',))
+                       chain=('plone_workflow',))
                        
-        self.assertEquals(self._chain(self.portal.d1), ('community_workflow',))
-        self.assertEquals(self._chain(self.portal.d2), ('community_workflow',))
-        self.assertEquals(self._chain(self.portal.n1), ('community_workflow',))
+        self.assertEquals(self._chain(self.portal.d1), ('plone_workflow',))
+        self.assertEquals(self._chain(self.portal.d2), ('plone_workflow',))
+        self.assertEquals(self._chain(self.portal.n1), ('plone_workflow',))
                        
         self.assertEquals(self._state(self.portal.d1), 'visible')
         self.assertEquals(self._state(self.portal.d2), 'visible')
@@ -50,12 +50,12 @@ class TestRemapWorkflow(WorkflowTestCase):
     def test_remap_with_partial_state_map(self):
         remap_workflow(self.portal, 
                        type_ids=('Document','News Item',), 
-                       chain=('community_workflow',),
+                       chain=('plone_workflow',),
                        state_map={'published' : 'published'})
                        
-        self.assertEquals(self._chain(self.portal.d1), ('community_workflow',))
-        self.assertEquals(self._chain(self.portal.d2), ('community_workflow',))
-        self.assertEquals(self._chain(self.portal.n1), ('community_workflow',))
+        self.assertEquals(self._chain(self.portal.d1), ('plone_workflow',))
+        self.assertEquals(self._chain(self.portal.d2), ('plone_workflow',))
+        self.assertEquals(self._chain(self.portal.n1), ('plone_workflow',))
                        
         self.assertEquals(self._state(self.portal.d1), 'published')
         self.assertEquals(self._state(self.portal.d2), 'visible')
@@ -74,9 +74,9 @@ class TestRemapWorkflow(WorkflowTestCase):
     def test_remap_from_no_workflow(self):
         remap_workflow(self.portal, 
                        type_ids=('Image',), 
-                       chain=('community_workflow',))
+                       chain=('plone_workflow',))
                        
-        self.assertEquals(self._chain(self.portal.i1), ('community_workflow',))
+        self.assertEquals(self._chain(self.portal.i1), ('plone_workflow',))
         self.assertEquals(self._state(self.portal.i1), 'visible')
 
 def test_suite():
