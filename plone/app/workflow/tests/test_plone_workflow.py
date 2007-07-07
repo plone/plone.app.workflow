@@ -55,13 +55,6 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'pending')
         self.failUnless(self.catalog(id='doc', review_state='pending'))
 
-    def testOwnerHidesPendingDocument(self):
-        self.workflow.doActionFor(self.doc, 'submit')
-        self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'pending')
-        self.workflow.doActionFor(self.doc, 'hide')
-        self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
-        self.failUnless(self.catalog(id='doc', review_state='private'))
-
     def testOwnerRetractsPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'pending')
@@ -143,8 +136,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(View, self.doc))
 
-    def testViewIsAcquiredInVisibleState(self):
-        self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), 'CHECKED')
+    def testViewIsNotAcquiredInVisibleState(self):
+        self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), '')
 
     def testViewPrivateDocument(self):
         self.workflow.doActionFor(self.doc, 'hide')
@@ -178,9 +171,9 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(View, self.doc))
 
-    def testViewIsAcquiredInPendingState(self):
+    def testViewIsNotAcquiredInPendingState(self):
         self.workflow.doActionFor(self.doc, 'submit')
-        self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), 'CHECKED')
+        self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), '')
 
     def testViewPublishedDocument(self):
         self.login('reviewer')
@@ -198,10 +191,10 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(View, self.doc))
 
-    def testViewIsAcquiredInPublishedState(self):
+    def testViewIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
-        self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), 'CHECKED')
+        self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), '')
 
     # Check access contents info permission
 
@@ -218,8 +211,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(AccessContentsInformation, self.doc))
 
-    def testAccessContentsInformationIsAcquiredInVisibleState(self):
-        self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), 'CHECKED')
+    def testAccessContentsInformationIsNotAcquiredInVisibleState(self):
+        self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), '')
 
     def testAccessPrivateDocument(self):
         self.workflow.doActionFor(self.doc, 'hide')
@@ -253,9 +246,9 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(AccessContentsInformation, self.doc))
 
-    def testAccessContentsInformationIsAcquiredInPendingState(self):
+    def testAccessContentsInformationIsNotAcquiredInPendingState(self):
         self.workflow.doActionFor(self.doc, 'submit')
-        self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), 'CHECKED')
+        self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), '')
 
     def testAccessPublishedDocument(self):
         self.login('reviewer')
@@ -273,10 +266,10 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(AccessContentsInformation, self.doc))
 
-    def testAccessContentsInformationIsAcquiredInPublishedState(self):
+    def testAccessContentsInformationIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
-        self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), 'CHECKED')
+        self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), '')
 
     # Check modify content permissions
 
@@ -504,7 +497,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testStateTitles(self):
         state_titles = { 'private': 'Private',
                         'visible': 'Public draft',
-                        'pending': 'Pending',
+                        'pending': 'Pending review',
                         'published': 'Published'
                         }
 

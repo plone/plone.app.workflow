@@ -178,9 +178,9 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(ModifyPortalContent, self.doc))
-        # Editor is denied
+        # Editor is allowed
         self.login('editor')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
         # Reader is denied
         self.login('reader')
         self.failIf(checkPerm(ModifyPortalContent, self.doc))
@@ -195,9 +195,11 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # transition requires Review portal content
         self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
-        # Owner is denied
+        # Manager is allowed
+        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        # Owner is allowed
         self.login(default_user)
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
         self.failIf(checkPerm(ModifyPortalContent, self.doc))
@@ -207,9 +209,9 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(ModifyPortalContent, self.doc))
-        # Editor is denied
+        # Editor is allowed
         self.login('editor')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
         # Reader is denied
         self.login('reader')
         self.failIf(checkPerm(ModifyPortalContent, self.doc))
@@ -234,9 +236,9 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(ChangeEvents, self.ev))
-        # Editor is denied
+        # Editor is allowed
         self.login('editor')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ev))
         # Reader is denied
         self.login('reader')
         self.failIf(checkPerm(ChangeEvents, self.ev))
@@ -251,9 +253,10 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # transition requires Review portal content
         self.login('manager')
         self.workflow.doActionFor(self.ev, 'publish')
-        # Owner is denied
+        self.failUnless(checkPerm(ChangeEvents, self.ev))
+        # Owner is allowed
         self.login(default_user)
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ev))
         # Member is denied
         self.login('member')
         self.failIf(checkPerm(ChangeEvents, self.ev))
@@ -263,9 +266,9 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(ChangeEvents, self.ev))
-        # Editor is denied
+        # Editor is allowed
         self.login('editor')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ev))
         # Reader is denied
         self.login('reader')
         self.failIf(checkPerm(ChangeEvents, self.ev))

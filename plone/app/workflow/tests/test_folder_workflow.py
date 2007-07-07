@@ -166,19 +166,19 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testManagerHidesVisibleFolder(self):
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'visible')
         self.login('manager')
-        self.assertRaises(WorkflowException, self.workflow.doActionFor, self.dir, 'hide')
+        self.workflow.doActionFor(self.dir, 'hide')
 
     def testManagerShowsPrivateFolder(self):
         self.workflow.doActionFor(self.dir, 'hide')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'private')
         self.login('manager')
-        self.assertRaises(WorkflowException, self.workflow.doActionFor, self.dir, 'show')
+        self.workflow.doActionFor(self.dir, 'show')
 
     def testManagerHidesPublishedFolder(self):
         self.workflow.doActionFor(self.dir, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'published')
         self.login('manager')
-        self.assertRaises(WorkflowException, self.workflow.doActionFor, self.dir, 'hide')
+        self.workflow.doActionFor(self.dir, 'hide')
 
     # Check view permissions
 
@@ -195,8 +195,8 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(View, self.dir))
 
-    def testViewIsAcquiredInVisibleState(self):
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(View), 'CHECKED')
+    def testViewIsNotAcquiredInVisibleState(self):
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(View), '')
 
     def testViewPrivateFolder(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -230,9 +230,9 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(View, self.dir))
 
-    def testViewIsAcquiredInPublishedState(self):
+    def testViewIsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(View), 'CHECKED')
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(View), '')
 
     # Check access contents info permission
 
@@ -249,8 +249,8 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(AccessContentsInformation, self.dir))
 
-    def testAccessContentsInformationIsAcquiredInVisibleState(self):
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(AccessContentsInformation), 'CHECKED')
+    def testAccessContentsInformationIsNotAcquiredInVisibleState(self):
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(AccessContentsInformation), '')
 
     def testAccessPrivateFolderContents(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -284,9 +284,9 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(AccessContentsInformation, self.dir))
 
-    def testAccessContentsInformationIsAcquiredInPublishedState(self):
+    def testAccessContentsInformationIsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(AccessContentsInformation), 'CHECKED')
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(AccessContentsInformation), '')
 
     # Check modify contents permission
 
@@ -392,9 +392,9 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.logout()
         self.failUnless(checkPerm(ListFolderContents, self.dir))
 
-    def testListFolderContentsIsAcquiredInPublishedState(self):
+    def testListFolderContentsIsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), 'CHECKED')
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), '')
 
     # Check catalog search
 
