@@ -197,7 +197,7 @@ class SharingView(BrowserView):
             if item['type'] == 'user':
                 member = acl_users.getUserById(rid)
                 if member is not None:
-                    name = member.getProperty('fullname') or member.getUserName() or name
+                    name = member.getProperty('fullname') or member.getId() or name
                     global_roles = set(member.getRoles())
             elif item['type'] == 'group':
                 g = portal_groups.getGroupById(rid)
@@ -259,7 +259,7 @@ class SharingView(BrowserView):
                     if r in roles:
                         roles[r] = 'global'
                 info.append(dict(id    = userid,
-                                 title = user.getProperty('fullname') or user.getUserName() or userid,
+                                 title = user.getProperty('fullname') or user.getId() or userid,
                                  type  = 'user',
                                  roles = roles))
         return info
