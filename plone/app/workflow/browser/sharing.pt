@@ -95,7 +95,8 @@
                         tal:attributes="value entry/type"
                         />
                 </td>
-                <td tal:repeat="role available_roles">
+                <td class="listingCheckbox"
+                    tal:repeat="role available_roles">
                     <tal:block define="entry_role python:entry['roles'][role['id']]">
                         <img tal:condition="python:entry_role == 'global'" tal:replace="structure context/site_icon.gif">
                         <img tal:condition="python:entry_role == 'acquired'" tal:replace="structure context/confirm_icon.gif">
