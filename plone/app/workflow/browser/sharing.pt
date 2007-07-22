@@ -29,7 +29,8 @@
     </dd>
 </dl>
 
-<p class="documentDescription">
+<p class="documentDescription"
+   i18n:translate="description_sharing_control">
     You can control who can view and edit your item using the list below.
 </p>
 
