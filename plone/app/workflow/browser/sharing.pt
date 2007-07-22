@@ -133,8 +133,7 @@
         indicates an inherited value. Similarly, the symbol
         <img i18n:name="image_link_icon"
              tal:replace="structure context/site_icon.gif" /> 
-        indicates a global role. These are managed by a site administrator 
-        via the Plone Site Settings.
+        indicates a global role, which is managed by the site administrator.
     </div>
 </div>
 
