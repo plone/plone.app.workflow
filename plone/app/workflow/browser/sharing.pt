@@ -46,12 +46,15 @@
                title="Search for user or group" 
                i18n:attributes="title"
                class="inputLabel"
-               value="" />
+               value="" 
+               />
         <input type="submit"
                id="sharing-save-button" 
                name="form.button.Search"
                value="Search"
-               class="searchButton allowMultiSubmit" />
+               class="searchButton allowMultiSubmit" 
+               i18n:attributes="value box_search"
+               />
     </div>
 
 <table
@@ -137,8 +140,8 @@
     </div>
 </div>
 
-    <input class="context" type="submit" name="form.button.Save" value="Save" />
-    <input class="standalone" type="submit" name="form.button.Cancel" value="Cancel" />
+    <input class="context" type="submit" name="form.button.Save" value="Save" i18n:attributes="value label_save" />
+    <input class="standalone" type="submit" name="form.button.Cancel" value="Cancel" i18n:attributes="value label_cancel"/>
 
 </form>
 
