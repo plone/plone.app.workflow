@@ -64,7 +64,10 @@ class SharingView(BrowserView):
         if postback:
             return self.template()
         else:
-            self.request.response.redirect(self.context.absolute_url())
+            context_state = self.context.restrictedTraverse("@@plone_context_state")
+            url = '%s/%s' % (self.context.absolute_url(),
+                             context_state.view_template_id()) 
+            self.request.response.redirect(url)
             
     # View
     
