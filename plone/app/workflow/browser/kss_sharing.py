@@ -42,10 +42,10 @@ class KSSSharingView(base):
         # get the html from a macro
         ksscore = self.getCommandSet('core')
 
-        for the_id in ['user-group-sharing-settings', 'user-group-sharing-head']:
-            macro = self.template.macros[the_id]
-            res = self.macro_wrapper(the_macro=macro, instance=self.context, view=sharing)
-            ksscore.replaceHTML(ksscore.getHtmlIdSelector(the_id), res)
+        the_id = 'user-group-sharing'
+        macro = self.template.macros[the_id]
+        res = self.macro_wrapper(the_macro=macro, instance=self.context, view=sharing)
+        ksscore.replaceHTML(ksscore.getHtmlIdSelector(the_id), res)
 
         return self.render()
 
