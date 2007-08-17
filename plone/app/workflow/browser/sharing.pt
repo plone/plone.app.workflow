@@ -46,7 +46,7 @@
                name="search_term"
                title="Search for user or group" 
                i18n:attributes="title"
-               class="inputLabel"
+               class="searchField"
                value="" 
                />
         <input type="submit"
