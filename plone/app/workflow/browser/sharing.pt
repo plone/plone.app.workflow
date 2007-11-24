@@ -4,6 +4,7 @@
       i18n:domain="plone">
 
 <head>
+</head>
 
 <body>
 <div metal:fill-slot="body"

@@ -4,6 +4,10 @@ Changelog for plone.app.workflow
 
 plone.app.workflow - 0.1 Unreleased
 
+    - Added missing closing head tag to sharing.pt. This closes
+      http://dev.plone.org/plone/ticket/7161.
+      [hannosch]
+
     - Initial package structure.
       [zopeskel]
 
