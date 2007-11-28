@@ -161,8 +161,8 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
 
     # Check modify content permissions
 
-    def testModifyPrivateDocument(self):
-        self.accertEqual(self.doc.acquiredRolesAreUsedBy(ModifyPortalContent), '') # not checked
+    def testModifyPrivateDocumentIsNotAcquiredInPrivateState(self):
+        self.assertEqual(self.doc.acquiredRolesAreUsedBy(ModifyPortalContent), '') # not checked
 
     def testModifyPrivateDocument(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
