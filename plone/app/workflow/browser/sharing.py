@@ -74,7 +74,7 @@ class SharingView(BrowserView):
     def roles(self):
         """Get a list of roles that can be managed.
         
-        Returns a list of dics with keys:
+        Returns a list of dicts with keys:
         
             - id
             - title
@@ -233,70 +233,93 @@ class SharingView(BrowserView):
                 info.append(info_item)
             
         return info
+    
+    def _principal_search_results(self,
+                                  search_for_principal,
+                                  get_principal_by_id,
+                                  get_principal_title,
+                                  principal_type,
+                                  id_key):
+        """Return search results for a query to add new users or groups.
         
-    def user_search_results(self):
-        """Return search results for a query to add new users
+        Returns a list of dicts, as per role_settings().
         
-        Returns a list of dicts, as per role_settings()
+        Arguments:
+            search_for_principal -- a function that takes an IPASSearchView and
+                a search string. Uses the former to search for the latter and
+                returns the results.
+            get_principal_by_id -- a function that takes a user id and returns
+                the user of that id
+            get_principal_title -- a function that takes a user and a default
+                title and returns a human-readable title for the user. If it
+                can't think of anything good, returns the default title.
+            principal_type -- either 'user' or 'group', depending on what kind
+                of principals you want
+            id_key -- the key under which the principal id is stored in the
+                dicts returned from search_for_principal
         """
         context = aq_inner(self.context)
-        acl_users = getToolByName(context, 'acl_users')
         
         search_term = self.request.form.get('search_term', None)
         if not search_term:
             return []
-            
-        existing_users = set([u['id'] for u in self.existing_role_settings() 
-                                if u['type'] == 'user'])
+        
+        existing_principals = set([p['id'] for p in self.existing_role_settings() 
+                                if p['type'] == principal_type])
         empty_roles = dict([(r['id'], False) for r in self.roles()])
         info = []
         
         hunter = getMultiAdapter((context, self.request), name='pas_search')
-        for userinfo in hunter.searchUsers(fullname=search_term):
-            userid = userinfo['userid']
-            if userid not in existing_users:
-                user = acl_users.getUserById(userid)
+        for principal_info in search_for_principal(hunter, search_term):
+            principal_id = principal_info[id_key]
+            if principal_id not in existing_principals:
+                principal = get_principal_by_id(principal_id)
                 roles = empty_roles.copy()
-                for r in user.getRoles():
+                for r in principal.getRoles():
                     if r in roles:
                         roles[r] = 'global'
-                info.append(dict(id    = userid,
-                                 title = user.getProperty('fullname') or user.getId() or userid,
-                                 type  = 'user',
+                info.append(dict(id    = principal_id,
+                                 title = get_principal_title(principal,
+                                                             principal_id),
+                                 type  = principal_type,
                                  roles = roles))
         return info
+        
+    def user_search_results(self):
+        """Return search results for a query to add new users.
+        
+        Returns a list of dicts, as per role_settings().
+        """
+        def search_for_principal(hunter, search_term):
+            return hunter.searchUsers(fullname=search_term)
+        
+        def get_principal_by_id(user_id):
+            acl_users = getToolByName(aq_inner(self.context), 'acl_users')
+            return acl_users.getUserById(user_id)
+        
+        def get_principal_title(user, default_title):
+            return user.getProperty('fullname') or user.getId() or default_title
+            
+        return self._principal_search_results(search_for_principal,
+            get_principal_by_id, get_principal_title, 'user', 'userid')
         
     def group_search_results(self):
-        """Return search results for a query to add new groups
+        """Return search results for a query to add new groups.
         
-        Returns a list of dicts, as per role_settings()
+        Returns a list of dicts, as per role_settings().
         """
-        context = aq_inner(self.context)
-        portal_groups = getToolByName(context, 'portal_groups')
+        def search_for_principal(hunter, search_term):
+            return hunter.searchGroups(id=search_term)
         
-        search_term = self.request.form.get('search_term', None)
-        if not search_term:
-            return []
+        def get_principal_by_id(group_id):
+            portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
+            return portal_groups.getGroupById(group_id)
+        
+        def get_principal_title(group, _):
+            return group.getGroupTitleOrName()
             
-        existing_groups = set([g['id'] for g in self.existing_role_settings() 
-                                if g['type'] == 'group'])
-        empty_roles = dict([(r['id'], False) for r in self.roles()])
-        info = []
-        
-        hunter = getMultiAdapter((context, self.request), name='pas_search')
-        for groupinfo in hunter.searchGroups(id=search_term):
-            groupid = groupinfo['groupid']
-            if groupid not in existing_groups:
-                group = portal_groups.getGroupById(groupid)
-                roles = empty_roles.copy()
-                for r in group.getRoles():
-                    if r in roles:
-                        roles[r] = 'global'                
-                info.append(dict(id    = groupid,
-                                 title = group.getGroupTitleOrName(),
-                                 type  = 'group',
-                                 roles = roles))
-        return info
+        return self._principal_search_results(search_for_principal,
+            get_principal_by_id, get_principal_title, 'group', 'groupid')
         
     def _inherited_roles(self):
         """Returns a tuple with the acquired local roles."""

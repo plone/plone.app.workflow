@@ -2,7 +2,13 @@ Changelog for plone.app.workflow
 
     (name of developer listed in brackets)
 
-plone.app.workflow - 0.1 Unreleased
+plone.app.workflow - whatever comes after 1.0rc2 (unreleased)
+
+    - Factored up the duplicated logic from user_search_results() and
+      group_search_results() to form _principal_search_results().
+      [erikrose]
+
+plone.app.workflow - 0.1
 
     - Added missing closing head tag to sharing.pt. This closes
       http://dev.plone.org/plone/ticket/7161.
