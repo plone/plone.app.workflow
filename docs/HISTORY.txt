@@ -4,6 +4,10 @@ Changelog for plone.app.workflow
 
 plone.app.workflow - whatever comes after 1.0rc2 (unreleased)
 
+    - user_search_results() now searches in login name as well as fullname.
+      Fixes http://dev.plone.org/plone/ticket/6853
+      [erikrose]
+
     - Factored up the duplicated logic from user_search_results() and
       group_search_results() to form _principal_search_results().
       [erikrose]

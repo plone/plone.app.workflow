@@ -1,3 +1,5 @@
+from itertools import chain
+
 from zope.component import getUtilitiesFor, queryUtility, getMultiAdapter
 
 from Products.Five.browser import BrowserView
@@ -291,7 +293,14 @@ class SharingView(BrowserView):
         Returns a list of dicts, as per role_settings().
         """
         def search_for_principal(hunter, search_term):
-            return hunter.searchUsers(fullname=search_term)
+            def merge(results, key):
+                # Duplicating this from PASSearchView since I didn't want to
+                # complicate IPASSearchView by adding the merge() implementation
+                # detail to it
+                return dict([(result[key], result) for result in results]).values()
+            return merge(chain(*[hunter.searchUsers(**{field: search_term})
+                                 for field in ['login', 'fullname']]
+                              ), 'userid')
         
         def get_principal_by_id(user_id):
             acl_users = getToolByName(aq_inner(self.context), 'acl_users')
