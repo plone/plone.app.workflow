@@ -12,6 +12,7 @@ from zExceptions import Forbidden
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
 from Products.CMFPlone import PloneMessageFactory as _
+from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.memoize.instance import memoize, clearafter
 
@@ -58,6 +59,8 @@ class SharingView(BrowserView):
                          roles = [r for r in roles if entry.get('role_%s' % r, False)]))
             if settings:
                 self.update_role_settings(settings)
+                
+            IStatusMessage(self.request).addStatusMessage(_(u"Changes saved."), type='info')
             
         # Other buttons return to the sharing page
         if cancel_button:
@@ -145,7 +148,7 @@ class SharingView(BrowserView):
         
         # This logic is adapted from computeRoleMap.py
         
-        local_roles = acl_users.getLocalRolesForDisplay(context)
+        local_roles = acl_users._getLocalRolesForDisplay(context)
         acquired_roles = self._inherited_roles()
         available_roles = [r['id'] for r in self.roles()]
 
