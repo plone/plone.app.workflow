@@ -6,7 +6,7 @@
         name="sharing"
         for="*"
         class=".sharing.SharingView"
-        permission="cmf.ChangeLocalRoles"
+        permission="plone.DelegateRoles"
         />
         
     <browser:page
@@ -14,6 +14,7 @@
         class=".kss_sharing.KSSSharingView"
         name="updateSharingInfo"
         attribute="updateSharingInfo"
-        permission="cmf.ChangeLocalRoles"
+        permission="plone.DelegateRoles"
       />
+      
 </configure>
