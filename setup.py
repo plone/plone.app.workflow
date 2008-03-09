@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.0.2'
+version = '1.0.8'
 
 setup(name='plone.app.workflow',
       version=version,
