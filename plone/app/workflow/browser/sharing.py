@@ -183,6 +183,13 @@ class SharingView(BrowserView):
                                      acquired = [],
                                      local = [],)
 
+        # If the current user has been given roles, remove them so that he
+        # doesn't accidentally lock himself out.
+        
+        member = portal_membership.getAuthenticatedMember()
+        if member.getId() in items:
+            items[member.getId()]['disabled'] = True
+
         # Sort the list: first the authenticated users virtual group, then 
         # all other groups and then all users, alphabetically
 
@@ -218,6 +225,7 @@ class SharingView(BrowserView):
             info_item = dict(id    = item['id'],
                              type  = item['type'],
                              title = name,
+                             disabled = item.get('disabled', False),
                              roles = {})
                              
             # Record role settings

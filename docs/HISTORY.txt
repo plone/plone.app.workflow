@@ -2,7 +2,13 @@ Changelog for plone.app.workflow
 
     (name of developer listed in brackets)
 
-plone.app.workflow - whatever comes after 1.0rc2 (unreleased)
+plone.app.workflow - 1.1
+
+    - Stopped people from locking themselves out by disabling the ability
+      to edit their own roles.
+
+    - Added friendly "Changes saved" message.
+      http://dev.plone.org/plone/ticket/6966
 
     - user_search_results() now searches in login name as well as fullname.
       Fixes http://dev.plone.org/plone/ticket/6853
