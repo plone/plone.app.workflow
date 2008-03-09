@@ -2,7 +2,15 @@ Changelog for plone.app.workflow
 
     (name of developer listed in brackets)
 
-plone.app.workflow - 1.1
+plone.app.workflow - 1.0.7
+
+    - Created fine-grained permissions for delegating sharing page roles in
+      order to avoid people with a delegated permission escalating their own
+      privileges. This can now be controlled at a high level by the
+      "Sharing page: Delegate roles" permission, which controls access to the
+      Sharing page machinery, and at an individual roles basis, with 
+      permissions like "Sharing page: Delegate Editor role".
+      http://dev.plone.org/plone/ticket/7652
 
     - Stopped people from locking themselves out by disabling the ability
       to edit their own roles.
