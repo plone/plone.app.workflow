@@ -150,6 +150,8 @@
     <input class="context" type="submit" name="form.button.Save" value="Save" i18n:attributes="value label_save" />
     <input class="standalone" type="submit" name="form.button.Cancel" value="Cancel" i18n:attributes="value label_cancel"/>
 
+    <input tal:replace="structure context/@@authenticator/authenticator" />
+
 </form>
 
 </div>

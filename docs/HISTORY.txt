@@ -2,6 +2,11 @@ Changelog for plone.app.workflow
 
     (name of developer listed in brackets)
 
+plone.app.workflow - 1.0.8
+
+    - Protect the "sharing" form against CSRF attacks.
+      [witsch]
+
 plone.app.workflow - 1.0.7
 
     - Created fine-grained permissions for delegating sharing page roles in

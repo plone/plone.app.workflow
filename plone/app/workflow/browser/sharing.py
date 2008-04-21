@@ -43,7 +43,11 @@ class SharingView(BrowserView):
 
             if not self.request.get('REQUEST_METHOD','GET') == 'POST':
                 raise Forbidden
-            
+
+            authenticator = self.context.restrictedTraverse('@@authenticator', None) 
+            if not authenticator.verify(): 
+                raise Forbidden
+
             # Update the acquire-roles setting
             inherit = bool(form.get('inherit', False))
             self.update_inherit(inherit)
