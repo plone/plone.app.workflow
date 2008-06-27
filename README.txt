@@ -1,7 +1,6 @@
-plone.app.workflow Package Readme
-=========================
+Introduction
+============
 
-Overview
---------
+plone.app.workflow contains workflow- and security-related features for Plone,
+including the sharing view.
 
-workflow and security settings for Plone

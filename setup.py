@@ -1,15 +1,13 @@
 from setuptools import setup, find_packages
-import sys, os
+import os.path
 
 version = '1.1.1'
 
 setup(name='plone.app.workflow',
       version=version,
       description="workflow and security settings for Plone",
-      long_description="""\
-plone.app.workflow contains workflow- and security-related features for Plone,
-including the sharing view.
-""",
+      long_description=open("README.txt").read() + "\n" +
+                       open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
         "Framework :: Plone",
         "Framework :: Zope2",
@@ -28,6 +26,7 @@ including the sharing view.
       zip_safe=False,
       install_requires=[
         'setuptools',
+        'plone.memoize',
       ],
       entry_points="""
       # -*- Entry points: -*-
