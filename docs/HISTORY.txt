@@ -4,6 +4,10 @@ Changelog
 1.1.1 - UNRELEASED
 ------------------
 
+- Mark the security names as public so they can be imported everywhere
+  and register them with Zope on startup so you can manage them via the
+  ZMI or a GenericSetup profile.  
+  [wichert]
 
 
 1.1.0 - April 21, 2008
