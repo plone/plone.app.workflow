@@ -1,6 +1,6 @@
 from itertools import chain
 
-from zope.component import getUtilitiesFor, queryUtility, getMultiAdapter
+from zope.component import getUtilitiesFor, getMultiAdapter
 
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -20,6 +20,23 @@ from plone.app.workflow.interfaces import ISharingPageRole
 
 AUTH_GROUP = 'AuthenticatedUsers'
 STICKY = (AUTH_GROUP,)
+
+def merge_search_results(results, key):
+    """Merge member search results.
+
+    Based on PlonePAS.browser.search.PASSearchView.merge.
+    """
+    output={}
+    for entry in results:
+        id=entry[key]
+        if id not in output:
+            output[id]=entry.copy()
+        else:
+            buf=entry.copy()
+            buf.update(output[id])
+            output[id]=buf
+
+    return output.values()
 
 class SharingView(BrowserView):
     
@@ -292,6 +309,9 @@ class SharingView(BrowserView):
             if principal_id not in existing_principals:
                 principal = get_principal_by_id(principal_id)
                 roles = empty_roles.copy()
+                if principal is None:
+                    continue
+
                 for r in principal.getRoles():
                     if r in roles:
                         roles[r] = 'global'
@@ -308,12 +328,7 @@ class SharingView(BrowserView):
         Returns a list of dicts, as per role_settings().
         """
         def search_for_principal(hunter, search_term):
-            def merge(results, key):
-                # Duplicating this from PASSearchView since I didn't want to
-                # complicate IPASSearchView by adding the merge() implementation
-                # detail to it
-                return dict([(result[key], result) for result in results]).values()
-            return merge(chain(*[hunter.searchUsers(**{field: search_term})
+            return merge_search_results(chain(*[hunter.searchUsers(**{field: search_term})
                                  for field in ['login', 'fullname']]
                               ), 'userid')
         

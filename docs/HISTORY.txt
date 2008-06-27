@@ -4,6 +4,13 @@ Changelog
 1.1.1 - UNRELEASED
 ------------------
 
+- Update the search-result merging code based on the code from PlonePAS 3.6.
+  [wichert]
+
+- Handle principals which can not be retrieved. This can occur in LDAP
+  environments.
+  [wichert]
+
 - Mark the security names as public so they can be imported everywhere
   and register them with Zope on startup so you can manage them via the
   ZMI or a GenericSetup profile.  
