@@ -13,5 +13,5 @@ class ISharingPageRole(Interface):
     
     title = schema.TextLine(title=u"A friendly name for the role")
     
-    required_permission = schema.TextLine(title=u"Permission required to manag this local role",
+    required_permission = schema.TextLine(title=u"Permission required to manage this local role",
                                           required=False)
