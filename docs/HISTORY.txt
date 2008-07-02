@@ -4,6 +4,11 @@ Changelog
 1.1.1 - UNRELEASED
 ------------------
 
+- Only call reindexObjectSecurity from the sharing tab's update_inherit method
+  if the setting actually changed.  This avoids an unnecessary, potentially
+  expensive catalog reindex in many cases.
+  [davisagli]
+
 - Update the search-result merging code based on the code from PlonePAS 3.6.
   [wichert]
 
