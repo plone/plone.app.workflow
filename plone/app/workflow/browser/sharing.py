@@ -67,7 +67,7 @@ class SharingView(BrowserView):
 
             # Update the acquire-roles setting
             inherit = bool(form.get('inherit', False))
-            self.update_inherit(inherit)
+            reindex = self.update_inherit(inherit, reindex=False)
 
             # Update settings for users and groups
             entries = form.get('entries', [])
@@ -79,8 +79,10 @@ class SharingView(BrowserView):
                          type = entry['type'],
                          roles = [r for r in roles if entry.get('role_%s' % r, False)]))
             if settings:
-                self.update_role_settings(settings)
+                reindex = self.update_role_settings(settings, reindex=False) or reindex
                 
+            if reindex:
+                aq_inner(self.context).reindexObjectSecurity()
             IStatusMessage(self.request).addStatusMessage(_(u"Changes saved."), type='info')
             
         # Other buttons return to the sharing page
@@ -405,8 +407,11 @@ class SharingView(BrowserView):
 
         return tuple(result)
         
-    def update_inherit(self, status=True):
+    def update_inherit(self, status=True, reindex=True):
         """Enable or disable local role acquisition on the context.
+
+        Returns True if changes were made, or False if the new settings
+        are the same as the existing settings.
         """
         context = aq_inner(self.context)
         portal_membership = getToolByName(context, 'portal_membership')
@@ -417,21 +422,26 @@ class SharingView(BrowserView):
         oldstatus = bool(getattr(aq_base(context), '__ac_local_roles_block__', False))
 
         if status == oldstatus:
-            return
+            return False
 
         context.__ac_local_roles_block__ = status and True or None
-        context.reindexObjectSecurity()
+        if reindex:
+            context.reindexObjectSecurity()
+        return True
         
     @clearafter
-    def update_role_settings(self, new_settings):
+    def update_role_settings(self, new_settings, reindex=True):
         """Update local role settings and reindex object security if necessary.
         
         new_settings is a list of dicts with keys id, for the user/group id;
         type, being either 'user' or 'group'; and roles, containing the list
         of role ids that are set.
+
+        Returns True if changes were made, or False if the new settings
+        are the same as the existing settings.
         """
         
-        reindex = False
+        changed = False
         context = aq_inner(self.context)
             
         managed_roles = frozenset([r['id'] for r in self.roles()])
@@ -456,13 +466,15 @@ class SharingView(BrowserView):
             
             if new_roles:
                 context.manage_setLocalRoles(user_id, list(new_roles))
-                reindex = True
+                changed = True
             elif existing_roles:
                 member_ids_to_clear.append(user_id)
                 
         if member_ids_to_clear:
             context.manage_delLocalRoles(userids=member_ids_to_clear)
-            reindex = True
+            changed = True
         
-        if reindex:
+        if changed and reindex:
             self.context.reindexObjectSecurity()
+
+        return changed

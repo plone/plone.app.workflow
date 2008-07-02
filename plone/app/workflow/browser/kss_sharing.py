@@ -1,3 +1,4 @@
+from Acquisition import aq_inner
 from zope.interface import implements
 from zope.component import getMultiAdapter
 
@@ -20,7 +21,7 @@ class KSSSharingView(base):
         sharing = getMultiAdapter((self.context, self.request,), name="sharing")
     
         inherit = bool(self.request.form.get('inherit', False))
-        sharing.update_inherit(inherit)
+        reindex = sharing.update_inherit(inherit, reindex=False)
         
         # Extract currently selected setting from the form
         # to take these into account (also on re-submit of the form).
@@ -34,7 +35,10 @@ class KSSSharingView(base):
                      type = entry['type'],
                      roles = [r for r in roles if entry.get('role_%s' % r, False)]))
         if settings:
-            sharing.update_role_settings(settings)
+            reindex = sharing.update_role_settings(settings) or reindex
+
+        if reindex:
+            aq_inner(self.context).reindexObjectSecurity()
 
         # get the table body, let it render again
         # use macro in sharing.pt for that
