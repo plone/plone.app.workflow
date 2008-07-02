@@ -4,6 +4,11 @@ Changelog
 1.1.1 - UNRELEASED
 ------------------
 
+- Modify the inline (kss) search option in the sharing page to only search
+  and not update the roles and search. This behaviour was unintuitive and
+  possible very very slow.
+  [wichert]
+
 - Update the sharing page to do nothing if the new set of roles is the
   same as the current set of roles.
   [wichert]

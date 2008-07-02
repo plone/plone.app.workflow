@@ -140,8 +140,28 @@ class SharingView(BrowserView):
         user_results = self.user_search_results()
         group_results = self.group_search_results()
 
-        return existing_settings + user_results + group_results
-        
+        current_settings = existing_settings + user_results + group_results
+
+        # We may be called when the user does a search instead of an update.
+        # In that case we must not loose the changes the user made and
+        # merge those into the role settings.
+        requested = self.request.form.get('entries', None)
+        if requested is not None:
+            roles = [r['id'] for r in self.roles()]
+            settings = {}
+            for entry in requested:
+                roles = [r for r in roles if entry.get('role_%s' % r, False)]
+                settings[(entry['id'], entry['type'])] = roles
+
+            for entry in current_settings:
+                desired_roles = settings.get((entry['id'], entry['type']), None)
+                if desired_roles is None:
+                    continue
+                for role in entry["roles"]:
+                    entry["roles"][role] = role in desired_roles
+
+        return current_settings
+
     def inherited(self, context=None):
         """Return True if local roles are inherited here.
         """
