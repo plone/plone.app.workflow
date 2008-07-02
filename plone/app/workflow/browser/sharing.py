@@ -419,12 +419,13 @@ class SharingView(BrowserView):
         if not portal_membership.checkPermission(permissions.ModifyPortalContent, context):
             raise Unauthorized
 
-        oldstatus = bool(getattr(aq_base(context), '__ac_local_roles_block__', False))
+        block = not status 
+        oldblock = bool(getattr(aq_base(context), '__ac_local_roles_block__', False))
 
-        if status == oldstatus:
+        if block == oldblock:
             return False
 
-        context.__ac_local_roles_block__ = status and True or None
+        context.__ac_local_roles_block__ = block and True or None
         if reindex:
             context.reindexObjectSecurity()
         return True
