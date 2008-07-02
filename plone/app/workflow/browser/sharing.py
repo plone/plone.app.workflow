@@ -441,7 +441,7 @@ class SharingView(BrowserView):
         Returns True if changes were made, or False if the new settings
         are the same as the existing settings.
         """
-        
+
         changed = False
         context = aq_inner(self.context)
             
@@ -453,20 +453,27 @@ class SharingView(BrowserView):
             
             existing_roles = frozenset(context.get_local_roles_for_userid(userid=user_id))
             selected_roles = frozenset(s['roles'])
+
+            relevant_existing_roles = managed_roles & existing_roles
+
+            # If, for the managed roles, the new set is the same as the
+            # current set we do not need to do anything.
+            if relevant_existing_roles == selected_roles:
+                continue
             
             # We will remove those roles that we are managing and which set
             # on the context, but which were not selected
-            to_remove = (managed_roles & existing_roles) - selected_roles
-            
+            to_remove = relevant_existing_roles - selected_roles
+
             # Leaving us with the selected roles, less any roles that we
             # want to remove
-            new_roles = (selected_roles | existing_roles) - to_remove
+            wanted_roles = (selected_roles | existing_roles) - to_remove
             
             # take away roles that we are managing, that were not selected 
             # and which were part of the existing roles
             
-            if new_roles:
-                context.manage_setLocalRoles(user_id, list(new_roles))
+            if wanted_roles:
+                context.manage_setLocalRoles(user_id, list(wanted_roles))
                 changed = True
             elif existing_roles:
                 member_ids_to_clear.append(user_id)

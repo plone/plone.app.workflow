@@ -4,7 +4,11 @@ Changelog
 1.1.1 - UNRELEASED
 ------------------
 
-- Update sharing code to only reindex an object once instead of twice.
+- Update the sharing page to do nothing if the new set of roles is the
+  same as the current set of roles.
+  [wichert]
+
+- Update sharing code to only reindex once instead of twice.
   [wichert]
 
 - Only call reindexObjectSecurity from the sharing tab's update_inherit method
