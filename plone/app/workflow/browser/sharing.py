@@ -415,13 +415,18 @@ class SharingView(BrowserView):
         if not portal_membership.checkPermission(permissions.ModifyPortalContent, context):
             raise Unauthorized
 
+        reindex = False
         if not status:
+            if not getattr(aq_base(context), '__ac_local_roles_block__', None):
+                reindex = True
             context.__ac_local_roles_block__ = True
         else:
             if getattr(aq_base(context), '__ac_local_roles_block__', None):
+                reindex = True
                 context.__ac_local_roles_block__ = None
 
-        context.reindexObjectSecurity()
+        if reindex:
+            context.reindexObjectSecurity()
         
     @clearafter
     def update_role_settings(self, new_settings):
