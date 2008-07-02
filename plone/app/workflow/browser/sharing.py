@@ -160,10 +160,9 @@ class SharingView(BrowserView):
         """
         context = aq_inner(self.context)
         
-        portal_membership = getToolByName(aq_inner(self.context), 'portal_membership')
-        portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
-        portal = getToolByName(aq_inner(self.context), 'portal_url').getPortalObject()
-        acl_users = getattr(portal, 'acl_users')
+        portal_membership = getToolByName(context, 'portal_membership')
+        portal_groups = getToolByName(context, 'portal_groups')
+        acl_users = getToolByName(context, 'acl_users')
         
         info = []
         
@@ -333,7 +332,7 @@ class SharingView(BrowserView):
                               ), 'userid')
         
         def get_principal_by_id(user_id):
-            acl_users = getToolByName(aq_inner(self.context), 'acl_users')
+            acl_users = getToolByName(self.context, 'acl_users')
             return acl_users.getUserById(user_id)
         
         def get_principal_title(user, default_title):
@@ -351,7 +350,7 @@ class SharingView(BrowserView):
             return hunter.searchGroups(id=search_term)
         
         def get_principal_by_id(group_id):
-            portal_groups = getToolByName(aq_inner(self.context), 'portal_groups')
+            portal_groups = getToolByName(self.context, 'portal_groups')
             return portal_groups.getGroupById(group_id)
         
         def get_principal_title(group, _):
