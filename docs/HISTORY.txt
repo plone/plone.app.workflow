@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1.1 - UNRELEASED
-------------------
+1.1.3 - July 7th, 2008
+----------------------
 
 - Modify the inline (kss) search option in the sharing page to only search
   and not update the roles and search. This behaviour was unintuitive and
