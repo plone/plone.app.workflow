@@ -147,10 +147,11 @@ class SharingView(BrowserView):
         # merge those into the role settings.
         requested = self.request.form.get('entries', None)
         if requested is not None:
-            roles = [r['id'] for r in self.roles()]
+            knownroles = [r['id'] for r in self.roles()]
             settings = {}
             for entry in requested:
-                roles = [r for r in roles if entry.get('role_%s' % r, False)]
+                roles = [r for r in knownroles
+                                if entry.get('role_%s' % r, False)]
                 settings[(entry['id'], entry['type'])] = roles
 
             for entry in current_settings:
