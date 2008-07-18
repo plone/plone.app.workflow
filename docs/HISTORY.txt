@@ -4,6 +4,10 @@ Changelog
 1.1.4 - UNRELEASED
 ------------------
 
+- Sort the principals in the sharing page. Before they could reorder
+  randomly when saving changes.
+  [wichert]
+
 - Fix a logic error in sharing page view: role changes would appear to be
   lost when saving a view, while the were really applied. This fixes
   http://dev.plone.org/plone/ticket/8295 .

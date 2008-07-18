@@ -117,7 +117,7 @@ class SharingView(BrowserView):
             if permission is None or portal_membership.checkPermission(permission, context):
                 pairs.append(dict(id = name, title = utility.title))
                 
-        pairs.sort(lambda x, y: cmp(x['id'], y['id']))
+        pairs.sort(key=lambda x: x["id"])
         return pairs
         
     @memoize
@@ -160,6 +160,8 @@ class SharingView(BrowserView):
                     continue
                 for role in entry["roles"]:
                     entry["roles"][role] = role in desired_roles
+
+        current_settings.sort(key=lambda x: x["type"]+x["title"])
 
         return current_settings
 
