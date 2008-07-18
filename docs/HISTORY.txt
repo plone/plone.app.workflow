@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.1.4 - UNRELEASED
+------------------
+
+- Fix a logic error in sharing page view: role changes would appear to be
+  lost when saving a view, while the were really applied. This fixes
+  http://dev.plone.org/plone/ticket/8295 .
+  [wichert]
+
+
 1.1.3 - July 7th, 2008
 ----------------------
 
