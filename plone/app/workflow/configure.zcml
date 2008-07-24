@@ -26,12 +26,12 @@
         factory=".localroles.ReviewerRole"
         />
         
+    <!--
     <utility
         name="Manager"
         factory=".localroles.ManagerRole"
         />
         
-    <!--
     <utility
         name="Owner"
         factory=".localroles.OwnerRole"

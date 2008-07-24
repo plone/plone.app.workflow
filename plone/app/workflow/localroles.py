@@ -5,6 +5,10 @@ from Products.CMFCore import permissions as core_permissions
 
 from Products.CMFPlone import PloneMessageFactory as _
 
+"""
+XXX: policy explanation
+"""
+
 # These are for everyone
 
 class ReaderRole(object):
@@ -33,11 +37,11 @@ class ReviewerRole(object):
 
 # Only managers can manage these
 
-class ManagerRole(object):
-    implements(ISharingPageRole)
-    
-    title = _(u"title_can_manage", default=u"Can manage")
-    required_permission = core_permissions.ManagePortal
+#class ManagerRole(object):
+#    implements(ISharingPageRole)
+#    
+#    title = _(u"title_can_manage", default=u"Can manage")
+#    required_permission = core_permissions.ManagePortal
 
 # Low level role that should never be dispayed
 
