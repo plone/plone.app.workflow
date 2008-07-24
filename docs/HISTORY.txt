@@ -1,8 +1,12 @@
 Changelog
 =========
 
-1.1.4 - UNRELEASED
-------------------
+1.1.4 - July 24, 2008
+---------------------
+
+- Keep the icons for inherited and global roles when updating the sharing
+  page after a search. This fixes http://dev.plone.org/plone/ticket/8313 .
+  [wichert]
 
 - Sort the principals in the sharing page. Before they could reorder
   randomly when saving changes.
