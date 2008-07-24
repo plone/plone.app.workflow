@@ -42,6 +42,7 @@ class WorkflowFunctionalTestCase(FunctionalTestCase):
         self.portal.acl_users._doAddUser('delegate_editor', 'secret', ['Member',],[])
         self.portal.acl_users._doAddUser('delegate_contributor', 'secret', ['Member',],[])
         self.portal.acl_users._doAddUser('delegate_reviewer', 'secret', ['Member',],[])
+        self.portal.acl_users._doAddUser('delegate_manager', 'secret', ['Member',],[])
 
         self.setRoles(('Manager',))
         self.folder.invokeFactory('News Item', 'newsitem1')
