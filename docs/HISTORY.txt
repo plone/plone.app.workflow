@@ -4,6 +4,13 @@ Changelog
 1.1.5 - UNRELEASED
 ------------------
 
+- Correct UnicodeDecodeError in sharing-view when users or groups with 
+  non-ascii characters are searched. All parameters fetched from the 
+  request are strings, but _(u'Logged-in users') isn't. A string with 
+  non-ascii characters and a unicode-string can't be joined. Fixes 
+  https://dev.plone.org/plone/ticket/7576
+  [csenger]
+
 1.1.4 - July 24, 2008
 ---------------------
 

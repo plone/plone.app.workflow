@@ -163,7 +163,7 @@ class SharingView(BrowserView):
                     if entry["roles"][role] in [True, False]:
                         entry["roles"][role] = role in desired_roles
 
-        current_settings.sort(key=lambda x: x["type"]+x["title"])
+        current_settings.sort(key=lambda x: x["type"]+str(x["title"]))
 
         return current_settings
 
