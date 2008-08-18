@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1.5 - UNRELEASED
-------------------
+1.1.5 - August 18th, 2008
+-------------------------
 
 - Correct UnicodeDecodeError in sharing-view when users or groups with 
   non-ascii characters are searched. All parameters fetched from the 
