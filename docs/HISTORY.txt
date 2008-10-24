@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.1.6 (Unreleased)
+------------------
+
+- Use safe_unicode() instead of str() to fix #7576. Fixes
+  https://dev.plone.org/plone/ticket/8371 .
+  [csenger]
+
 1.1.5 - August 18th, 2008
 -------------------------
 

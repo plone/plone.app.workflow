@@ -12,6 +12,7 @@ from zExceptions import Forbidden
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
 from Products.CMFPlone import PloneMessageFactory as _
+from Products.CMFPlone.utils import safe_unicode, getSiteEncoding
 from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.memoize.instance import memoize, clearafter
@@ -163,7 +164,8 @@ class SharingView(BrowserView):
                     if entry["roles"][role] in [True, False]:
                         entry["roles"][role] = role in desired_roles
 
-        current_settings.sort(key=lambda x: x["type"]+str(x["title"]))
+        encoding = getSiteEncoding(aq_inner(self.context))                               
+        current_settings.sort(key=lambda x: safe_unicode(x["type"], encoding)+safe_unicode(x["title"],encoding))
 
         return current_settings
 
