@@ -4,6 +4,9 @@ Changelog
 1.1.6 (Unreleased)
 ------------------
 
+- Adjusted a test to work with Zope 2.12.
+  [hannosch]
+
 - Use safe_unicode() instead of str() to fix #7576. Fixes
   https://dev.plone.org/plone/ticket/8371 .
   [csenger]

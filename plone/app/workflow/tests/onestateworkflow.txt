@@ -8,7 +8,7 @@ First, some set-up of our site for testing:
 
     >>> from Products.Five.testbrowser import Browser
     >>> browser = Browser()
-    >>> browser.handleErrors = False
+    >>> browser.handleErrors = True
     
 Let us log all exceptions, which is useful for debugging.
 
@@ -80,19 +80,16 @@ We shouldn't see the edit tab
 Or have the "Modify portal content" permission in any scenario
 
     >>> browser.open('%s/edit' % self.folder.absolute_url())
-    Traceback (most recent call last):
-    ...
-    Unauthorized: ...We're sorry, but there seems to be an error...
+    >>> 'Please log in' in browser.contents
+    True
 
     >>> browser.open('%s/edit' % self.folder.document1.absolute_url())
-    Traceback (most recent call last):
-    ...
-    Unauthorized: ...We're sorry, but there seems to be an error...
+    >>> 'Please log in' in browser.contents
+    True
 
     >>> browser.open('%s/edit' % self.folder.event1.absolute_url())
-    Traceback (most recent call last):
-    ...
-    Unauthorized: ...We're sorry, but there seems to be an error...
+    >>> 'Please log in' in browser.contents
+    True
 
 And for good measure, we can't access any of the fields on the event governed by
 "Change portal events".  
