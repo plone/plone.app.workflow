@@ -4,6 +4,10 @@ Changelog
 1.1.6 (Unreleased)
 ------------------
 
+- Display the userid in addition to the fullname if they are different.
+  Fixes https://dev.plone.org/plone/ticket/8251
+  [csenger]  
+
 - Adjusted a test to work with Zope 2.12.
   [hannosch]
 

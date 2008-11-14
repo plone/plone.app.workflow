@@ -44,6 +44,8 @@ class SharingView(BrowserView):
     # Actions
     
     template = ViewPageTemplateFile('sharing.pt')
+
+    STICKY = STICKY
     
     def __call__(self):
         """Perform the update and redirect if necessary, or render the page
