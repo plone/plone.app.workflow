@@ -24,11 +24,27 @@ setup(name='plone.app.workflow',
       namespace_packages = ['plone', 'plone.app'],
       include_package_data=True,
       zip_safe=False,
+      extras_require=dict(
+        test=[
+            'Products.CMFCalendar',
+            'Products.PloneTestCase',
+        ]
+      ),
       install_requires=[
         'setuptools',
+        'kss.core',
         'plone.memoize',
+        'plone.app.kss',
+        'zope.component',
+        'zope.interface',
+        'zope.schema',
+        'Plone',
+        'Products.CMFCore',
+        'Products.DCWorkflow',
+        'Products.statusmessages',
+        # 'transaction',
+        # 'Acquisition',
+        # 'DateTime',
+        # 'Zope2',
       ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
       )
