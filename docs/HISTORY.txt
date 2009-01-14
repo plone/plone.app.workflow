@@ -4,6 +4,9 @@ Changelog
 1.1.6 (Unreleased)
 ------------------
 
+- Fixed deprecation warnings for use of Globals.
+  [hannosch]
+
 - Specified package dependencies.
   [hannosch]
 

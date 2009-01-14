@@ -5,7 +5,7 @@ _marker = object()
 
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.utils import modifyRolesForPermission
-from Globals import PersistentMapping
+from Persistence import PersistentMapping
 from Acquisition import aq_base
 from DateTime import DateTime
 
