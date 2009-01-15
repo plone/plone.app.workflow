@@ -11,14 +11,14 @@ Changelog
   [hannosch]
 
 - Display the userid in addition to the fullname if they are different.
-  Fixes https://dev.plone.org/plone/ticket/8251
+  Fixes http://dev.plone.org/plone/ticket/8251
   [csenger]  
 
 - Adjusted a test to work with Zope 2.12.
   [hannosch]
 
 - Use safe_unicode() instead of str() to fix #7576. Fixes
-  https://dev.plone.org/plone/ticket/8371 .
+  http://dev.plone.org/plone/ticket/8371 .
   [csenger]
 
 1.1.5 - August 18th, 2008
@@ -28,7 +28,7 @@ Changelog
   non-ascii characters are searched. All parameters fetched from the 
   request are strings, but _(u'Logged-in users') isn't. A string with 
   non-ascii characters and a unicode-string can't be joined. Fixes 
-  https://dev.plone.org/plone/ticket/7576
+  http://dev.plone.org/plone/ticket/7576
   [csenger]
 
 1.1.4 - July 24, 2008
