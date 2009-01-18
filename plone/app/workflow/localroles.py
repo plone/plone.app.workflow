@@ -3,7 +3,7 @@ from plone.app.workflow.interfaces import ISharingPageRole
 from plone.app.workflow import permissions
 from Products.CMFCore import permissions as core_permissions
 
-from Products.CMFPlone import PloneMessageFactory as _
+from plone.app.workflow import PloneMessageFactory as _
 
 """
 XXX: policy explanation

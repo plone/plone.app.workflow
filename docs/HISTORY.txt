@@ -4,6 +4,9 @@ Changelog
 1.2 (Unreleased)
 ----------------
 
+- Use our own PloneMessageFactory.
+  [hannosch]
+
 - Fixed deprecation warnings for use of Globals.
   [hannosch]
 

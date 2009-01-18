@@ -11,12 +11,12 @@ from zExceptions import Forbidden
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
-from Products.CMFPlone import PloneMessageFactory as _
 from Products.CMFPlone.utils import safe_unicode, getSiteEncoding
 from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.memoize.instance import memoize, clearafter
 
+from plone.app.workflow import PloneMessageFactory as _
 from plone.app.workflow.interfaces import ISharingPageRole
 
 AUTH_GROUP = 'AuthenticatedUsers'
