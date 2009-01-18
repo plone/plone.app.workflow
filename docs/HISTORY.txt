@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1.6 (Unreleased)
-------------------
+1.2 (Unreleased)
+----------------
 
 - Fixed deprecation warnings for use of Globals.
   [hannosch]
