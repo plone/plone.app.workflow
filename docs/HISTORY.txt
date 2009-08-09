@@ -1,9 +1,11 @@
 Changelog
 =========
 
-1.2.1 - unreleased
+1.3 (unreleased)
 ------------------
 
+- Added support for the sharing.xml import/export syntax::
+  [optilude]
 
 1.2 - 2009-05-10
 ----------------
