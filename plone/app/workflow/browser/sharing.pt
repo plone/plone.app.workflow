@@ -13,7 +13,7 @@
 <h1 class="documentFirstHeading"
     i18n:translate="heading_currently_assigned_shares">
     Sharing for
-    "<span tal:content="context/Title" tal:omit-tag="" i18n:name="folder">title</span>"
+    <q><span tal:content="context/Title" tal:omit-tag="" i18n:name="folder">title</span></q>
 </h1>
 
 <dl class="portalMessage info" tal:condition="context_state/is_default_page">
