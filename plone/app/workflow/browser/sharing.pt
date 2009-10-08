@@ -13,7 +13,7 @@
 <h1 class="documentFirstHeading"
     i18n:translate="heading_currently_assigned_shares">
     Sharing for
-    <q><span tal:content="context/Title" tal:omit-tag="" i18n:name="folder">title</span></q>
+    &quot;<q tal:content="context/Title" tal:omit-tag="" i18n:name="folder">title</q>&quot;
 </h1>
 
 <dl class="portalMessage info" tal:condition="context_state/is_default_page">
@@ -72,6 +72,7 @@
               <th i18n:translate="label_name">User/Group</th>
               <th class="nosort"
                   tal:repeat="role available_roles"
+                  i18n:translate=""
                   tal:content="role/title"  />
           </tr>
       </thead>
