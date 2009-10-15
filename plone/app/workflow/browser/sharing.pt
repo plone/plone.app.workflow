@@ -1,19 +1,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       lang="en"
-      metal:use-macro="context/@@standard_macros/page"
+      metal:use-macro="context/main_template/macros/master"
       i18n:domain="plone">
 
 <head>
 </head>
 
 <body>
-<div metal:fill-slot="body"
+<div metal:fill-slot="main"
      tal:define="context_state context/@@plone_context_state">
 
 <h1 class="documentFirstHeading"
     i18n:translate="heading_currently_assigned_shares">
     Sharing for
-    &quot;<q tal:content="context/Title" tal:omit-tag="" i18n:name="folder">title</q>&quot;
+    <q><span tal:content="context/Title" i18n:name="folder">title</span></q>
 </h1>
 
 <dl class="portalMessage info" tal:condition="context_state/is_default_page">
