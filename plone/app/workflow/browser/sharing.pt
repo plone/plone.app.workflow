@@ -69,7 +69,7 @@
 
       <thead metal:define-macro="user-group-sharing-head" id="user-group-sharing-head">
           <tr tal:condition="python:len(role_settings) > 0">
-              <th i18n:translate="label_name">User/Group</th>
+              <th i18n:translate="label_name">Name</th>
               <th class="nosort"
                   tal:repeat="role available_roles"
                   i18n:translate=""
