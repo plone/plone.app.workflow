@@ -4,6 +4,8 @@ Changelog
 2.0b1 - Unreleased
 ------------------
 
+- Don't include <q> tag in heading_currently_assigned_shares message.
+  [vincentfretin]
 
 2.0a1 - 2009-11-14
 ------------------
