@@ -1,20 +1,18 @@
 from itertools import chain
 
+from plone.memoize.instance import memoize, clearafter
 from zope.component import getUtilitiesFor, getMultiAdapter
 
-from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
-from Acquisition import aq_inner, aq_parent, aq_base
+from Acquisition import aq_parent, aq_base
 from AccessControl import Unauthorized
 from zExceptions import Forbidden
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
-from Products.CMFPlone.utils import safe_unicode, getSiteEncoding
+from Products.CMFPlone.utils import safe_unicode
+from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-
-from plone.memoize.instance import memoize, clearafter
 
 from plone.app.workflow import PloneMessageFactory as _
 from plone.app.workflow.interfaces import ISharingPageRole
@@ -83,15 +81,15 @@ class SharingView(BrowserView):
                          roles = [r for r in roles if entry.get('role_%s' % r, False)]))
             if settings:
                 reindex = self.update_role_settings(settings, reindex=False) or reindex
-                
+
             if reindex:
-                aq_inner(self.context).reindexObjectSecurity()
+                self.context.reindexObjectSecurity()
             IStatusMessage(self.request).addStatusMessage(_(u"Changes saved."), type='info')
-            
+
         # Other buttons return to the sharing page
         if cancel_button:
             postback = False
-        
+
         if postback:
             return self.template()
         else:
@@ -110,7 +108,7 @@ class SharingView(BrowserView):
             - id
             - title
         """
-        context = aq_inner(self.context)
+        context = self.context
         portal_membership = getToolByName(context, 'portal_membership')
         
         pairs = []
@@ -166,8 +164,7 @@ class SharingView(BrowserView):
                     if entry["roles"][role] in [True, False]:
                         entry["roles"][role] = role in desired_roles
 
-        encoding = getSiteEncoding(aq_inner(self.context))                               
-        current_settings.sort(key=lambda x: safe_unicode(x["type"], encoding)+safe_unicode(x["title"],encoding))
+        current_settings.sort(key=lambda x: safe_unicode(x["type"])+safe_unicode(x["title"]))
 
         return current_settings
 
@@ -189,7 +186,7 @@ class SharingView(BrowserView):
 
         Returns a list of dicts as per role_settings()
         """
-        context = aq_inner(self.context)
+        context = self.context
         
         portal_membership = getToolByName(context, 'portal_membership')
         portal_groups = getToolByName(context, 'portal_groups')
@@ -322,7 +319,7 @@ class SharingView(BrowserView):
             id_key -- the key under which the principal id is stored in the
                 dicts returned from search_for_principal
         """
-        context = aq_inner(self.context)
+        context = self.context
         
         search_term = self.request.form.get('search_term', None)
         if not search_term:
@@ -392,7 +389,7 @@ class SharingView(BrowserView):
         
     def _inherited_roles(self):
         """Returns a tuple with the acquired local roles."""
-        context = aq_inner(self.context)
+        context = self.context
         
         if not self.inherited(context):
             return []
@@ -442,7 +439,7 @@ class SharingView(BrowserView):
         Returns True if changes were made, or False if the new settings
         are the same as the existing settings.
         """
-        context = aq_inner(self.context)
+        context = self.context
         portal_membership = getToolByName(context, 'portal_membership')
         
         if not portal_membership.checkPermission(permissions.ModifyPortalContent, context):
@@ -472,7 +469,7 @@ class SharingView(BrowserView):
         """
 
         changed = False
-        context = aq_inner(self.context)
+        context = self.context
             
         managed_roles = frozenset([r['id'] for r in self.roles()])
         member_ids_to_clear = []
