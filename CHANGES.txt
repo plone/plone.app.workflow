@@ -4,7 +4,7 @@ Changelog
 2.0b1 - Unreleased
 ------------------
 
-- Changed msgid box_search to button_search in sharing.pt. box_search have
+- Changed msgid box_search to label_search in sharing.pt. box_search have
   a different semantic in the header for the rendered search portlet.
   This closes http://dev.plone.org/plone/ticket/9752
 

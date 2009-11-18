@@ -55,7 +55,7 @@
                name="form.button.Search"
                value="Search"
                class="searchButton allowMultiSubmit" 
-               i18n:attributes="value button_search"
+               i18n:attributes="value label_search"
                />
     </div>
 
