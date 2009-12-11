@@ -220,7 +220,8 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
 
     def testChangeEventsIsNotAcquiredInPrivateState(self):
         self.assertEqual(self.workflow.getInfoFor(self.ev, 'review_state'), 'private')
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
+        # since r104169 event content doesn't use `ChangeEvents` anymore...
+        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPrivateEvent(self):
         self.assertEqual(self.workflow.getInfoFor(self.ev, 'review_state'), 'private')
@@ -247,7 +248,8 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # transition requires Review portal content
         self.login('manager')
         self.workflow.doActionFor(self.ev, 'publish')
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
+        # since r104169 event content doesn't use `ChangeEvents` anymore...
+        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishEvent(self):
         # transition requires Review portal content

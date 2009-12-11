@@ -120,7 +120,8 @@ class TestOneStateWorkflow(WorkflowTestCase):
     # Check change events permission
 
     def testChangeEventsIsNotAcquiredInPublishedState(self):
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
+        # since r104169 event content doesn't use `ChangeEvents` anymore...
+        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishEvent(self):
         # Owner is allowed

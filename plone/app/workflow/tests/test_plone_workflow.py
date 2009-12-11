@@ -362,7 +362,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.failIf(checkPerm(ChangeEvents, self.ev))
 
     def testChangeEventsIsNotAcquiredInVisibleState(self):
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
+        # since r104169 event content doesn't use `ChangeEvents` anymore...
+        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPrivateEvent(self):
         self.workflow.doActionFor(self.ev, 'hide')
@@ -380,7 +381,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testChangeEventsIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.ev, 'hide')
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
+        # since r104169 event content doesn't use `ChangeEvents` anymore...
+        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPendingEvent(self):
         self.workflow.doActionFor(self.ev, 'submit')
@@ -398,7 +400,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testChangeEventsIsNotAcquiredInPendingState(self):
         self.workflow.doActionFor(self.ev, 'submit')
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
+        # since r104169 event content doesn't use `ChangeEvents` anymore...
+        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishedEvent(self):
         self.login('reviewer')
@@ -419,7 +422,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testChangeEventsIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
         self.workflow.doActionFor(self.ev, 'publish')
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ChangeEvents), '')
+        # since r104169 event content doesn't use `ChangeEvents` anymore...
+        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     # Check catalog search
 
