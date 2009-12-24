@@ -4,7 +4,7 @@ from zope.component import provideAdapter, provideUtility, getUtilitiesFor
 from zope.component.testing import tearDown
 
 from five.localsitemanager import make_objectmanager_site
-from zope.app.component.hooks import setHooks, setSite, clearSite
+from zope.site.hooks import setHooks, setSite, clearSite
 
 from plone.app.workflow.exportimport import import_sharing, export_sharing
 from plone.app.workflow.exportimport import SharingXMLAdapter
