@@ -4,7 +4,7 @@ Changelog
 2.0a3 - 2009-12-27
 ------------------
 
-- Add support for GeneriSetup roles removal in sharing.xml. This
+- Add support for GenericSetup roles removal in sharing.xml. This
   closes http://dev.plone.org/plone/ticket/9979.
   [dukebody, thanks optilude]
 
