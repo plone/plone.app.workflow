@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0a3 - Unreleased
+2.0a3 - 2009-12-27
 ------------------
 
 - Add support for GeneriSetup roles removal in sharing.xml. This
