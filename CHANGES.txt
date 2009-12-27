@@ -4,6 +4,10 @@ Changelog
 2.0a3 - Unreleased
 ------------------
 
+- Add support for GeneriSetup roles removal in sharing.xml. This
+  closes http://dev.plone.org/plone/ticket/9979.
+  [dukebody, thanks optilude]
+
 - Use zope.site and declare missing package dependencies.
   [hannosch]
 

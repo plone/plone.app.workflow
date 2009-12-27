@@ -73,6 +73,14 @@ class SharingXMLAdapter(XMLAdapterBase):
         title = unicode(node.getAttribute('title'))
         required = node.getAttribute('permission') or None
 
+        if node.hasAttribute('remove'):
+            utility = self.context.queryUtility(ISharingPageRole, name)
+            if utility is not None:
+                if name in self.context.objectIds():
+                    self.context._delObject(name, suppress_events=True)
+                self.context.unregisterUtility(utility, ISharingPageRole, name)
+            return
+
         component = PersistentSharingPageRole(title=title, required_permission=required)
 
         self.context.registerUtility(component, ISharingPageRole, name, info=self.info_tag)

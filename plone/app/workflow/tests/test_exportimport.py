@@ -1,6 +1,6 @@
 import unittest
 
-from zope.component import provideAdapter, provideUtility, getUtilitiesFor
+from zope.component import provideAdapter, provideUtility, getUtilitiesFor, getSiteManager
 from zope.component.testing import tearDown
 
 from five.localsitemanager import make_objectmanager_site
@@ -26,8 +26,10 @@ class ExportImportTest(unittest.TestCase):
         make_objectmanager_site(site)
         setHooks()
         setSite(site)
+        sm = getSiteManager()
         
         self.site = site
+        self.sm = sm
     
     def roles(self):
         return dict(getUtilitiesFor(ISharingPageRole))
@@ -204,7 +206,63 @@ class TestImport(ExportImportTest):
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
         self.assertEquals('Can do stuff', roles['DoerOfStuff'].title)
         self.assertEquals('Delegate doing stuff', roles['DoerOfStuff'].required_permission)
+
+    def test_remove_one(self):
+
+        xml = """\
+<sharing>
+    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+</sharing>
+"""
+        context = DummyImportContext(self.sm, purge=False)
+        context._files = {'sharing.xml': xml}
         
+        import_sharing(context)
+        roles = self.roles()
+        
+        self.assertEquals(1, len(roles))
+        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
+
+        xml = """\
+<sharing>
+    <role remove="True" id='CopyEditor'/>
+</sharing> 
+"""
+        context = DummyImportContext(self.sm, purge=False)
+        context._files = {'sharing.xml': xml}
+
+        import_sharing(context)
+        roles = self.roles()
+
+        self.assertEquals(0, len(roles))
+
+    def test_remove_multiple(self):
+        xml = """\
+<sharing>
+    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+    <role id='DoerOfStuff' title='Can do stuff' permission='Delegate doing stuff'/>
+</sharing>
+"""
+        context = DummyImportContext(self.sm, purge=False)
+        context._files = {'sharing.xml': xml}        
+        import_sharing(context)
+
+        xml = """\
+<sharing>
+    <role id='Hacker' title='Can hack' permission='Hack the system'/>
+    <role remove="True" id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+</sharing>
+"""
+        context = DummyImportContext(self.sm, purge=False)
+        context._files = {'sharing.xml': xml}
+        
+        import_sharing(context)
+        roles = self.roles()
+        
+        self.assertEquals(2, len(roles))
+        self.assertEquals('Can do stuff', roles['DoerOfStuff'].title)
+        self.assertEquals('Can hack', roles['Hacker'].title)
+
 
 class TestExport(ExportImportTest):
     
