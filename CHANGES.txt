@@ -4,6 +4,9 @@ Changelog
 2.0b1 - unreleased
 ------------------
 
+- Allow @@sharing to search for group title as well as id.
+  Closes http://dev.plone.org/plone/ticket/9269
+  [esteele]
 
 2.0a3 - 2009-12-27
 ------------------

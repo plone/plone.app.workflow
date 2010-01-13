@@ -375,7 +375,7 @@ class SharingView(BrowserView):
         Returns a list of dicts, as per role_settings().
         """
         def search_for_principal(hunter, search_term):
-            return hunter.searchGroups(id=search_term)
+            return merge_search_results(chain(*[hunter.searchGroups(**{field:search_term}) for field in ['id', 'title']]), 'groupid')
         
         def get_principal_by_id(group_id):
             portal_groups = getToolByName(self.context, 'portal_groups')
