@@ -4,6 +4,10 @@ Changelog
 2.0b1 - unreleased
 ------------------
 
+- Updated sharing.pt to the recent markup conventions.
+  References http://dev.plone.org/plone/ticket/9981
+  [spliter]
+
 - Allow @@sharing to search for group title as well as id.
   Closes http://dev.plone.org/plone/ticket/9269
   [esteele]
