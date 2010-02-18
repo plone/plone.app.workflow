@@ -52,7 +52,7 @@ Head over to our temporary folder containing our one_state_workflow items
     
 We're not forced to log in and we can view the item. Thus, we have view permission
 
-    >>> 'Please log in' not in browser.contents
+    >>> 'Login Name' not in browser.contents
     True
 
 We can also access contents information
@@ -80,15 +80,15 @@ We shouldn't see the edit tab
 Or have the "Modify portal content" permission in any scenario
 
     >>> browser.open('%s/edit' % self.folder.absolute_url())
-    >>> 'Please log in' in browser.contents
+    >>> 'Login Name' in browser.contents
     True
 
     >>> browser.open('%s/edit' % self.folder.document1.absolute_url())
-    >>> 'Please log in' in browser.contents
+    >>> 'Login Name' in browser.contents
     True
 
     >>> browser.open('%s/edit' % self.folder.event1.absolute_url())
-    >>> 'Please log in' in browser.contents
+    >>> 'Login Name' in browser.contents
     True
 
 And for good measure, we can't access any of the fields on the event governed by
@@ -119,7 +119,7 @@ Head over to our temporary folder containing our one_state_workflow items
     
 We're not forced to log in and we can view the item. Thus, we have view permission
 
-    >>> 'Please log in' not in browser.contents
+    >>> 'Login Name' not in browser.contents
     True
 
 We can also access contents information
