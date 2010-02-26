@@ -347,18 +347,18 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testListVisibleFolderContents(self):
         # Owner is allowed
         self.failUnless(checkPerm(ListFolderContents, self.dir))
-        # Member is allowed
+        # Member is denied
         self.login('member')
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
-        # Reviewer is denied
-        self.login('reviewer')
         self.failIf(checkPerm(ListFolderContents, self.dir))
+        # Reviewer is allowed
+        self.login('reviewer')
+        self.failUnless(checkPerm(ListFolderContents, self.dir))
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(ListFolderContents, self.dir))
 
-    def testListFolderContentsIsNotAcquiredInVisibleState(self):
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), '')
+    def testListFolderContentsIsAcquiredInVisibleState(self):
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), 'CHECKED')
 
     def testListPrivateFolderContents(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -367,34 +367,34 @@ class TestFolderWorkflow(WorkflowTestCase):
         # Member is denied
         self.login('member')
         self.failIf(checkPerm(ListFolderContents, self.dir))
-        # Reviewer is denied
+        # Reviewer is allowed
         self.login('reviewer')
-        self.failIf(checkPerm(ListFolderContents, self.dir))
+        self.failUnless(checkPerm(ListFolderContents, self.dir))
         # Anonymous is denied
         self.logout()
         self.failIf(checkPerm(ListFolderContents, self.dir))
 
-    def testListFolderContentsIsNotAcquiredInPrivateState(self):
+    def testListFolderContentsIsAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.dir, 'hide')
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), '')
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), 'CHECKED')
 
     def testListPublishedFolderContents(self):
         self.workflow.doActionFor(self.dir, 'publish')
         # Owner is allowed
         self.failUnless(checkPerm(ListFolderContents, self.dir))
-        # Member is allowed
+        # Member is denied
         self.login('member')
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.failIf(checkPerm(ListFolderContents, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
         self.failUnless(checkPerm(ListFolderContents, self.dir))
-        # Anonymous is allowed
+        # Anonymous is denied
         self.logout()
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.failIf(checkPerm(ListFolderContents, self.dir))
 
-    def testListFolderContentsIsNotAcquiredInPublishedState(self):
+    def testListFolderContentsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
-        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), '')
+        self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), 'CHECKED')
 
     # Check catalog search
 

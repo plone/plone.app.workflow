@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.0b2 - Unreleased
+------------------
+
+- Adapt tests to new policy introduced in
+  http://dev.plone.org/plone/changeset/34375
+  References http://dev.plone.org/plone/ticket/10236
+  [tomster]
+
 2.0b1 - 2010-02-18
 ------------------
 
