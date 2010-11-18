@@ -89,10 +89,10 @@ Changelog
 1.1.5 - August 18th, 2008
 -------------------------
 
-- Correct UnicodeDecodeError in sharing-view when users or groups with 
-  non-ascii characters are searched. All parameters fetched from the 
-  request are strings, but _(u'Logged-in users') isn't. A string with 
-  non-ascii characters and a unicode-string can't be joined. Fixes 
+- Correct UnicodeDecodeError in sharing-view when users or groups with
+  non-ascii characters are searched. All parameters fetched from the
+  request are strings, but _(u'Logged-in users') isn't. A string with
+  non-ascii characters and a unicode-string can't be joined. Fixes
   http://dev.plone.org/plone/ticket/7576
   [csenger]
 
@@ -142,7 +142,7 @@ Changelog
 
 - Mark the security names as public so they can be imported everywhere
   and register them with Zope on startup so you can manage them via the
-  ZMI or a GenericSetup profile.  
+  ZMI or a GenericSetup profile.
   [wichert]
 
 
@@ -160,7 +160,7 @@ Changelog
   order to avoid people with a delegated permission escalating their own
   privileges. This can now be controlled at a high level by the
   "Sharing page: Delegate roles" permission, which controls access to the
-  Sharing page machinery, and at an individual roles basis, with 
+  Sharing page machinery, and at an individual roles basis, with
   permissions like "Sharing page: Delegate Editor role".
   http://dev.plone.org/plone/ticket/7652
 
