@@ -60,6 +60,7 @@
                        />
             </div>
 
+        <div id="user-group-sharing-container">
         <table metal:define-macro="user-group-sharing" id="user-group-sharing"
                class="listing"
                summary="Current sharing permissions"
@@ -132,6 +133,7 @@
                 </tal:entries>
             </tbody>
         </table>
+        </div>
 
         <div class="field">
             <input class="noborder"

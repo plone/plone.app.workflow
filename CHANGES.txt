@@ -4,6 +4,8 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+- Sharing table is into a div container.
+  [thomasdesvenain]
 
 2.0 - 2010-07-18
 ----------------
