@@ -6,23 +6,21 @@ security = ModuleSecurityInfo("plone.app.workflow.permissions")
 # Controls access to the "sharing" page
 security.declarePublic("DelegateRoles")
 DelegateRoles = "Sharing page: Delegate roles"
-setDefaultRoles(DelegateRoles, ('Manager', 'Owner', 'Editor', 'Reviewer', ))
+setDefaultRoles(DelegateRoles, ('Manager', 'Site Administrator', 'Owner', 'Editor', 'Reviewer', ))
 
 # Control the individual roles
 security.declarePublic("DelegateReaderRole")
 DelegateReaderRole = "Sharing page: Delegate Reader role"
-setDefaultRoles(DelegateReaderRole, ('Manager', 'Owner', 'Editor', 'Reviewer'))
+setDefaultRoles(DelegateReaderRole, ('Manager', 'Site Administrator', 'Owner', 'Editor', 'Reviewer'))
 
 security.declarePublic("DelegateEditorRole")
 DelegateEditorRole = "Sharing page: Delegate Editor role"
-setDefaultRoles(DelegateEditorRole, ('Manager', 'Owner', 'Editor'))
+setDefaultRoles(DelegateEditorRole, ('Manager', 'Site Administrator', 'Owner', 'Editor'))
 
 security.declarePublic("DelegateContributorRole")
 DelegateContributorRole = "Sharing page: Delegate Contributor role"
-setDefaultRoles(DelegateContributorRole, ('Manager', 'Owner',))
+setDefaultRoles(DelegateContributorRole, ('Manager', 'Site Administrator', 'Owner',))
 
 security.declarePublic("DelegateReviewerRole")
 DelegateReviewerRole = "Sharing page: Delegate Reviewer role"
-setDefaultRoles(DelegateReviewerRole, ('Manager', 'Reviewer',))
-
-
+setDefaultRoles(DelegateReviewerRole, ('Manager', 'Site Administrator', 'Reviewer',))

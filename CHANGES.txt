@@ -4,6 +4,10 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+- Add Site Administrator to the roles which are allowed to delegate the other
+  roles (for forward compatibility with Plone 4.1).
+  [davisagli]
+
 - Sharing table is into a div container.
   [thomasdesvenain]
 
