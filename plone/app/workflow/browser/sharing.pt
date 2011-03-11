@@ -35,6 +35,8 @@
         You can control who can view and edit your item using the list below.
     </div>
 
+    <div tal:replace="structure provider:plone.abovecontentbody" tal:condition="not:ajax_load" />
+
     <div id="content-core">
         <form method="post"
               tal:attributes="action string:${context/absolute_url}/@@sharing">

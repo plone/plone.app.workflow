@@ -4,6 +4,9 @@ Changelog
 2.0.2 - Unreleased
 ------------------
 
+- Added plone.abovecontentbody viewletmanager in sharing view.
+  [vincentfretin]
+
 2.0.1 - 2011-01-04
 ------------------
 
