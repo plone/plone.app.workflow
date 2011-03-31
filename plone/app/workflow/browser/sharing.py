@@ -2,6 +2,7 @@ from itertools import chain
 
 from plone.memoize.instance import memoize, clearafter
 from zope.component import getUtilitiesFor, getMultiAdapter
+from zope.i18n import translate
 
 from Acquisition import aq_parent, aq_base
 from AccessControl import Unauthorized
@@ -118,7 +119,7 @@ class SharingView(BrowserView):
             if permission is None or portal_membership.checkPermission(permission, context):
                 pairs.append(dict(id = name, title = utility.title))
                 
-        pairs.sort(key=lambda x: x["id"])
+        pairs.sort(key=lambda x: translate(x["title"], context=self.request))
         return pairs
         
     @memoize

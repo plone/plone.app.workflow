@@ -4,6 +4,9 @@ Changelog
 2.0.2 - Unreleased
 ------------------
 
+- Sort sharing columns by translated title instead of role id.
+  [vincentfretin]
+
 - Added plone.abovecontentbody viewletmanager in sharing view.
   [vincentfretin]
 
