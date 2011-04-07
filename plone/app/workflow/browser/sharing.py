@@ -10,7 +10,7 @@ from zExceptions import Forbidden
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
-from Products.CMFPlone.utils import safe_unicode
+from Products.CMFPlone.utils import normalizeString, safe_unicode
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
@@ -119,7 +119,7 @@ class SharingView(BrowserView):
             if permission is None or portal_membership.checkPermission(permission, context):
                 pairs.append(dict(id = name, title = utility.title))
                 
-        pairs.sort(key=lambda x: translate(x["title"], context=self.request))
+        pairs.sort(key=lambda x: normalizeString(translate(x["title"], context=self.request)))
         return pairs
         
     @memoize
