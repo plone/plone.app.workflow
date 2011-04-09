@@ -17,41 +17,43 @@ from Products.GenericSetup.tests.common import DummyExportContext
 
 from OFS.Folder import Folder
 
+
 class ExportImportTest(unittest.TestCase):
-    
+
     def setUp(self):
         provideAdapter(SharingXMLAdapter, name='plone.app.workflow.sharing')
-        
+
         site = Folder('plone')
         make_objectmanager_site(site)
         setHooks()
         setSite(site)
         sm = getSiteManager()
-        
+
         self.site = site
         self.sm = sm
-    
+
     def roles(self):
         return dict(getUtilitiesFor(ISharingPageRole))
-    
+
     def tearDown(self):
         clearSite()
         tearDown()
 
+
 class TestImport(ExportImportTest):
 
     def test_empty_import_no_purge(self):
-        
+
         xml = "<sharing />"
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
-        
+
         self.assertEquals(0, len(self.roles()))
 
     def test_import_single_no_purge(self):
-        
+
         xml = """\
 <sharing>
     <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
@@ -59,10 +61,10 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(1, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
@@ -77,10 +79,10 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(2, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
@@ -88,7 +90,7 @@ class TestImport(ExportImportTest):
         self.assertEquals(None, roles['Controller'].required_permission)
 
     def test_import_multiple_times_no_purge(self):
-        
+
         xml = """\
 <sharing>
     <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
@@ -96,14 +98,14 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(1, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
-        
+
         xml = """\
 <sharing>
     <role id='Controller' title='Can control' />
@@ -111,10 +113,10 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(2, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
@@ -122,7 +124,7 @@ class TestImport(ExportImportTest):
         self.assertEquals(None, roles['Controller'].required_permission)
 
     def test_import_multiples_times_purge(self):
-        
+
         xml = """\
 <sharing>
     <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
@@ -130,14 +132,14 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(1, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
-        
+
         xml = """\
 <sharing>
     <role id='Controller' title='Can control' />
@@ -145,16 +147,16 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=True)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(1, len(roles))
         self.assertEquals('Can control', roles['Controller'].title)
         self.assertEquals(None, roles['Controller'].required_permission)
 
     def test_import_multiples_times_no_purge_overwrite(self):
-        
+
         xml = """\
 <sharing>
     <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
@@ -162,14 +164,14 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(1, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
-        
+
         xml = """\
 <sharing>
     <role id='CopyEditor' title='Can edit copy' permission='Delegate: CopyEditor'/>
@@ -177,18 +179,18 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(1, len(roles))
         self.assertEquals('Can edit copy', roles['CopyEditor'].title)
         self.assertEquals('Delegate: CopyEditor', roles['CopyEditor'].required_permission)
 
     def test_import_override_global(self):
-        
+
         provideUtility(PersistentSharingPageRole("Do stuff", "A permission"), ISharingPageRole, name="DoerOfStuff")
-        
+
         xml = """\
 <sharing>
     <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
@@ -197,10 +199,10 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.site, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(2, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
         self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
@@ -216,17 +218,17 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.sm, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(1, len(roles))
         self.assertEquals('Can copyedit', roles['CopyEditor'].title)
 
         xml = """\
 <sharing>
     <role remove="True" id='CopyEditor'/>
-</sharing> 
+</sharing>
 """
         context = DummyImportContext(self.sm, purge=False)
         context._files = {'sharing.xml': xml}
@@ -244,7 +246,7 @@ class TestImport(ExportImportTest):
 </sharing>
 """
         context = DummyImportContext(self.sm, purge=False)
-        context._files = {'sharing.xml': xml}        
+        context._files = {'sharing.xml': xml}
         import_sharing(context)
 
         xml = """\
@@ -255,38 +257,38 @@ class TestImport(ExportImportTest):
 """
         context = DummyImportContext(self.sm, purge=False)
         context._files = {'sharing.xml': xml}
-        
+
         import_sharing(context)
         roles = self.roles()
-        
+
         self.assertEquals(2, len(roles))
         self.assertEquals('Can do stuff', roles['DoerOfStuff'].title)
         self.assertEquals('Can hack', roles['Hacker'].title)
 
 
 class TestExport(ExportImportTest):
-    
+
     def test_export_empty(self):
-        
+
         xml = """\
 <?xml version="1.0"?>
 <sharing/>
 """
         context = DummyExportContext(self.site)
         export_sharing(context)
-        
+
         self.assertEquals('sharing.xml', context._wrote[0][0])
         self.assertEquals(xml, context._wrote[0][1])
-    
+
     def test_export_multiple(self):
         sm = self.site.getSiteManager()
-        
+
         # Will not be exported, as it's global
         provideUtility(PersistentSharingPageRole("Do stuff", "A permission"), ISharingPageRole, name="DoerOfStuff")
-        
+
         # Will not be exported, as it wasn't imported with this handler
         sm.registerUtility(PersistentSharingPageRole("Do other Stuff"), ISharingPageRole, "DoerOfOtherStuff")
-        
+
         import_xml = """\
 <sharing>
     <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
@@ -304,14 +306,15 @@ class TestExport(ExportImportTest):
 
         import_context = DummyImportContext(self.site, purge=False)
         import_context._files = {'sharing.xml': import_xml}
-        
+
         import_sharing(import_context)
-        
+
         export_context = DummyExportContext(self.site)
         export_sharing(export_context)
-        
+
         self.assertEquals('sharing.xml', export_context._wrote[0][0])
         self.assertEquals(export_xml, export_context._wrote[0][1])
-        
+
+
 def test_suite():
     return unittest.defaultTestLoader.loadTestsFromName(__name__)

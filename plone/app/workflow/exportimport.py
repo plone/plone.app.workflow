@@ -15,15 +15,16 @@ from Products.GenericSetup.utils import XMLAdapterBase
 from zope.i18nmessageid import MessageFactory
 PMF = MessageFactory('plone')
 
+
 class PersistentSharingPageRole(Persistent):
     """These are registered as local utilities when managing the sharing
     page roles.
     """
     implements(ISharingPageRole)
-    
+
     title = u""
     required_permission = None
-    
+
     def __init__(self, title=u"", required_permission=None):
         self.title = PMF(title)
         self.required_permission = required_permission
@@ -38,7 +39,7 @@ class SharingXMLAdapter(XMLAdapterBase):
     info_tag = u"__sharing_gs__"
 
     def _importNode(self, node):
-        
+
         if self.environ.shouldPurge():
             self._purgeRoles()
 
@@ -47,7 +48,7 @@ class SharingXMLAdapter(XMLAdapterBase):
 
     def _exportNode(self):
         node = self._doc.createElement('sharing')
-        
+
         for reg in self._iterRoleRegistrations():
             node.appendChild(self._extractRole(reg))
 
@@ -65,10 +66,10 @@ class SharingXMLAdapter(XMLAdapterBase):
             self.context.unregisterUtility(provided=reg.provided, name=reg.name)
 
     def _initRole(self, node):
-        
+
         if node.nodeName != 'role':
             return
-            
+
         name = unicode(node.getAttribute('id'))
         title = unicode(node.getAttribute('title'))
         required = node.getAttribute('permission') or None
@@ -86,23 +87,24 @@ class SharingXMLAdapter(XMLAdapterBase):
         self.context.registerUtility(component, ISharingPageRole, name, info=self.info_tag)
 
     def _extractRole(self, reg):
-        
+
         component = reg.component
-        
+
         node = self._doc.createElement('role')
         node.setAttribute('id', reg.name)
         node.setAttribute('title', component.title)
-        
+
         if component.required_permission:
             node.setAttribute('permission', component.required_permission)
-        
+
         return node
 
+
 def import_sharing(context):
-    
+
     sm = getSiteManager(context.getSite())
     logger = context.getLogger('plone.app.workflow')
-    
+
     if sm is None or not IComponentRegistry.providedBy(sm):
         logger.info("Can not register sharing page roles, as no component registry was found.")
         return
@@ -112,12 +114,13 @@ def import_sharing(context):
         body = context.readDataFile('sharing.xml')
         if body is not None:
             importer.body = body
-    
+
+
 def export_sharing(context):
 
     sm = getSiteManager(context.getSite())
     logger = context.getLogger('plone.app.workflow')
-    
+
     if sm is None or not IComponentRegistry.providedBy(sm):
         logger.debug("Nothing to export.")
         return

@@ -18,7 +18,7 @@ class TestFolderWorkflow(WorkflowTestCase):
     def afterSetUp(self):
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
-        
+
         self.workflow.setChainForPortalTypes(['Folder'], 'folder_workflow')
 
         self.portal.acl_users._doAddUser('member', 'secret', ['Member'], [])

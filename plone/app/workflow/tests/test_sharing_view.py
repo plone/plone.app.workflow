@@ -19,18 +19,19 @@ class TestSharingView(WorkflowTestCase):
 
     def test_search_by_login_name(self):
         """Make sure we can search by login name on the Sharing tab.
-        
+
         Prevents regressions of #6853.
         """
         request = self.app.REQUEST
         request.form['search_term'] = 'testuser'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.user_search_results()
-        self.failUnless(len(results) and results[0].get('id') == 'testuser', msg="Didn't find testuser when I searched by login name.")
+        self.failUnless(len(results) and results[0].get('id') == 'testuser',
+            msg="Didn't find testuser when I searched by login name.")
 
     def test_search_with_nonascii_users(self):
         """Make sure we can search with users that have non-ascii-chars in their fullname.
-        
+
         Prevents regressions of #7576.
         """
         request = self.app.REQUEST
@@ -45,8 +46,8 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = 'testgroup'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.group_search_results()
-        self.failUnless(len(results) and results[0].get('id') == 'testgroup', msg="Didn't find testgroup when I searched by group id.")
-
+        self.failUnless(len(results) and results[0].get('id') == 'testgroup',
+            msg="Didn't find testgroup when I searched by group id.")
 
     def test_search_for_group_by_title(self):
         """ Make sure we can search for groups by title """
@@ -54,7 +55,9 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = 'meaningful'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.group_search_results()
-        self.failUnless(len(results) and results[0].get('title') == 'Some meaningful title', msg="Didn't find testuser when I searched by group title.")
+        self.failUnless(len(results) and results[0].get('title') == 'Some meaningful title',
+            msg="Didn't find testuser when I searched by group title.")
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

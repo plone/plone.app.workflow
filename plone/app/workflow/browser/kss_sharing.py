@@ -14,10 +14,10 @@ class KSSSharingView(base):
 
     template = ViewPageTemplateFile('sharing.pt')
     macro_wrapper = ViewPageTemplateFile('macro_wrapper.pt')
-    
+
     def updateSharingInfo(self, search_term=''):
-        sharing = getMultiAdapter((self.context, self.request,), name="sharing")
-    
+        sharing = getMultiAdapter((self.context, self.request), name="sharing")
+
         # get the html from a macro
         ksscore = self.getCommandSet('core')
 
@@ -27,4 +27,3 @@ class KSSSharingView(base):
         ksscore.replaceHTML(ksscore.getHtmlIdSelector(the_id), res)
 
         return self.render()
-

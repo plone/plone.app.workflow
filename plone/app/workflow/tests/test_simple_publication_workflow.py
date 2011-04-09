@@ -21,12 +21,12 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
     def afterSetUp(self):
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
-        self.workflow.setChainForPortalTypes(['Document','Event'], 'simple_publication_workflow')
+        self.workflow.setChainForPortalTypes(['Document', 'Event'], 'simple_publication_workflow')
 
         self.portal.acl_users._doAddUser('member', 'secret', ['Member'], [])
         self.portal.acl_users._doAddUser('reviewer', 'secret', ['Reviewer'], [])
         self.portal.acl_users._doAddUser('manager', 'secret', ['Manager'], [])
-        self.portal.acl_users._doAddUser('editor' , ' secret', ['Editor'],[])
+        self.portal.acl_users._doAddUser('editor', ' secret', ['Editor'], [])
         self.portal.acl_users._doAddUser('reader', 'secret', ['Reader'], [])
 
         self.folder.invokeFactory('Document', id='doc')

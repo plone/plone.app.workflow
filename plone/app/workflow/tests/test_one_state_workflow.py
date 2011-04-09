@@ -5,12 +5,12 @@
 from Products.CMFPlone.tests import PloneTestCase
 from base import WorkflowTestCase
 
-from Products.CMFCore.WorkflowCore import WorkflowException
+#from Products.CMFCore.WorkflowCore import WorkflowException
 
 from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
-from Products.CMFCore.permissions import ListFolderContents
+#from Products.CMFCore.permissions import ListFolderContents
 from Products.CMFCore.permissions import ModifyPortalContent
 from Products.CMFCalendar.permissions import ChangeEvents
 
@@ -20,16 +20,15 @@ default_user = PloneTestCase.default_user
 
 class TestOneStateWorkflow(WorkflowTestCase):
 
-
     def afterSetUp(self):
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
-        self.workflow.setChainForPortalTypes(['Document','Event'], 'one_state_workflow')
+        self.workflow.setChainForPortalTypes(['Document', 'Event'], 'one_state_workflow')
 
         self.portal.acl_users._doAddUser('member', 'secret', ['Member'], [])
         self.portal.acl_users._doAddUser('reviewer', 'secret', ['Reviewer'], [])
         self.portal.acl_users._doAddUser('manager', 'secret', ['Manager'], [])
-        self.portal.acl_users._doAddUser('editor' , ' secret', ['Editor'],[])
+        self.portal.acl_users._doAddUser('editor', ' secret', ['Editor'], [])
         self.portal.acl_users._doAddUser('reader', 'secret', ['Reader'], [])
 
 

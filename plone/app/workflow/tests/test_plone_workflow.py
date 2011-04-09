@@ -21,8 +21,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def afterSetUp(self):
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
-        
-        self.workflow.setChainForPortalTypes(['Document','Event'], 'plone_workflow')
+
+        self.workflow.setChainForPortalTypes(['Document', 'Event'], 'plone_workflow')
 
         self.portal.acl_users._doAddUser('member', 'secret', ['Member'], [])
         self.portal.acl_users._doAddUser('reviewer', 'secret', ['Reviewer'], [])
@@ -499,14 +499,13 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.failUnless(worklist[0] == self.doc)
 
     def testStateTitles(self):
-        state_titles = { 'private': 'Private',
+        state_titles = {'private': 'Private',
                         'visible': 'Public draft',
                         'pending': 'Pending review',
-                        'published': 'Published'
-                        }
+                        'published': 'Published'}
 
         wf = self.workflow.plone_workflow
-            
+
         for state_id, title in state_titles.items():
             state = getattr(wf.states, state_id, None)
             if state is not None:
