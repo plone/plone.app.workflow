@@ -1,11 +1,16 @@
 Changelog
 =========
 
+
 2.0.3 - unreleased
 ------------------
 
+- Add MANIFEST.in.
+  [WouterVH]
+
 - Normalize translated string before sorting sharing columns.
   [vincentfretin]
+
 
 2.0.2 - 2011-04-03
 ------------------
@@ -15,6 +20,7 @@ Changelog
 
 - Added plone.abovecontentbody viewletmanager in sharing view.
   [vincentfretin]
+
 
 2.0.1 - 2011-01-04
 ------------------
@@ -29,11 +35,13 @@ Changelog
 - Sharing table is into a div container.
   [thomasdesvenain]
 
+
 2.0 - 2010-07-18
 ----------------
 
 - Update license to GPL version 2 only.
   [hannosch]
+
 
 2.0b2 - 2010-03-05
 ------------------
@@ -42,6 +50,7 @@ Changelog
   http://dev.plone.org/plone/changeset/34375
   References http://dev.plone.org/plone/ticket/10236
   [tomster]
+
 
 2.0b1 - 2010-02-18
 ------------------
@@ -54,6 +63,7 @@ Changelog
   Closes http://dev.plone.org/plone/ticket/9269
   [esteele]
 
+
 2.0a3 - 2009-12-27
 ------------------
 
@@ -64,6 +74,7 @@ Changelog
 - Use zope.site and declare missing package dependencies.
   [hannosch]
 
+
 2.0a2 - 2009-12-16
 ------------------
 
@@ -73,6 +84,7 @@ Changelog
 
 - Don't include <q> tag in heading_currently_assigned_shares message.
   [vincentfretin]
+
 
 2.0a1 - 2009-11-14
 ------------------
@@ -86,6 +98,7 @@ Changelog
 
 - Added support for the sharing.xml import/export syntax.
   [optilude]
+
 
 1.2 - 2009-05-10
 ----------------
@@ -110,8 +123,9 @@ Changelog
   http://dev.plone.org/plone/ticket/8371.
   [csenger]
 
-1.1.5 - August 18th, 2008
--------------------------
+
+1.1.5 - 2008-08-18
+------------------
 
 - Correct UnicodeDecodeError in sharing-view when users or groups with
   non-ascii characters are searched. All parameters fetched from the
@@ -120,8 +134,9 @@ Changelog
   http://dev.plone.org/plone/ticket/7576
   [csenger]
 
-1.1.4 - July 24, 2008
----------------------
+
+1.1.4 - 2008-07-24
+------------------
 
 - Keep the icons for inherited and global roles when updating the sharing
   page after a search. This fixes http://dev.plone.org/plone/ticket/8313 .
@@ -137,8 +152,8 @@ Changelog
   [wichert]
 
 
-1.1.3 - July 7th, 2008
-----------------------
+1.1.3 - 2008-07-07
+------------------
 
 - Modify the inline (kss) search option in the sharing page to only search
   and not update the roles and search. This behaviour was unintuitive and
@@ -170,15 +185,15 @@ Changelog
   [wichert]
 
 
-1.1.0 - April 21, 2008
-----------------------
+1.1.0 - 2008-04-21
+------------------
 
 - Protect the "sharing" form against CSRF attacks.
   [witsch]
 
 
-1.0.7 - March 9, 2008
----------------------
+1.0.7 - 2008-03-09
+------------------
 
 - Created fine-grained permissions for delegating sharing page roles in
   order to avoid people with a delegated permission escalating their own
