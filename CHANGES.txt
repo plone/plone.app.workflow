@@ -4,6 +4,11 @@ Changelog
 2.0.4 - unreleased
 ------------------
 
+- In sharing view, the search for users and groups was done twice, once in
+  macro_wrapper template and another one in the user-group-sharing macro
+  in sharing template because of duplicate variable definitions.
+  [vincentfretin]
+
 
 2.0.3 - 2011-05-12
 ------------------

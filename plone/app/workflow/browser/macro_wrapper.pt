@@ -2,10 +2,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       i18n:domain="plone">
         <tal:defines define="here nocall:options/instance;
-                             view nocall:options/view;
-                             available_roles view/roles;
-                             num_columns python:len(available_roles) + 1;
-                             role_settings view/role_settings">
+                             view nocall:options/view;">
            <metal:block use-macro="options/the_macro" />
         </tal:defines>
 </tal:block>
