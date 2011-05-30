@@ -4,6 +4,10 @@ Changelog
 2.0.4 - unreleased
 ------------------
 
+- In sharing view, return empty list immediately if search_term is the
+  translated "Search for user or group" message.
+  [vincentfretin]
+
 - In sharing view, the search for users and groups was done twice, once in
   macro_wrapper template and another one in the user-group-sharing macro
   in sharing template because of duplicate variable definitions.

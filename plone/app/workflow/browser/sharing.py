@@ -324,8 +324,10 @@ class SharingView(BrowserView):
         """
         context = self.context
 
+        translated_message = translate(_(u"Search for user or group"),
+                context=self.request)
         search_term = self.request.form.get('search_term', None)
-        if not search_term:
+        if not search_term or search_term == translated_message:
             return []
 
         existing_principals = set([p['id'] for p in self.existing_role_settings()
