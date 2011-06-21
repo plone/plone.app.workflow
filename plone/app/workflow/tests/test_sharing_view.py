@@ -67,14 +67,14 @@ class TestSharingView(WorkflowTestCase):
         self.portal.acl_users._doAddUser('localmanager', 'secret', ['Member'], [])
         folder = self.portal[self.portal.invokeFactory('Folder', 'folder')]
         subfolder = folder[folder.invokeFactory('Folder', 'subfolder')]
-        folder.manage_setLocalRoles('localmanager', ('Site Administrator',))
+        folder.manage_setLocalRoles('localmanager', ('Manager',))
 
         self.login('localmanager')
         sharing = subfolder.restrictedTraverse('@@sharing')
         sharing.update_inherit(status=False, reindex=True)
 
         user = self.portal.portal_membership.getAuthenticatedMember()
-        self.failUnless('Site Administrator' in user.getRolesInContext(subfolder),)
+        self.failUnless('Manager' in user.getRolesInContext(subfolder),)
 
 
 def test_suite():
