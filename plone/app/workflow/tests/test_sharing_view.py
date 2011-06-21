@@ -58,6 +58,24 @@ class TestSharingView(WorkflowTestCase):
         self.failUnless(len(results) and results[0].get('title') == 'Some meaningful title',
             msg="Didn't find testuser when I searched by group title.")
 
+    def test_local_manager_removes_inheritance(self):
+        """When a user that inherits the right to remove inheritance do it,
+        its roles are locally set on content
+        to avoid him to loose rights on the content itself
+        Refs #11945
+        """
+        self.portal.acl_users._doAddUser('localmanager', 'secret', ['Member'], [])
+        folder = self.portal[self.portal.invokeFactory('Folder', 'folder')]
+        subfolder = folder[folder.invokeFactory('Folder', 'subfolder')]
+        folder.manage_setLocalRoles('localmanager', ('Site Administrator',))
+
+        self.login('localmanager')
+        sharing = subfolder.restrictedTraverse('@@sharing')
+        sharing.update_inherit(status=False, reindex=True)
+
+        user = self.portal.portal_membership.getAuthenticatedMember()
+        self.failUnless('Site Administrator' in user.getRolesInContext(subfolder),)
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

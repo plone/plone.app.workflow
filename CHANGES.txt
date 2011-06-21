@@ -4,6 +4,13 @@ Changelog
 2.0.4 - unreleased
 ------------------
 
+- If user has inherited local roles on a folder
+  and removes inheritance on sharing page,
+  locally set roles he inherited before
+  to avoid definitive lose of access.
+  This refs http://dev.plone.org/plone/ticket/11945.
+  [thomasdesvenain]
+
 - In sharing view, return empty list immediately if search_term is the
   translated "Search for user or group" message.
   [vincentfretin]

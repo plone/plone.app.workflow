@@ -449,18 +449,31 @@ class SharingView(BrowserView):
         context = self.context
         portal_membership = getToolByName(context, 'portal_membership')
 
-        if not portal_membership.checkPermission(permissions.ModifyPortalContent, context):
+        if not portal_membership.checkPermission(
+                                permissions.ModifyPortalContent, context):
             raise Unauthorized
 
         block = not status
-        oldblock = bool(getattr(aq_base(context), '__ac_local_roles_block__', False))
+        oldblock = bool(getattr(aq_base(context),
+                                '__ac_local_roles_block__', False))
 
         if block == oldblock:
             return False
 
+        if block:
+            # If user has inherited local roles and removes inheritance,
+            # locally set roles he inherited before
+            # to avoid definitive lose of access (refs #11945)
+            user = portal_membership.getAuthenticatedMember()
+            context_roles = user.getRolesInContext(context)
+            global_roles = user.getRoles()
+            local_roles = [r for r in context_roles if r not in global_roles]
+            context.manage_setLocalRoles(user.getId(), local_roles)
+
         context.__ac_local_roles_block__ = block and True or None
         if reindex:
             context.reindexObjectSecurity()
+
         return True
 
     @clearafter
