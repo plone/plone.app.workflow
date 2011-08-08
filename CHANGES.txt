@@ -4,6 +4,11 @@ Changelog
 2.0.5 - unreleased
 ------------------
 
+- User should click the 'Save' button to actually save its changes in the 
+  sharing tab. IOW we dont want to update local roles while searching 
+  for users.
+  [jfroche]
+
 
 2.0.4 - 2011-07-04
 ------------------
