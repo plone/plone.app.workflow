@@ -56,12 +56,9 @@ class SharingView(BrowserView):
 
         form = self.request.form
         submitted = form.get('form.submitted', False)
-
         save_button = form.get('form.button.Save', None) is not None
         cancel_button = form.get('form.button.Cancel', None) is not None
-
-        if submitted and not cancel_button:
-
+        if submitted and save_button and not cancel_button:
             if not self.request.get('REQUEST_METHOD', 'GET') == 'POST':
                 raise Forbidden
 

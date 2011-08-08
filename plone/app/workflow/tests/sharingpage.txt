@@ -69,24 +69,46 @@ other roles can do.
 
     >>> browser.getControl(name='search_term').value = "delegate_contributor"
     >>> browser.getControl(name='form.button.Search').click()
+    >>> 'Changes saved' not in browser.contents
+    True
     >>> browser.getControl(name='entries.role_Contributor:records').getControl(value='True',index=-1).click()
+    >>> request = self.portal.REQUEST
+    >>> request.form['form.button.Save'] = 1
+    >>> browser.getControl("Save").click()
+    >>> 'Changes saved' in browser.contents
+    True
 
     >>> browser.getControl(name='search_term').value = "delegate_editor"
     >>> browser.getControl(name='form.button.Search').click()
     >>> browser.getControl(name='entries.role_Editor:records').getControl(value='True',index=-1).click()
+    >>> request = self.portal.REQUEST
+    >>> request.form['form.button.Save'] = 1
+    >>> browser.getControl("Save").click()
+    >>> 'Changes saved' in browser.contents
+    True
 
     >>> #browser.getControl(name='search_term').value = "delegate_manager"
     >>> #browser.getControl(name='form.button.Search').click()
     >>> #browser.getControl(name='entries.role_Manager:records').getControl(value='True',index=-1).click()
+    >>> #request = self.portal.REQUEST
+    >>> #request.form['form.button.Save'] = 1
+    >>> #browser.getControl("Save").click()
+    >>> #'Changes saved' in browser.contents
 
     >>> browser.getControl(name='search_term').value = "delegate_reader"
     >>> browser.getControl(name='form.button.Search').click()
     >>> browser.getControl(name='entries.role_Reader:records').getControl(value='True',index=-1).click()
+    >>> request = self.portal.REQUEST
+    >>> request.form['form.button.Save'] = 1
+    >>> browser.getControl("Save").click()
+    >>> 'Changes saved' in browser.contents
+    True
 
     >>> browser.getControl(name='search_term').value = "delegate_reviewer"
     >>> browser.getControl(name='form.button.Search').click()
     >>> browser.getControl(name='entries.role_Reviewer:records').getControl(value='True',index=-1).click()
-
+    >>> request = self.portal.REQUEST
+    >>> request.form['form.button.Save'] = 1
     >>> browser.getControl("Save").click()
     >>> 'Changes saved' in browser.contents
     True
