@@ -25,5 +25,5 @@ class KSSSharingView(base):
         macro = self.template.macros[the_id]
         res = self.macro_wrapper(the_macro=macro, instance=self.context, view=sharing)
         ksscore.replaceHTML(ksscore.getHtmlIdSelector(the_id), res)
-
+        self.issueAllPortalMessages()
         return self.render()
