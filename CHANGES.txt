@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.5 - unreleased
+2.0.5 (2011-08-31)
 ------------------
 
 - User should click the 'Save' button to actually save its changes in the 
