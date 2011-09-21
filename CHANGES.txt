@@ -4,7 +4,8 @@ Changelog
 2.0.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ensure a stable ordering in the sharing.xml GS export.
+  [hannosch]
 
 
 2.0.5 (2011-08-31)

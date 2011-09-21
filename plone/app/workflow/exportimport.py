@@ -47,11 +47,16 @@ class SharingXMLAdapter(XMLAdapterBase):
             self._initRole(child)
 
     def _exportNode(self):
-        node = self._doc.createElement('sharing')
-
+        regs = []
         for reg in self._iterRoleRegistrations():
-            node.appendChild(self._extractRole(reg))
+            regs.append(self._extractRole(reg))
 
+        node = self._doc.createElement('sharing')
+        def _sort(key):
+            return (key.getAttribute('id'), key.getAttribute('title'))
+        regs.sort(key=_sort)
+        for reg in regs:
+            node.appendChild(reg)
         return node
 
     def _iterRoleRegistrations(self):
