@@ -465,7 +465,8 @@ class SharingView(BrowserView):
             context_roles = user.getRolesInContext(context)
             global_roles = user.getRoles()
             local_roles = [r for r in context_roles if r not in global_roles]
-            context.manage_setLocalRoles(user.getId(), local_roles)
+            if local_roles:
+                context.manage_setLocalRoles(user.getId(), local_roles)
 
         context.__ac_local_roles_block__ = block and True or None
         if reindex:

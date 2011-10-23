@@ -4,6 +4,10 @@ Changelog
 2.0.6 (unreleased)
 ------------------
 
+- Avoid failure if user with global 'Manager' role
+  removes inheritance on sharing.
+  [thomasdesvenain]
+
 - Ensure a stable ordering in the sharing.xml GS export.
   [hannosch]
 
