@@ -7,7 +7,7 @@
         factory=".exportimport.SharingXMLAdapter"
         name="plone.app.workflow.sharing"
         />
-    
+
     <gs:importStep
         name="sharing"
         title="Sharing (local) roles"
