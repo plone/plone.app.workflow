@@ -10,11 +10,11 @@
         />
 
     <browser:page
-        for="*"
-        class=".kss_sharing.KSSSharingView"
         name="updateSharingInfo"
+        for="*"
+        class=".sharing.SharingView"
         attribute="updateSharingInfo"
         permission="plone.DelegateRoles"
-      />
+        />
 
 </configure>

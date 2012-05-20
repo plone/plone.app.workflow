@@ -18,6 +18,8 @@ from Products.statusmessages.interfaces import IStatusMessage
 from plone.app.workflow import PloneMessageFactory as _
 from plone.app.workflow.interfaces import ISharingPageRole
 
+import json
+
 AUTH_GROUP = 'AuthenticatedUsers'
 STICKY = (AUTH_GROUP, )
 
@@ -45,13 +47,27 @@ class SharingView(BrowserView):
     # Actions
 
     template = ViewPageTemplateFile('sharing.pt')
+    macro_wrapper = ViewPageTemplateFile('macro_wrapper.pt')
 
     STICKY = STICKY
 
     def __call__(self):
         """Perform the update and redirect if necessary, or render the page
         """
+        postback = self.handle_form()
+        if postback:
+            return self.template()
+        else:
+            context_state = self.context.restrictedTraverse(
+                "@@plone_context_state")
+            url = context_state.view_url()
+            self.request.response.redirect(url)
 
+    def handle_form(self):
+        """
+        We split this out so we can reuse this for ajax.
+        Will return a boolean if it was a post or not
+        """
         postback = True
 
         form = self.request.form
@@ -62,7 +78,8 @@ class SharingView(BrowserView):
             if not self.request.get('REQUEST_METHOD', 'GET') == 'POST':
                 raise Forbidden
 
-            authenticator = self.context.restrictedTraverse('@@authenticator', None)
+            authenticator = self.context.restrictedTraverse('@@authenticator',
+                                                            None)
             if not authenticator.verify():
                 raise Forbidden
 
@@ -76,26 +93,23 @@ class SharingView(BrowserView):
             settings = []
             for entry in entries:
                 settings.append(
-                    dict(id = entry['id'],
-                         type = entry['type'],
-                         roles = [r for r in roles if entry.get('role_%s' % r, False)]))
+                    dict(id=entry['id'],
+                         type=entry['type'],
+                         roles=[r for r in roles
+                            if entry.get('role_%s' % r, False)]))
             if settings:
-                reindex = self.update_role_settings(settings, reindex=False) or reindex
-
+                reindex = self.update_role_settings(settings, reindex=False) \
+                            or reindex
             if reindex:
                 self.context.reindexObjectSecurity()
-            IStatusMessage(self.request).addStatusMessage(_(u"Changes saved."), type='info')
+            IStatusMessage(self.request).addStatusMessage(
+                _(u"Changes saved."), type='info')
 
         # Other buttons return to the sharing page
         if cancel_button:
             postback = False
 
-        if postback:
-            return self.template()
-        else:
-            context_state = self.context.restrictedTraverse("@@plone_context_state")
-            url = context_state.view_url()
-            self.request.response.redirect(url)
+        return postback
 
     # View
 
@@ -530,3 +544,15 @@ class SharingView(BrowserView):
             self.context.reindexObjectSecurity()
 
         return changed
+
+    def updateSharingInfo(self, search_term=''):
+        self.handle_form()
+        the_id = 'user-group-sharing'
+        macro = self.template.macros[the_id]
+        res = self.macro_wrapper(the_macro=macro, instance=self.context,
+                                 view=self)
+        messages = self.context.restrictedTraverse('global_statusmessage')()
+        return json.dumps({
+            'body': res,
+            'messages': messages
+        })

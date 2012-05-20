@@ -32,8 +32,6 @@ setup(name='plone.app.workflow',
       ),
       install_requires=[
         'setuptools',
-        'kss.core',
-        'plone.app.kss',
         'plone.memoize',
         'transaction',
         'zope.component',
