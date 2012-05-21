@@ -89,8 +89,8 @@
                                     sticky python:entry['id'] in view.STICKY"
                         tal:attributes="class python:oddrow and 'odd' or 'even'">
                         <td>
-                            <img tal:condition="is_group" tal:replace="structure context/group.gif" />
-                            <img tal:condition="not:is_group" tal:replace="structure context/user.gif" />
+                            <img tal:condition="is_group" tal:replace="structure context/group.png" />
+                            <img tal:condition="not:is_group" tal:replace="structure context/user.png" />
 
                             <tal:sticky condition="sticky">
                               <span tal:replace="entry/title" />
@@ -118,8 +118,8 @@
                         <td class="listingCheckbox"
                             tal:repeat="role available_roles">
                             <tal:block define="entry_role python:entry['roles'][role['id']]">
-                                <img tal:condition="python:entry_role == 'global'" tal:replace="structure context/site_icon.gif" />
-                                <img tal:condition="python:entry_role == 'acquired'" tal:replace="structure context/confirm_icon.gif" />
+                                <img tal:condition="python:entry_role == 'global'" tal:replace="structure context/site_icon.png" />
+                                <img tal:condition="python:entry_role == 'acquired'" tal:replace="structure context/confirm_icon.png" />
                                 <tal:block condition="python:entry_role in (True, False)">
                                   <input class="noborder"
                                          type="checkbox"
@@ -155,10 +155,10 @@
                 be valid.
                 In the overview, the symbol
                 <img i18n:name="image_confirm_icon"
-                     tal:replace="structure context/confirm_icon.gif" />
+                     tal:replace="structure context/confirm_icon.png" />
                 indicates an inherited value. Similarly, the symbol
                 <img i18n:name="image_link_icon"
-                     tal:replace="structure context/site_icon.gif" />
+                     tal:replace="structure context/site_icon.png" />
                 indicates a global role, which is managed by the site administrator.
             </div>
         </div>
