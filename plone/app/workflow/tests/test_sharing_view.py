@@ -13,6 +13,8 @@ class TestSharingView(WorkflowTestCase):
         self.portal.acl_users._doAddUser('testuser', 'secret', ['Member'], [])
         self.portal.acl_users._doAddUser('nonasciiuser', 'secret', ['Member'], [])
         self.portal.acl_users._doAddGroup('testgroup', [], title='Some meaningful title')
+        testuser = self.portal.portal_membership.getMemberById('testuser')
+        testuser.setMemberProperties(dict(email='testuser@plone.org'))
         nonasciiuser = self.portal.portal_membership.getMemberById('nonasciiuser')
         nonasciiuser.setMemberProperties(dict(fullname=u'\xc4\xdc\xdf'.encode('utf-8')))
         self.loginAsPortalOwner()
@@ -28,6 +30,23 @@ class TestSharingView(WorkflowTestCase):
         results = view.user_search_results()
         self.failUnless(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched by login name.")
+
+    def search_by_email(self, term):
+        request = self.app.REQUEST
+        request.form['search_term'] = term
+        view = getMultiAdapter((self.portal, request), name='sharing')
+        results = view.user_search_results()
+        self.failUnless(len(results) and results[0].get('id') == 'testuser',
+            msg="Didn't find testuser when I searched for %s as email." % term)
+
+    def test_search_by_email(self):
+        """Make sure we can search by email on the Sharing tab.
+
+        Prevents regressions of #11631.
+        """
+        self.search_by_email('testuser@plone.org')
+        self.search_by_email('plone.org')
+        self.search_by_email('plone')
 
     def test_search_with_nonascii_users(self):
         """Make sure we can search with users that have non-ascii-chars in their fullname.
