@@ -137,7 +137,8 @@
         </table>
         </div>
 
-        <div class="field">
+        <div class="field" id="field-inherit"
+             tal:condition="view/caneditinherit">
             <input class="noborder"
                    type="checkbox"
                    name="inherit:boolean"

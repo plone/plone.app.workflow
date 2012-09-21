@@ -4,6 +4,10 @@ Changelog
 2.0.8 (unreleased)
 ------------------
 
+- Refactor: we can easily customize the sharing view 
+  so that add/remove inherit field is removed.
+  [thomasdesvenain]
+
 - Search on email address within the Sharing view.
   [davidjb]
 

@@ -67,8 +67,11 @@ class SharingView(BrowserView):
                 raise Forbidden
 
             # Update the acquire-roles setting
-            inherit = bool(form.get('inherit', False))
-            reindex = self.update_inherit(inherit, reindex=False)
+            if self.caneditinherit():
+                inherit = bool(form.get('inherit', False))
+                reindex = self.update_inherit(inherit, reindex=False)
+            else:
+                reindex = False
 
             # Update settings for users and groups
             entries = form.get('entries', [])
@@ -167,6 +170,9 @@ class SharingView(BrowserView):
         current_settings.sort(key=lambda x: safe_unicode(x["type"])+safe_unicode(x["title"]))
 
         return current_settings
+    
+    def caneditinherit(self):
+        return True
 
     def inherited(self, context=None):
         """Return True if local roles are inherited here.
