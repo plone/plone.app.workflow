@@ -67,7 +67,7 @@ class SharingView(BrowserView):
                 raise Forbidden
 
             # Update the acquire-roles setting
-            if self.caneditinherit():
+            if self.can_edit_inherit():
                 inherit = bool(form.get('inherit', False))
                 reindex = self.update_inherit(inherit, reindex=False)
             else:
@@ -171,7 +171,10 @@ class SharingView(BrowserView):
 
         return current_settings
     
-    def caneditinherit(self):
+    def can_edit_inherit(self):
+        """If this method returns True, user can change role role inheritance status
+        If it is False, inherit checkbox is not displayed on form
+        """
         return True
 
     def inherited(self, context=None):
