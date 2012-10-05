@@ -54,7 +54,7 @@
                        value=""
                        />
                 <input type="submit"
-                       id="sharing-save-button"
+                       id="sharing-search-button"
                        name="form.button.Search"
                        value="Search"
                        class="searchButton allowMultiSubmit"
@@ -164,7 +164,7 @@
             </div>
         </div>
 
-            <input class="context" type="submit" name="form.button.Save" value="Save" i18n:attributes="value label_save" />
+            <input id="sharing-save-button" class="context allowMultiSubmit" type="submit" name="form.button.Save" value="Save" i18n:attributes="value label_save" />
             <input class="standalone" type="submit" name="form.button.Cancel" value="Cancel" i18n:attributes="value label_cancel"/>
 
             <input tal:replace="structure context/@@authenticator/authenticator" />
