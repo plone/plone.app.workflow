@@ -4,7 +4,9 @@ Changelog
 2.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Extensibility improvement on sharing view so developers can easily
+  override this view and change what groups are always displayed (STICKY).
+  [ispburger]
 
 
 2.1.0 (2012-10-16)

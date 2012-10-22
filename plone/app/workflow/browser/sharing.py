@@ -264,7 +264,7 @@ class SharingView(BrowserView):
         # Sort the list: first the authenticated users virtual group, then
         # all other groups and then all users, alphabetically
 
-        dec_users = [(a['id'] not in STICKY,
+        dec_users = [(a['id'] not in self.STICKY,
                        a['type'],
                        a['name'],
                        a) for a in items.values()]
@@ -313,7 +313,7 @@ class SharingView(BrowserView):
                 else:
                     info_item['roles'][r] = False
 
-            if have_roles or rid in STICKY:
+            if have_roles or rid in self.STICKY:
                 info.append(info_item)
 
         return info
