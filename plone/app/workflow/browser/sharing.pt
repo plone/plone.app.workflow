@@ -49,8 +49,9 @@
                        size="30"
                        name="search_term"
                        title="Search for user or group"
-                       i18n:attributes="title"
-                       class="searchField inputLabel"
+                       placeholder="Search for user or group"
+                       i18n:attributes="title; placeholder"
+                       class="searchField"
                        value=""
                        />
                 <input type="submit"

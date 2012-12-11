@@ -4,7 +4,9 @@ Changelog
 2.0.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use HTML5 placeholder attribute on Sharing tab search box. Replaces
+  deprecated inputLabel class.
+  [danjacka]
 
 
 2.0.8 (2012-10-03)
