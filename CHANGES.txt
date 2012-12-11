@@ -8,6 +8,10 @@ Changelog
   override this view and change what groups are always displayed (STICKY).
   [ispburger]
 
+- Use HTML5 placeholder attribute on Sharing tab search box. Replaces
+  deprecated inputLabel class.
+  [danjacka]
+
 
 2.1.0 (2012-10-16)
 ------------------
