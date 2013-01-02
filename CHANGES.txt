@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.1 (unreleased)
+2.1.1 (2013-01-01)
 ------------------
 
 - Extensibility improvement on sharing view so developers can easily
