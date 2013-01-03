@@ -382,7 +382,7 @@ class SharingView(BrowserView):
 
         def search_for_principal(hunter, search_term):
             return merge_search_results(chain(*[hunter.searchUsers(**{field: search_term})
-                for field in ['login', 'fullname', 'email']]), 'userid')
+                for field in ['name', 'fullname', 'email']]), 'userid')
 
         def get_principal_by_id(user_id):
             acl_users = getToolByName(self.context, 'acl_users')

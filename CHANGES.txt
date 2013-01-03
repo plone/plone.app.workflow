@@ -4,7 +4,9 @@ Changelog
 2.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Call searchUsers with the 'name' argument instead of 'login'.
+  'name' is the officially supported way according to the PAS interface.
+  [maurits]
 
 
 2.1.1 (2013-01-01)
