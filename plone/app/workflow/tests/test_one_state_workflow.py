@@ -23,7 +23,7 @@ class TestOneStateWorkflow(WorkflowTestCase):
     def afterSetUp(self):
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
-        self.workflow.setChainForPortalTypes(['Document', 'Event'], 'one_state_workflow')
+        self.workflow.setChainForPortalTypes(['Document', 'News Item'], 'one_state_workflow')
 
         self.portal.acl_users._doAddUser('member', 'secret', ['Member'], [])
         self.portal.acl_users._doAddUser('reviewer', 'secret', ['Reviewer'], [])
@@ -31,17 +31,16 @@ class TestOneStateWorkflow(WorkflowTestCase):
         self.portal.acl_users._doAddUser('editor', ' secret', ['Editor'], [])
         self.portal.acl_users._doAddUser('reader', 'secret', ['Reader'], [])
 
-
         self.folder.invokeFactory('Document', id='doc')
         self.doc = self.folder.doc
-        self.folder.invokeFactory('Event', id='ev')
-        self.ev = self.folder.ev
+        self.folder.invokeFactory('News Item', id='ni')
+        self.ni = self.folder.ni
 
     # Check allowed transitions: none for one state workflow
 
     def testInitialState(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'published')
-        self.assertEqual(self.workflow.getInfoFor(self.ev, 'review_state'), 'published')
+        self.assertEqual(self.workflow.getInfoFor(self.ni, 'review_state'), 'published')
 
     # Check view permission
 
@@ -120,26 +119,26 @@ class TestOneStateWorkflow(WorkflowTestCase):
 
     def testChangeEventsIsNotAcquiredInPublishedState(self):
         # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
+        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishEvent(self):
         # Owner is allowed
-        self.failUnless(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Reader is denied
         self.login('reader')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
 
 
 def test_suite():

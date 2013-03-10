@@ -30,8 +30,6 @@ default 'published' state
     'published'
     >>> self.workflow.getInfoFor(self.folder.document1, 'review_state')
     'published'
-    >>> self.workflow.getInfoFor(self.folder.event1, 'review_state')
-    'published'
     >>> self.workflow.getInfoFor(self.folder.newsitem1, 'review_state')
     'published'
 
@@ -57,7 +55,7 @@ We're not forced to log in and we can view the item. Thus, we have view permissi
 
 We can also access contents information
 
-    >>> 'document1' and 'newsitem1' and 'event1' in browser.contents
+    >>> 'document1' and 'newsitem1' in browser.contents
     True
 
 We shouldn't see the edit tab
@@ -67,11 +65,6 @@ We shouldn't see the edit tab
     ...
     LookupError: label 'Edit'
     >>> browser.open('%s' % self.folder.document1.absolute_url())
-    >>> browser.getControl('Edit')
-    Traceback (most recent call last):
-    ...
-    LookupError: label 'Edit'
-    >>> browser.open('%s' % self.folder.event1.absolute_url())
     >>> browser.getControl('Edit')
     Traceback (most recent call last):
     ...
@@ -86,21 +79,6 @@ Or have the "Modify portal content" permission in any scenario
     >>> browser.open('%s/edit' % self.folder.document1.absolute_url())
     >>> 'Login Name' in browser.contents
     True
-
-    >>> browser.open('%s/edit' % self.folder.event1.absolute_url())
-    >>> 'Login Name' in browser.contents
-    True
-
-And for good measure, we can't access any of the fields on the event governed by
-"Change portal events".
-
-XXX - Need to do this as another user, as it appears this
-command is being executed by test_user_1_ who is the owner and very much has the
-"Change portal events" permission.
-
-    >>> # self.folder.event1.getEventType()
-    # ()
-    >>> # self.folder.event1.setEventType('Conference')
 
 
 Test with the member role
@@ -124,7 +102,7 @@ We're not forced to log in and we can view the item. Thus, we have view permissi
 
 We can also access contents information
 
-    >>> 'document1' and 'newsitem1' and 'event1' in browser.contents
+    >>> 'document1' and 'newsitem1' in browser.contents
     True
 
 We shouldn't see the edit tab
@@ -134,11 +112,6 @@ We shouldn't see the edit tab
     ...
     LookupError: label 'Edit'
     >>> browser.open('%s' % self.folder.document1.absolute_url())
-    >>> browser.getControl('Edit')
-    Traceback (most recent call last):
-    ...
-    LookupError: label 'Edit'
-    >>> browser.open('%s' % self.folder.event1.absolute_url())
     >>> browser.getControl('Edit')
     Traceback (most recent call last):
     ...

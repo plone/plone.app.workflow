@@ -14,14 +14,13 @@ class TestRemapWorkflow(WorkflowTestCase):
 
         self.setRoles(('Manager', ))
 
-        self.workflow.setChainForPortalTypes(('Document', 'Event', ), ('simple_publication_workflow', ))
+        self.workflow.setChainForPortalTypes(('Document', ), ('simple_publication_workflow', ))
         self.workflow.setChainForPortalTypes(('News Item', ), ('one_state_workflow', ))
         self.workflow.setChainForPortalTypes(('Folder', ), ())
         self.workflow.setChainForPortalTypes(('Image', ), None)
 
         self.portal.invokeFactory('Document', 'd1')
         self.portal.invokeFactory('Document', 'd2')
-        self.folder.invokeFactory('Event', 'e1')
         self.folder.invokeFactory('Document', 'e2')
         self.portal.invokeFactory('News Item', 'n1')
         self.portal.invokeFactory('Image', 'i1')

@@ -22,7 +22,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
 
-        self.workflow.setChainForPortalTypes(['Document', 'Event'], 'plone_workflow')
+        self.workflow.setChainForPortalTypes(['Document', 'News Item'], 'plone_workflow')
 
         self.portal.acl_users._doAddUser('member', 'secret', ['Member'], [])
         self.portal.acl_users._doAddUser('reviewer', 'secret', ['Reviewer'], [])
@@ -31,8 +31,8 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.folder.invokeFactory('Document', id='doc')
         self.doc = self.folder.doc
 
-        self.folder.invokeFactory('Event', id='ev')
-        self.ev = self.folder.ev
+        self.folder.invokeFactory('News Item', id='ni')
+        self.ni = self.folder.ni
 
     # Check allowed transitions
 
@@ -350,80 +350,80 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testModifyVisibleEvent(self):
         # Owner is allowed
-        self.failUnless(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInVisibleState(self):
         # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
+        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPrivateEvent(self):
-        self.workflow.doActionFor(self.ev, 'hide')
+        self.workflow.doActionFor(self.ni, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInPrivateState(self):
-        self.workflow.doActionFor(self.ev, 'hide')
+        self.workflow.doActionFor(self.ni, 'hide')
         # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
+        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPendingEvent(self):
-        self.workflow.doActionFor(self.ev, 'submit')
+        self.workflow.doActionFor(self.ni, 'submit')
         # Owner is denied
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(ChangeEvents, self.ev))
+        self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInPendingState(self):
-        self.workflow.doActionFor(self.ev, 'submit')
+        self.workflow.doActionFor(self.ni, 'submit')
         # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
+        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishedEvent(self):
         self.login('reviewer')
-        self.workflow.doActionFor(self.ev, 'publish')
+        self.workflow.doActionFor(self.ni, 'publish')
         # Owner is denied
         self.login(default_user)
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ev))
+        self.failIf(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
-        self.workflow.doActionFor(self.ev, 'publish')
+        self.workflow.doActionFor(self.ni, 'publish')
         # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ev.acquiredRolesAreUsedBy(ModifyPortalContent), '')
+        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     # Check catalog search
 

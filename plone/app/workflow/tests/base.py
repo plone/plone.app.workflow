@@ -49,8 +49,6 @@ class WorkflowFunctionalTestCase(FunctionalTestCase):
         self.setRoles(('Manager', ))
         self.folder.invokeFactory('News Item', 'newsitem1')
         self.newsitem = self.folder.newsitem1
-        self.folder.invokeFactory('Event', 'event1')
-        self.event = self.folder.event1
         self.folder.invokeFactory('Document', 'document1')
         self.document = self.folder.document1
         self.setRoles(('Member', ))
