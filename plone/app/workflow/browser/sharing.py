@@ -561,6 +561,7 @@ class SharingView(BrowserView):
         res = self.macro_wrapper(the_macro=macro, instance=self.context,
                                  view=self)
         messages = self.context.restrictedTraverse('global_statusmessage')()
+        self.request.response.setHeader("Content-type","application/json")
         return json.dumps({
             'body': res,
             'messages': messages
