@@ -4,7 +4,8 @@ Changelog
 2.2.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add json header to sharing.py. 
+  [travacic]
 
 
 2.1.2 (2013-01-13)
