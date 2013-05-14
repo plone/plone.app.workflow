@@ -4,6 +4,14 @@ Changelog
 2.2.0 (unreleased)
 ------------------
 
+- Include roles derived from borg.localrole adapters on the Sharing tab,
+  appearing as inherited roles.
+  [datakurre, davisagli]
+
+
+2.1.3 (2013-04-29)
+------------------
+
 - Add json header to sharing.py. 
   [travacic]
 
