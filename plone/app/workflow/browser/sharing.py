@@ -220,7 +220,7 @@ class SharingView(BrowserView):
         # This logic is adapted from computeRoleMap.py
 
         local_roles = acl_users._getLocalRolesForDisplay(context)
-        acquired_roles = self._inherited_roles()
+        acquired_roles = self._inherited_roles() + self._borg_localroles()
         available_roles = [r['id'] for r in self.roles()]
 
         # first process acquired roles
@@ -457,6 +457,41 @@ class SharingView(BrowserView):
         for pos in range(len(result)-1, -1, -1):
             result[pos][1] = tuple(result[pos][1])
             result[pos] = tuple(result[pos])
+
+        return tuple(result)
+
+    def _borg_localroles(self):
+        """Returns a tuple with roles obtained via borg.localrole adapters."""
+        # Get all local roles (includeding those provided
+        # by borg_localroles) and editable local roles
+        # (only those stored in the object):
+        pas = getToolByName(self.context, "acl_users")
+        editable_local_roles = dict(self.context.get_local_roles())
+
+        # Calculate borg_local_roles by substracting editable local
+        # roles from all available local roles (including the
+        # borg.localrole provided roles):
+        borg_local_roles = pas._getAllLocalRoles(self.context)
+        for principal, roles in editable_local_roles.items():
+            borg_local_roles[principal] = [
+                r for r in borg_local_roles.get(principal, ())
+                if r not in roles]
+            if not borg_local_roles[principal]:
+                del borg_local_roles[principal]
+
+        # Adapted from: PluggableAuthService._getLocalRolesForDisplay
+        result = []
+        for principal, roles in borg_local_roles.items():
+            username = principal
+            userType = 'user'
+            if pas.getGroup(principal):
+                userType = 'group'
+            else:
+                user = pas.getUserById(principal)
+                if user:
+                    username = user.getUserName()
+                    principal = user.getId()
+            result.append((username, tuple(roles), userType, principal))
 
         return tuple(result)
 
