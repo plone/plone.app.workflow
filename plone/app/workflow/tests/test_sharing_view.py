@@ -57,7 +57,7 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = 'nonasciiuser'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.role_settings()
-        self.failUnless(len(results) and results[1].get('title') == '\xc3\x84\xc3\x9c\xc3\x9f', msg="Umlaute")
+        self.failUnless(len(results) and results[-1].get('title') == '\xc3\x84\xc3\x9c\xc3\x9f', msg="Umlaute")
 
     def test_search_for_group_by_id(self):
         """ Make sure we can search for groups by id """
@@ -94,6 +94,35 @@ class TestSharingView(WorkflowTestCase):
 
         user = self.portal.portal_membership.getAuthenticatedMember()
         self.failUnless('Manager' in user.getRolesInContext(subfolder),)
+
+    def test_borg_localroles(self):
+        from Products.CMFCore.interfaces import ISiteRoot
+        from borg.localrole.interfaces import ILocalRoleProvider
+        from zope.component import adapter, provideAdapter
+        from zope.interface import implementer
+
+        @adapter(ISiteRoot)
+        @implementer(ILocalRoleProvider)
+        class LocalRoleProvider(object):
+            def __init__(self, context):
+                self.context = context
+            
+            def getAllRoles(self):
+                yield 'borguser', ('Contributor',)
+            
+            def getRoles(self, user_id):
+                if user_id == 'borguser':
+                    return ('Contributor',)
+                return ()
+        provideAdapter(LocalRoleProvider)
+
+        self.portal.acl_users._doAddUser('borguser', 'secret', ['Member'], [])
+        self.loginAsPortalOwner()
+        sharing = self.portal.restrictedTraverse('@@sharing')
+        info = sharing.existing_role_settings()
+        self.assertEqual(2, len(info))
+        self.assertEqual('borguser', info[1]['id'])
+        self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
 
 
 def test_suite():
