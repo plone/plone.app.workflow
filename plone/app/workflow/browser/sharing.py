@@ -46,7 +46,7 @@ class SharingView(BrowserView):
 
     # Actions
 
-    template = ViewPageTemplateFile('sharing.pt')
+    index = ViewPageTemplateFile('sharing.pt')
     macro_wrapper = ViewPageTemplateFile('macro_wrapper.pt')
 
     STICKY = STICKY
@@ -56,7 +56,7 @@ class SharingView(BrowserView):
         """
         postback = self.handle_form()
         if postback:
-            return self.template()
+            return self.index()
         else:
             context_state = self.context.restrictedTraverse(
                 "@@plone_context_state")
