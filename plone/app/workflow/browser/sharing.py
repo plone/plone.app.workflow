@@ -592,7 +592,7 @@ class SharingView(BrowserView):
     def updateSharingInfo(self, search_term=''):
         self.handle_form()
         the_id = 'user-group-sharing'
-        macro = self.template.macros[the_id]
+        macro = self.index.macros[the_id]
         res = self.macro_wrapper(the_macro=macro, instance=self.context,
                                  view=self)
         messages = self.context.restrictedTraverse('global_statusmessage')()
