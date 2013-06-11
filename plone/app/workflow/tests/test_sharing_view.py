@@ -32,7 +32,7 @@ class TestSharingView(WorkflowTestCase):
         self.failUnless(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched by login name.")
         value = JSONDecoder().decode(view.updateSharingInfo(search_term='testuser'))
-        self.assertIn('value="testuser"', value['body'])
+        self.assertTrue('value="testuser"' in value['body'])
 
     def search_by_email(self, term):
         request = self.app.REQUEST
