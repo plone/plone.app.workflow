@@ -419,7 +419,7 @@ class SharingView(BrowserView):
         context = self.context
 
         if not self.inherited(context):
-            return []
+            return ()
 
         portal = getToolByName(context, 'portal_url').getPortalObject()
         result = []

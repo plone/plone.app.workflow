@@ -123,6 +123,14 @@ class TestSharingView(WorkflowTestCase):
         self.assertEqual(2, len(info))
         self.assertEqual('borguser', info[1]['id'])
         self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
+        
+        #check borg local roles works with non-heriting roles policy
+        sharing = self.portal.restrictedTraverse('@@sharing')
+        setattr(sharing.context, '__ac_local_roles_block__', True)
+        info = sharing.existing_role_settings()
+        self.assertEqual(2, len(info))
+        self.assertEqual('borguser', info[1]['id'])
+        self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
 
 
 def test_suite():
