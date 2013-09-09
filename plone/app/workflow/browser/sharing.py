@@ -283,7 +283,7 @@ class SharingView(BrowserView):
             if item['type'] == 'user':
                 member = acl_users.getUserById(rid)
                 if member is not None:
-                    name = member.getProperty('fullname') or member.getId() or name
+                    name = member.getProperty('fullname') or member.getUserName() or name
                     global_roles = set(member.getRoles())
                     login = member.getUserName()
             elif item['type'] == 'group':
