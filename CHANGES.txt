@@ -4,6 +4,10 @@ Changelog
 2.2.0 (unreleased)
 ------------------
 
+- Show user's login name instead of the user id, which is an internal
+  identifier.
+  [davisagli]
+
 - Include roles derived from borg.localrole adapters on the Sharing tab,
   appearing as inherited roles.
   [datakurre, davisagli]

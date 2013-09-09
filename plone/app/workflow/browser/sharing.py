@@ -277,6 +277,7 @@ class SharingView(BrowserView):
             item = d[-1]
             name = item['name']
             rid = item['id']
+            login = rid
             global_roles = set()
 
             if item['type'] == 'user':
@@ -284,9 +285,11 @@ class SharingView(BrowserView):
                 if member is not None:
                     name = member.getProperty('fullname') or member.getId() or name
                     global_roles = set(member.getRoles())
+                    login = member.getUserName()
             elif item['type'] == 'group':
                 g = portal_groups.getGroupById(rid)
                 name = g.getGroupTitleOrName()
+                login = None
                 global_roles = set(g.getRoles())
 
                 # This isn't a proper group, so it needs special treatment :(
@@ -298,6 +301,8 @@ class SharingView(BrowserView):
                              title = name,
                              disabled = item.get('disabled', False),
                              roles = {})
+            if login != name:
+                info_item['login'] = login
 
             # Record role settings
             have_roles = False
@@ -367,9 +372,13 @@ class SharingView(BrowserView):
                 for r in principal.getRoles():
                     if r in roles:
                         roles[r] = 'global'
+                login = principal.getUserName()
+                if principal_type == 'group' or login == principal_id:
+                    login = None
                 info.append(dict(id = principal_id,
                                  title = get_principal_title(principal,
                                                              principal_id),
+                                 login = login,
                                  type = principal_type,
                                  roles = roles))
         return info
