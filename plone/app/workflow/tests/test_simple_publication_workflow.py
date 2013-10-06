@@ -1,19 +1,12 @@
-#
-# Tests about the Simple publication workflow
-#
-
 from Products.CMFPlone.tests import PloneTestCase
 from base import WorkflowTestCase
-
+from plone.app.testing import TEST_USER_NAME
 from Products.CMFCore.WorkflowCore import WorkflowException
-
 from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
 from Products.CMFCore.permissions import ModifyPortalContent
 from Products.CMFCalendar.permissions import ChangeEvents
-
-default_user = PloneTestCase.default_user
 
 
 class TestSimplePublicationWorkflow(WorkflowTestCase):
@@ -57,7 +50,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
     def testViewPrivateDocument(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(View, self.doc))
         # Member is denied
         self.login('member')
@@ -86,7 +79,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(View, self.doc))
         # Member is allowed
         self.login('member')
@@ -112,7 +105,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
     def testAccessContentsInformationPrivateDocument(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(AccessContentsInformation, self.doc))
         # Member is denied
         self.login('member')
@@ -141,7 +134,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed
         self.login('member')
@@ -167,7 +160,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
     def testModifyPrivateDocument(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
@@ -198,7 +191,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Manager is allowed
         self.failUnless(checkPerm(ModifyPortalContent, self.doc))
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
@@ -226,7 +219,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
     def testModifyPrivateEvent(self):
         self.assertEqual(self.workflow.getInfoFor(self.ni, 'review_state'), 'private')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
@@ -257,7 +250,7 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.workflow.doActionFor(self.ni, 'publish')
         self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')

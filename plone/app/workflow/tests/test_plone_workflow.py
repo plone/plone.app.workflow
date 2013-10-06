@@ -1,19 +1,12 @@
-#
-# Tests the default workflow
-#
-
 from Products.CMFPlone.tests import PloneTestCase
 from base import WorkflowTestCase
-
+from plone.app.testing import TEST_USER_NAME
 from Products.CMFCore.WorkflowCore import WorkflowException
-
 from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
 from Products.CMFCore.permissions import ModifyPortalContent
 from Products.CMFCalendar.permissions import ChangeEvents
-
-default_user = PloneTestCase.default_user
 
 
 class TestDefaultWorkflow(WorkflowTestCase):
@@ -66,7 +59,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'published')
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.workflow.doActionFor(self.doc, 'retract')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
         self.failUnless(self.catalog(id='doc', review_state='visible'))
@@ -179,7 +172,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(View, self.doc))
         # Member is allowed
         self.login('member')
@@ -254,7 +247,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed
         self.login('member')
@@ -329,7 +322,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is denied
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failIf(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
@@ -407,7 +400,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.ni, 'publish')
         # Owner is denied
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failIf(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
@@ -472,7 +465,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(self.catalog(id='doc'))
         # Member is allowed
         self.login('member')

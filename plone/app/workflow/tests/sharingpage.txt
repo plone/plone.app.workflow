@@ -7,13 +7,14 @@ Let's also create some
 
     >>> self.setUpDefaultWorkflow(defaultWorkflow='one_state_workflow')
 
-    >>> from Testing.testbrowser import Browser
-    >>> browser = Browser()
+    >>> from plone.testing.z2 import Browser
+    >>> browser = Browser(app)
     >>> browser.handleErrors = False
 
 Let us log all exceptions, which is useful for debugging.
 
     >>> self.portal.error_log._ignored_exceptions = ()
+    >>> import transaction; transaction.commit()
 
 Anonymous users
 ---------------
@@ -118,9 +119,10 @@ Owner
 
 The owner should be able to delegate Reader, Editor and Contributor.
 
+    >>> from plone.app.testing import TEST_USER_NAME
     >>> browser.open('%s/logout' % self.portal.absolute_url())
     >>> browser.open('%s/login_form' % self.portal.absolute_url())
-    >>> browser.getControl(name='__ac_name').value = 'test_user_1_'
+    >>> browser.getControl(name='__ac_name').value = TEST_USER_NAME
     >>> browser.getControl(name='__ac_password').value = 'secret'
     >>> browser.getControl('Log in').click()
 

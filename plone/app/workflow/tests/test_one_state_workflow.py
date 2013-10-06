@@ -1,21 +1,10 @@
-#
-# Tests the one state workflow
-#
-
-from Products.CMFPlone.tests import PloneTestCase
 from base import WorkflowTestCase
-
-#from Products.CMFCore.WorkflowCore import WorkflowException
-
+from plone.app.testing import TEST_USER_NAME
 from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
-#from Products.CMFCore.permissions import ListFolderContents
 from Products.CMFCore.permissions import ModifyPortalContent
 from Products.CMFCalendar.permissions import ChangeEvents
-
-
-default_user = PloneTestCase.default_user
 
 
 class TestOneStateWorkflow(WorkflowTestCase):
@@ -49,7 +38,7 @@ class TestOneStateWorkflow(WorkflowTestCase):
 
     def testViewPublishedDocument(self):
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(View, self.doc))
         # Member is allowed
         self.login('member')
@@ -74,7 +63,7 @@ class TestOneStateWorkflow(WorkflowTestCase):
 
     def testAccessPublishedDocument(self):
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed
         self.login('member')
@@ -97,7 +86,7 @@ class TestOneStateWorkflow(WorkflowTestCase):
 
     def testModifyPublishedDocument(self):
         # Owner is allowed
-        self.login(default_user)
+        self.login(TEST_USER_NAME)
         self.failUnless(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')

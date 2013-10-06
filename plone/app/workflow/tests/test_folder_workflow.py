@@ -1,7 +1,3 @@
-#
-# Tests the folder workflow
-#
-
 from base import WorkflowTestCase
 
 from Products.CMFCore.WorkflowCore import WorkflowException

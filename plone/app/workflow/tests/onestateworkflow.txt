@@ -6,13 +6,13 @@ First, some set-up of our site for testing:
 
     >>> self.setUpDefaultWorkflow(defaultWorkflow='one_state_workflow')
 
-    >>> from Testing.testbrowser import Browser
-    >>> browser = Browser()
-    >>> browser.handleErrors = True
+    >>> from plone.testing.z2 import Browser
+    >>> browser = Browser(app)
 
 Let us log all exceptions, which is useful for debugging.
 
     >>> self.portal.error_log._ignored_exceptions = ()
+    >>> import transaction; transaction.commit()
 
 Verify that our items are actually all in the one_state_workflow and in our
 default 'published' state
