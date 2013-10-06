@@ -1,7 +1,6 @@
 import unittest
-
+from plone.testing.zca import UNIT_TESTING
 from zope.component import provideAdapter, provideUtility, getUtilitiesFor, getSiteManager
-from zope.component.testing import tearDown
 
 from five.localsitemanager import make_objectmanager_site
 from zope.site.hooks import setHooks, setSite, clearSite
@@ -20,6 +19,8 @@ from OFS.Folder import Folder
 
 class ExportImportTest(unittest.TestCase):
 
+    layer = UNIT_TESTING
+
     def setUp(self):
         provideAdapter(SharingXMLAdapter, name='plone.app.workflow.sharing')
 
@@ -37,7 +38,6 @@ class ExportImportTest(unittest.TestCase):
 
     def tearDown(self):
         clearSite()
-        tearDown()
 
 
 class TestImport(ExportImportTest):
