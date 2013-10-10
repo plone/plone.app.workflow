@@ -38,13 +38,13 @@ class TestRemapWorkflow(WorkflowTestCase):
                        type_ids=('Document', 'News Item', ),
                        chain=('plone_workflow', ))
 
-        self.assertEquals(self._chain(self.portal.d1), ('plone_workflow', ))
-        self.assertEquals(self._chain(self.portal.d2), ('plone_workflow', ))
-        self.assertEquals(self._chain(self.portal.n1), ('plone_workflow', ))
+        self.assertEqual(self._chain(self.portal.d1), ('plone_workflow', ))
+        self.assertEqual(self._chain(self.portal.d2), ('plone_workflow', ))
+        self.assertEqual(self._chain(self.portal.n1), ('plone_workflow', ))
 
-        self.assertEquals(self._state(self.portal.d1), 'visible')
-        self.assertEquals(self._state(self.portal.d2), 'visible')
-        self.assertEquals(self._state(self.portal.n1), 'visible')
+        self.assertEqual(self._state(self.portal.d1), 'visible')
+        self.assertEqual(self._state(self.portal.d2), 'visible')
+        self.assertEqual(self._state(self.portal.n1), 'visible')
 
     def test_remap_with_partial_state_map(self):
         remap_workflow(self.portal,
@@ -52,45 +52,45 @@ class TestRemapWorkflow(WorkflowTestCase):
                        chain=('plone_workflow', ),
                        state_map={'published': 'published'})
 
-        self.assertEquals(self._chain(self.portal.d1), ('plone_workflow', ))
-        self.assertEquals(self._chain(self.portal.d2), ('plone_workflow', ))
-        self.assertEquals(self._chain(self.portal.n1), ('plone_workflow', ))
+        self.assertEqual(self._chain(self.portal.d1), ('plone_workflow', ))
+        self.assertEqual(self._chain(self.portal.d2), ('plone_workflow', ))
+        self.assertEqual(self._chain(self.portal.n1), ('plone_workflow', ))
 
-        self.assertEquals(self._state(self.portal.d1), 'published')
-        self.assertEquals(self._state(self.portal.d2), 'visible')
-        self.assertEquals(self._state(self.portal.n1), 'published')
+        self.assertEqual(self._state(self.portal.d1), 'published')
+        self.assertEqual(self._state(self.portal.d2), 'visible')
+        self.assertEqual(self._state(self.portal.n1), 'published')
 
     def test_remap_to_no_workflow(self):
 
         view_at_d1 = [r['name'] for r in self.portal.d1.rolesOfPermission('View') if r['selected']]
-        self.failUnless('Anonymous' in view_at_d1)
+        self.assertTrue('Anonymous' in view_at_d1)
 
         remap_workflow(self.portal,
                        type_ids=('Document', 'News Item', ),
                        chain=())
 
-        self.assertEquals(self._chain(self.portal.d1), ())
-        self.assertEquals(self._chain(self.portal.d2), ())
-        self.assertEquals(self._chain(self.portal.n1), ())
+        self.assertEqual(self._chain(self.portal.d1), ())
+        self.assertEqual(self._chain(self.portal.d2), ())
+        self.assertEqual(self._chain(self.portal.n1), ())
 
         view_at_d1 = [r['name'] for r in self.portal.d1.rolesOfPermission('View') if r['selected']]
-        self.failIf('Anonymous' in view_at_d1)
-        self.failUnless(self.portal.d1.acquiredRolesAreUsedBy('View'))
+        self.assertFalse('Anonymous' in view_at_d1)
+        self.assertTrue(self.portal.d1.acquiredRolesAreUsedBy('View'))
 
     def test_remap_from_no_workflow(self):
         remap_workflow(self.portal,
                        type_ids=('Image', ),
                        chain=('plone_workflow', ))
 
-        self.assertEquals(self._chain(self.portal.i1), ('plone_workflow', ))
-        self.assertEquals(self._state(self.portal.i1), 'visible')
+        self.assertEqual(self._chain(self.portal.i1), ('plone_workflow', ))
+        self.assertEqual(self._state(self.portal.i1), 'visible')
 
     def test_remap_to_default(self):
         remap_workflow(self.portal,
                        type_ids=('Folder', ),
                        chain='(Default)')
 
-        self.assertEquals(self._chain(self.portal.i1), ('plone_workflow', ))
+        self.assertEqual(self._chain(self.portal.i1), ('plone_workflow', ))
 
 
 def test_suite():

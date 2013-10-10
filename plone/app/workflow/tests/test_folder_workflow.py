@@ -30,48 +30,48 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'visible')
         self.workflow.doActionFor(self.dir, 'hide')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'private')
-        self.failUnless(self.catalog(id='dir', review_state='private'))
+        self.assertTrue(self.catalog(id='dir', review_state='private'))
 
     def testOwnerShowsPrivateFolder(self):
         self.workflow.doActionFor(self.dir, 'hide')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'private')
         self.workflow.doActionFor(self.dir, 'show')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='dir', review_state='visible'))
+        self.assertTrue(self.catalog(id='dir', review_state='visible'))
 
     def testOwnerPublishesPrivateFolder(self):
         self.workflow.doActionFor(self.dir, 'hide')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'private')
         self.workflow.doActionFor(self.dir, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='dir', review_state='published'))
+        self.assertTrue(self.catalog(id='dir', review_state='published'))
 
     def testOwnerPublishesVisibleFolder(self):
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'visible')
         self.workflow.doActionFor(self.dir, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='dir', review_state='published'))
+        self.assertTrue(self.catalog(id='dir', review_state='published'))
 
     def testOwnerHidesPublishedFolder(self):
         self.workflow.doActionFor(self.dir, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'published')
         self.workflow.doActionFor(self.dir, 'hide')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'private')
-        self.failUnless(self.catalog(id='dir', review_state='private'))
+        self.assertTrue(self.catalog(id='dir', review_state='private'))
 
     def testOwnerRetractsPublishedFolder(self):
         self.workflow.doActionFor(self.dir, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'published')
         self.workflow.doActionFor(self.dir, 'retract')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='dir', review_state='visible'))
+        self.assertTrue(self.catalog(id='dir', review_state='visible'))
 
     def testManagerPublishesVisibleFolder(self):
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'visible')
         self.login('manager')
         self.workflow.doActionFor(self.dir, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='dir', review_state='published'))
+        self.assertTrue(self.catalog(id='dir', review_state='published'))
 
     def testManagerPublishesPrivateFolder(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -79,7 +79,7 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.login('manager')
         self.workflow.doActionFor(self.dir, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='dir', review_state='published'))
+        self.assertTrue(self.catalog(id='dir', review_state='published'))
 
     def testManagerRetractsPublishedFolder(self):
         self.workflow.doActionFor(self.dir, 'publish')
@@ -87,7 +87,7 @@ class TestFolderWorkflow(WorkflowTestCase):
         self.login('manager')
         self.workflow.doActionFor(self.dir, 'retract')
         self.assertEqual(self.workflow.getInfoFor(self.dir, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='dir', review_state='visible'))
+        self.assertTrue(self.catalog(id='dir', review_state='visible'))
 
     # Check forbidden transitions
 
@@ -180,16 +180,16 @@ class TestFolderWorkflow(WorkflowTestCase):
 
     def testViewVisibleFolder(self):
         # Owner is allowed
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
 
     def testViewIsNotAcquiredInVisibleState(self):
         self.assertEqual(self.dir.acquiredRolesAreUsedBy(View), '')
@@ -197,16 +197,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testViewPrivateFolder(self):
         self.workflow.doActionFor(self.dir, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(View, self.dir))
+        self.assertFalse(checkPerm(View, self.dir))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(View, self.dir))
+        self.assertFalse(checkPerm(View, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(View, self.dir))
+        self.assertFalse(checkPerm(View, self.dir))
 
     def testViewIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -215,16 +215,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testViewPublishedFolder(self):
         self.workflow.doActionFor(self.dir, 'publish')
         # Owner is allowed
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(View, self.dir))
+        self.assertTrue(checkPerm(View, self.dir))
 
     def testViewIsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
@@ -234,16 +234,16 @@ class TestFolderWorkflow(WorkflowTestCase):
 
     def testAccessVisibleFolderContents(self):
         # Owner is allowed
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
 
     def testAccessContentsInformationIsNotAcquiredInVisibleState(self):
         self.assertEqual(self.dir.acquiredRolesAreUsedBy(AccessContentsInformation), '')
@@ -251,16 +251,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testAccessPrivateFolderContents(self):
         self.workflow.doActionFor(self.dir, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(AccessContentsInformation, self.dir))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.dir))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(AccessContentsInformation, self.dir))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(AccessContentsInformation, self.dir))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.dir))
 
     def testAccessContentsInformationIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -269,16 +269,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testAccessPublishedFolderContents(self):
         self.workflow.doActionFor(self.dir, 'publish')
         # Owner is allowed
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(AccessContentsInformation, self.dir))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.dir))
 
     def testAccessContentsInformationIsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
@@ -288,16 +288,16 @@ class TestFolderWorkflow(WorkflowTestCase):
 
     def testModifyVisibleFolderContents(self):
         # Owner is allowed
-        self.failUnless(checkPerm(ModifyPortalContent, self.dir))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
 
     def testModifyPortalContentIsNotAcquiredInVisibleState(self):
         self.assertEqual(self.dir.acquiredRolesAreUsedBy(ModifyPortalContent), '')
@@ -305,16 +305,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testModifyPrivateFolderContents(self):
         self.workflow.doActionFor(self.dir, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(ModifyPortalContent, self.dir))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
 
     def testModifyPortalContentIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -323,16 +323,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testModifyPublishedFolderContents(self):
         self.workflow.doActionFor(self.dir, 'publish')
         # Owner is allowed
-        self.failUnless(checkPerm(ModifyPortalContent, self.dir))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.dir))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.dir))
 
     def testModifyPortalContentIsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
@@ -342,16 +342,16 @@ class TestFolderWorkflow(WorkflowTestCase):
 
     def testListVisibleFolderContents(self):
         # Owner is allowed
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.assertTrue(checkPerm(ListFolderContents, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ListFolderContents, self.dir))
+        self.assertFalse(checkPerm(ListFolderContents, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.assertTrue(checkPerm(ListFolderContents, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ListFolderContents, self.dir))
+        self.assertFalse(checkPerm(ListFolderContents, self.dir))
 
     def testListFolderContentsIsAcquiredInVisibleState(self):
         self.assertEqual(self.dir.acquiredRolesAreUsedBy(ListFolderContents), 'CHECKED')
@@ -359,16 +359,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testListPrivateFolderContents(self):
         self.workflow.doActionFor(self.dir, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.assertTrue(checkPerm(ListFolderContents, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ListFolderContents, self.dir))
+        self.assertFalse(checkPerm(ListFolderContents, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.assertTrue(checkPerm(ListFolderContents, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ListFolderContents, self.dir))
+        self.assertFalse(checkPerm(ListFolderContents, self.dir))
 
     def testListFolderContentsIsAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.dir, 'hide')
@@ -377,16 +377,16 @@ class TestFolderWorkflow(WorkflowTestCase):
     def testListPublishedFolderContents(self):
         self.workflow.doActionFor(self.dir, 'publish')
         # Owner is allowed
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.assertTrue(checkPerm(ListFolderContents, self.dir))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ListFolderContents, self.dir))
+        self.assertFalse(checkPerm(ListFolderContents, self.dir))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(ListFolderContents, self.dir))
+        self.assertTrue(checkPerm(ListFolderContents, self.dir))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ListFolderContents, self.dir))
+        self.assertFalse(checkPerm(ListFolderContents, self.dir))
 
     def testListFolderContentsNotAcquiredInPublishedState(self):
         self.workflow.doActionFor(self.dir, 'publish')
@@ -396,44 +396,44 @@ class TestFolderWorkflow(WorkflowTestCase):
 
     def testFindVisibleFolder(self):
         # Owner is allowed
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
         # Member is allowed
         self.login('member')
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
 
     def testFindPrivateFolder(self):
         self.workflow.doActionFor(self.dir, 'hide')
         # Owner is allowed
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
         # Member is denied
         self.login('member')
-        self.failIf(self.catalog(id='dir'))
+        self.assertFalse(self.catalog(id='dir'))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(self.catalog(id='dir'))
+        self.assertFalse(self.catalog(id='dir'))
         # Anonymous is denied
         self.logout()
-        self.failIf(self.catalog(id='dir'))
+        self.assertFalse(self.catalog(id='dir'))
 
     def testFindPublishedFolder(self):
         self.workflow.doActionFor(self.dir, 'publish')
         # Owner is allowed
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
         # Member is allowed
         self.login('member')
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(self.catalog(id='dir'))
+        self.assertTrue(self.catalog(id='dir'))
 
 
 def test_suite():

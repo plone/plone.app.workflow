@@ -28,7 +28,7 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = 'testuser'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.user_search_results()
-        self.failUnless(len(results) and results[0].get('id') == 'testuser',
+        self.assertTrue(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched by login name.")
 
     def search_by_email(self, term):
@@ -36,7 +36,7 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = term
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.user_search_results()
-        self.failUnless(len(results) and results[0].get('id') == 'testuser',
+        self.assertTrue(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched for %s as email." % term)
 
     def test_search_by_email(self):
@@ -57,7 +57,7 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = 'nonasciiuser'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.role_settings()
-        self.failUnless(len(results) and results[-1].get('title') == '\xc3\x84\xc3\x9c\xc3\x9f', msg="Umlaute")
+        self.assertTrue(len(results) and results[-1].get('title') == '\xc3\x84\xc3\x9c\xc3\x9f', msg="Umlaute")
 
     def test_search_for_group_by_id(self):
         """ Make sure we can search for groups by id """
@@ -65,7 +65,7 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = 'testgroup'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.group_search_results()
-        self.failUnless(len(results) and results[0].get('id') == 'testgroup',
+        self.assertTrue(len(results) and results[0].get('id') == 'testgroup',
             msg="Didn't find testgroup when I searched by group id.")
 
     def test_search_for_group_by_title(self):
@@ -74,7 +74,7 @@ class TestSharingView(WorkflowTestCase):
         request.form['search_term'] = 'meaningful'
         view = getMultiAdapter((self.portal, request), name='sharing')
         results = view.group_search_results()
-        self.failUnless(len(results) and results[0].get('title') == 'Some meaningful title',
+        self.assertTrue(len(results) and results[0].get('title') == 'Some meaningful title',
             msg="Didn't find testuser when I searched by group title.")
 
     def test_local_manager_removes_inheritance(self):
@@ -93,7 +93,7 @@ class TestSharingView(WorkflowTestCase):
         sharing.update_inherit(status=False, reindex=True)
 
         user = self.portal.portal_membership.getAuthenticatedMember()
-        self.failUnless('Manager' in user.getRolesInContext(subfolder),)
+        self.assertTrue('Manager' in user.getRolesInContext(subfolder),)
 
     def test_borg_localroles(self):
         from Products.CMFCore.interfaces import ISiteRoot
@@ -106,10 +106,10 @@ class TestSharingView(WorkflowTestCase):
         class LocalRoleProvider(object):
             def __init__(self, context):
                 self.context = context
-            
+
             def getAllRoles(self):
                 yield 'borguser', ('Contributor',)
-            
+
             def getRoles(self, user_id):
                 if user_id == 'borguser':
                     return ('Contributor',)
@@ -123,7 +123,7 @@ class TestSharingView(WorkflowTestCase):
         self.assertEqual(2, len(info))
         self.assertEqual('borguser', info[1]['id'])
         self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
-        
+
         #check borg local roles works with non-heriting roles policy
         sharing = self.portal.restrictedTraverse('@@sharing')
         setattr(sharing.context, '__ac_local_roles_block__', True)

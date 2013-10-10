@@ -50,7 +50,7 @@ class TestImport(ExportImportTest):
 
         import_sharing(context)
 
-        self.assertEquals(0, len(self.roles()))
+        self.assertEqual(0, len(self.roles()))
 
     def test_import_single_no_purge(self):
 
@@ -65,9 +65,9 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(1, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
-        self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
 
     def test_import_multiple_no_purge(self):
 
@@ -83,11 +83,11 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(2, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
-        self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
-        self.assertEquals('Can control', roles['Controller'].title)
-        self.assertEquals(None, roles['Controller'].required_permission)
+        self.assertEqual(2, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual('Can control', roles['Controller'].title)
+        self.assertEqual(None, roles['Controller'].required_permission)
 
     def test_import_multiple_times_no_purge(self):
 
@@ -102,9 +102,9 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(1, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
-        self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
 
         xml = """\
 <sharing>
@@ -117,11 +117,11 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(2, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
-        self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
-        self.assertEquals('Can control', roles['Controller'].title)
-        self.assertEquals(None, roles['Controller'].required_permission)
+        self.assertEqual(2, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual('Can control', roles['Controller'].title)
+        self.assertEqual(None, roles['Controller'].required_permission)
 
     def test_import_multiples_times_purge(self):
 
@@ -136,9 +136,9 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(1, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
-        self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
 
         xml = """\
 <sharing>
@@ -151,9 +151,9 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(1, len(roles))
-        self.assertEquals('Can control', roles['Controller'].title)
-        self.assertEquals(None, roles['Controller'].required_permission)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Can control', roles['Controller'].title)
+        self.assertEqual(None, roles['Controller'].required_permission)
 
     def test_import_multiples_times_no_purge_overwrite(self):
 
@@ -168,9 +168,9 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(1, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
-        self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
 
         xml = """\
 <sharing>
@@ -183,9 +183,9 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(1, len(roles))
-        self.assertEquals('Can edit copy', roles['CopyEditor'].title)
-        self.assertEquals('Delegate: CopyEditor', roles['CopyEditor'].required_permission)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Can edit copy', roles['CopyEditor'].title)
+        self.assertEqual('Delegate: CopyEditor', roles['CopyEditor'].required_permission)
 
     def test_import_override_global(self):
 
@@ -203,11 +203,11 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(2, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
-        self.assertEquals('Delegate edit copy', roles['CopyEditor'].required_permission)
-        self.assertEquals('Can do stuff', roles['DoerOfStuff'].title)
-        self.assertEquals('Delegate doing stuff', roles['DoerOfStuff'].required_permission)
+        self.assertEqual(2, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual('Can do stuff', roles['DoerOfStuff'].title)
+        self.assertEqual('Delegate doing stuff', roles['DoerOfStuff'].required_permission)
 
     def test_remove_one(self):
 
@@ -222,8 +222,8 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(1, len(roles))
-        self.assertEquals('Can copyedit', roles['CopyEditor'].title)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Can copyedit', roles['CopyEditor'].title)
 
         xml = """\
 <sharing>
@@ -236,7 +236,7 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(0, len(roles))
+        self.assertEqual(0, len(roles))
 
     def test_remove_multiple(self):
         xml = """\
@@ -261,9 +261,9 @@ class TestImport(ExportImportTest):
         import_sharing(context)
         roles = self.roles()
 
-        self.assertEquals(2, len(roles))
-        self.assertEquals('Can do stuff', roles['DoerOfStuff'].title)
-        self.assertEquals('Can hack', roles['Hacker'].title)
+        self.assertEqual(2, len(roles))
+        self.assertEqual('Can do stuff', roles['DoerOfStuff'].title)
+        self.assertEqual('Can hack', roles['Hacker'].title)
 
 
 class TestExport(ExportImportTest):
@@ -277,8 +277,8 @@ class TestExport(ExportImportTest):
         context = DummyExportContext(self.site)
         export_sharing(context)
 
-        self.assertEquals('sharing.xml', context._wrote[0][0])
-        self.assertEquals(xml, context._wrote[0][1])
+        self.assertEqual('sharing.xml', context._wrote[0][0])
+        self.assertEqual(xml, context._wrote[0][1])
 
     def test_export_multiple(self):
         sm = self.site.getSiteManager()
@@ -312,8 +312,8 @@ class TestExport(ExportImportTest):
         export_context = DummyExportContext(self.site)
         export_sharing(export_context)
 
-        self.assertEquals('sharing.xml', export_context._wrote[0][0])
-        self.assertEquals(export_xml, export_context._wrote[0][1])
+        self.assertEqual('sharing.xml', export_context._wrote[0][0])
+        self.assertEqual(export_xml, export_context._wrote[0][1])
 
 
 def test_suite():

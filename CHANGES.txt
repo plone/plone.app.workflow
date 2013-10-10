@@ -4,6 +4,9 @@ Changelog
 2.2.0 (unreleased)
 ------------------
 
+- Replace deprecated test assert statements.
+  [timo]
+
 - Show user's login name instead of the user id, which is an internal
   identifier.
   [davisagli]

@@ -33,27 +33,27 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
         self.workflow.doActionFor(self.doc, 'hide')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
-        self.failUnless(self.catalog(id='doc', review_state='private'))
+        self.assertTrue(self.catalog(id='doc', review_state='private'))
 
     def testOwnerShowsPrivateDocument(self):
         self.workflow.doActionFor(self.doc, 'hide')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
         self.workflow.doActionFor(self.doc, 'show')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='doc', review_state='visible'))
+        self.assertTrue(self.catalog(id='doc', review_state='visible'))
 
     def testOwnerSubmitsVisibleDocument(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
         self.workflow.doActionFor(self.doc, 'submit')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'pending')
-        self.failUnless(self.catalog(id='doc', review_state='pending'))
+        self.assertTrue(self.catalog(id='doc', review_state='pending'))
 
     def testOwnerRetractsPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'pending')
         self.workflow.doActionFor(self.doc, 'retract')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='doc', review_state='visible'))
+        self.assertTrue(self.catalog(id='doc', review_state='visible'))
 
     def testOwnerRetractsPublishedDocument(self):
         self.login('reviewer')
@@ -62,7 +62,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login(TEST_USER_NAME)
         self.workflow.doActionFor(self.doc, 'retract')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='doc', review_state='visible'))
+        self.assertTrue(self.catalog(id='doc', review_state='visible'))
 
     def testReviewerPublishesPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
@@ -70,7 +70,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='doc', review_state='published'))
+        self.assertTrue(self.catalog(id='doc', review_state='published'))
 
     def testReviewerRejectsPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
@@ -78,14 +78,14 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'reject')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='doc', review_state='visible'))
+        self.assertTrue(self.catalog(id='doc', review_state='visible'))
 
     def testReviewerPublishesVisibleDocument(self):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='doc', review_state='published'))
+        self.assertTrue(self.catalog(id='doc', review_state='published'))
 
     def testReviewerRejectsPublishedDocument(self):
         self.login('reviewer')
@@ -93,7 +93,7 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'published')
         self.workflow.doActionFor(self.doc, 'reject')
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='doc', review_state='visible'))
+        self.assertTrue(self.catalog(id='doc', review_state='visible'))
 
     # Check some forbidden transitions
 
@@ -118,16 +118,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testViewVisibleDocument(self):
         # Owner is allowed
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
 
     def testViewIsNotAcquiredInVisibleState(self):
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(View), '')
@@ -135,16 +135,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testViewPrivateDocument(self):
         self.workflow.doActionFor(self.doc, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(View, self.doc))
+        self.assertFalse(checkPerm(View, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(View, self.doc))
+        self.assertFalse(checkPerm(View, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(View, self.doc))
+        self.assertFalse(checkPerm(View, self.doc))
 
     def testViewIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.doc, 'hide')
@@ -153,16 +153,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testViewPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
         # Owner is allowed
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Member is allowed (TODO:?)
         self.login('member')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Anonymous is allowed (TODO:?)
         self.logout()
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
 
     def testViewIsNotAcquiredInPendingState(self):
         self.workflow.doActionFor(self.doc, 'submit')
@@ -173,16 +173,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
 
     def testViewIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
@@ -193,16 +193,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testAccessVisibleDocument(self):
         # Owner is allowed
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
 
     def testAccessContentsInformationIsNotAcquiredInVisibleState(self):
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(AccessContentsInformation), '')
@@ -210,16 +210,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testAccessPrivateDocument(self):
         self.workflow.doActionFor(self.doc, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.doc))
 
     def testAccessContentsInformationIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.doc, 'hide')
@@ -228,16 +228,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testAccessPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
         # Owner is allowed
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed (TODO:?)
         self.login('member')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Anonymous is allowed (TODO:?)
         self.logout()
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
 
     def testAccessContentsInformationIsNotAcquiredInPendingState(self):
         self.workflow.doActionFor(self.doc, 'submit')
@@ -248,16 +248,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
 
     def testAccessContentsInformationIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
@@ -268,16 +268,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testModifyVisibleDocument(self):
         # Owner is allowed
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
 
     def testModifyPortalContentIsNotAcquiredInVisibleState(self):
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(ModifyPortalContent), '')
@@ -285,16 +285,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testModifyPrivateDocument(self):
         self.workflow.doActionFor(self.doc, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
 
     def testModifyPortalContentIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.doc, 'hide')
@@ -303,16 +303,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testModifyPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
         # Owner is denied
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
 
     def testModifyPortalContentIsNotAcquiredInPendingState(self):
         self.workflow.doActionFor(self.doc, 'submit')
@@ -323,16 +323,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is denied
         self.login(TEST_USER_NAME)
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
 
     def testModifyPortalContentIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
@@ -343,16 +343,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testModifyVisibleEvent(self):
         # Owner is allowed
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInVisibleState(self):
         # since r104169 event content doesn't use `ChangeEvents` anymore...
@@ -361,16 +361,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testModifyPrivateEvent(self):
         self.workflow.doActionFor(self.ni, 'hide')
         # Owner is allowed
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInPrivateState(self):
         self.workflow.doActionFor(self.ni, 'hide')
@@ -380,16 +380,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
     def testModifyPendingEvent(self):
         self.workflow.doActionFor(self.ni, 'submit')
         # Owner is denied
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInPendingState(self):
         self.workflow.doActionFor(self.ni, 'submit')
@@ -401,16 +401,16 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.workflow.doActionFor(self.ni, 'publish')
         # Owner is denied
         self.login(TEST_USER_NAME)
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInPublishedState(self):
         self.login('reviewer')
@@ -422,60 +422,60 @@ class TestDefaultWorkflow(WorkflowTestCase):
 
     def testFindVisibleDocument(self):
         # Owner is allowed
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Member is allowed
         self.login('member')
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
 
     def testFindPrivateDocument(self):
         self.workflow.doActionFor(self.doc, 'hide')
         # Owner is allowed
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Member is denied
         self.login('member')
-        self.failIf(self.catalog(id='doc'))
+        self.assertFalse(self.catalog(id='doc'))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(self.catalog(id='doc'))
+        self.assertFalse(self.catalog(id='doc'))
         # Anonymous is denied
         self.logout()
-        self.failIf(self.catalog(id='doc'))
+        self.assertFalse(self.catalog(id='doc'))
 
     def testFindPendingDocument(self):
         self.workflow.doActionFor(self.doc, 'submit')
         # Owner is allowed
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Member is allowed (TODO:?)
         self.login('member')
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Anonymous is allowed (TODO:?)
         self.logout()
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
 
     def testFindPublishedDocument(self):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Member is allowed
         self.login('member')
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(self.catalog(id='doc'))
+        self.assertTrue(self.catalog(id='doc'))
 
     def testMyWorklist(self):
         # When a member has the local Reviewer role, pending
@@ -484,12 +484,12 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.doc.manage_addLocalRoles('member', ['Reviewer'])
         self.login('reviewer')
         worklist = self.portal.my_worklist()
-        self.failUnless(len(worklist) == 1)
-        self.failUnless(worklist[0] == self.doc)
+        self.assertTrue(len(worklist) == 1)
+        self.assertTrue(worklist[0] == self.doc)
         self.login('member')
         worklist = self.portal.my_worklist()
-        self.failUnless(len(worklist) == 1)
-        self.failUnless(worklist[0] == self.doc)
+        self.assertTrue(len(worklist) == 1)
+        self.assertTrue(worklist[0] == self.doc)
 
     def testStateTitles(self):
         state_titles = {'private': 'Private',

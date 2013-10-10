@@ -39,22 +39,22 @@ class TestOneStateWorkflow(WorkflowTestCase):
     def testViewPublishedDocument(self):
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reader is allowed
         self.login('reader')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
 
     # Check access contents info permission
 
@@ -64,22 +64,22 @@ class TestOneStateWorkflow(WorkflowTestCase):
     def testAccessPublishedDocument(self):
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reviewer is allowed
         self.login('reviewer')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reader is allowed
         self.login('reader')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
 
     def testModifyPortalContentIsNotAcquiredInPublishedState(self):
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(ModifyPortalContent), '')
@@ -87,22 +87,22 @@ class TestOneStateWorkflow(WorkflowTestCase):
     def testModifyPublishedDocument(self):
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Reader is denied
         self.login('reader')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
 
     # Check change events permission
 
@@ -112,22 +112,22 @@ class TestOneStateWorkflow(WorkflowTestCase):
 
     def testModifyPublishEvent(self):
         # Owner is allowed
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Reader is denied
         self.login('reader')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
 
 def test_suite():

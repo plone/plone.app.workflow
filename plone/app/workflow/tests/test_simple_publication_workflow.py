@@ -51,22 +51,22 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(View, self.doc))
+        self.assertFalse(checkPerm(View, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(View, self.doc))
+        self.assertFalse(checkPerm(View, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(View, self.doc))
+        self.assertFalse(checkPerm(View, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reader is allowed
         self.login('reader')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
 
     def testViewIsNotAcquiredInPublishedState(self):
         # transition requires Review portal content
@@ -80,22 +80,22 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reviewer is denied  but he acquires through Anonymous Role
         self.login('reviewer')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
         # Reader is allowed
         self.login('reader')
-        self.failUnless(checkPerm(View, self.doc))
+        self.assertTrue(checkPerm(View, self.doc))
 
     # Check access contents info permission
 
@@ -106,22 +106,22 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(AccessContentsInformation, self.doc))
+        self.assertFalse(checkPerm(AccessContentsInformation, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reader is allowed
         self.login('reader')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
 
     def testAccessContentsInformationIsNotAcquiredInPublishedState(self):
         # transition requires Review portal content
@@ -135,22 +135,22 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.workflow.doActionFor(self.doc, 'publish')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Member is allowed
         self.login('member')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reviewer is denied but he acquires through Anonymous Role
         self.login('reviewer')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Anonymous is allowed
         self.logout()
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
         # Reader is allowed
         self.login('reader')
-        self.failUnless(checkPerm(AccessContentsInformation, self.doc))
+        self.assertTrue(checkPerm(AccessContentsInformation, self.doc))
 
     # Check modify content permissions
 
@@ -161,22 +161,22 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.doc, 'review_state'), 'private')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Reader is denied
         self.login('reader')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
 
     def testModifyPortalContentIsNotAcquiredInPublishedState(self):
         # transition requires Review portal content
@@ -189,25 +189,25 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.login('manager')
         self.workflow.doActionFor(self.doc, 'publish')
         # Manager is allowed
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(ModifyPortalContent, self.doc))
+        self.assertTrue(checkPerm(ModifyPortalContent, self.doc))
         # Reader is denied
         self.login('reader')
-        self.failIf(checkPerm(ModifyPortalContent, self.doc))
+        self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
 
     # Check change events permission
 
@@ -220,22 +220,22 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.ni, 'review_state'), 'private')
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Reader is denied
         self.login('reader')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
     def testChangeEventsIsNotAcquiredInPublishedState(self):
         # transition requires Review portal content
@@ -248,25 +248,25 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # transition requires Review portal content
         self.login('manager')
         self.workflow.doActionFor(self.ni, 'publish')
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Owner is allowed
         self.login(TEST_USER_NAME)
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Member is denied
         self.login('member')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Reviewer is denied
         self.login('reviewer')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Anonymous is denied
         self.logout()
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
         # Editor is allowed
         self.login('editor')
-        self.failUnless(checkPerm(ChangeEvents, self.ni))
+        self.assertTrue(checkPerm(ChangeEvents, self.ni))
         # Reader is denied
         self.login('reader')
-        self.failIf(checkPerm(ChangeEvents, self.ni))
+        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
 
 def test_suite():
