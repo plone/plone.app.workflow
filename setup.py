@@ -27,7 +27,7 @@ setup(name='plone.app.workflow',
       extras_require=dict(
         test=[
             'Products.CMFCalendar',
-            'Products.PloneTestCase',
+            'plone.app.testing',
         ]
       ),
       install_requires=[

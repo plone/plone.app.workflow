@@ -1,4 +1,3 @@
-from Products.CMFPlone.tests import PloneTestCase
 from base import WorkflowTestCase
 from plone.app.testing import TEST_USER_NAME
 from Products.CMFCore.WorkflowCore import WorkflowException
