@@ -5,7 +5,7 @@ from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
 from Products.CMFCore.permissions import ModifyPortalContent
-from Products.CMFCalendar.permissions import ChangeEvents
+ChangeEvents = 'Change portal events'
 
 
 class TestDefaultWorkflow(WorkflowTestCase):
@@ -353,10 +353,6 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
-    def testChangeEventsIsNotAcquiredInVisibleState(self):
-        # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
-
     def testModifyPrivateEvent(self):
         self.workflow.doActionFor(self.ni, 'hide')
         # Owner is allowed
@@ -371,11 +367,6 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.logout()
         self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
-    def testChangeEventsIsNotAcquiredInPrivateState(self):
-        self.workflow.doActionFor(self.ni, 'hide')
-        # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
-
     def testModifyPendingEvent(self):
         self.workflow.doActionFor(self.ni, 'submit')
         # Owner is denied
@@ -389,11 +380,6 @@ class TestDefaultWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.assertFalse(checkPerm(ChangeEvents, self.ni))
-
-    def testChangeEventsIsNotAcquiredInPendingState(self):
-        self.workflow.doActionFor(self.ni, 'submit')
-        # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishedEvent(self):
         self.login('reviewer')
@@ -410,12 +396,6 @@ class TestDefaultWorkflow(WorkflowTestCase):
         # Anonymous is denied
         self.logout()
         self.assertFalse(checkPerm(ChangeEvents, self.ni))
-
-    def testChangeEventsIsNotAcquiredInPublishedState(self):
-        self.login('reviewer')
-        self.workflow.doActionFor(self.ni, 'publish')
-        # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     # Check catalog search
 
@@ -502,10 +482,3 @@ class TestDefaultWorkflow(WorkflowTestCase):
             state = getattr(wf.states, state_id, None)
             if state is not None:
                 self.assertEqual(state.title, title)
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestDefaultWorkflow))
-    return suite

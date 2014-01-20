@@ -5,7 +5,7 @@ from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
 from Products.CMFCore.permissions import ModifyPortalContent
-from Products.CMFCalendar.permissions import ChangeEvents
+ChangeEvents = 'Change portal events'
 
 
 class TestSimplePublicationWorkflow(WorkflowTestCase):
@@ -210,11 +210,6 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
 
     # Check change events permission
 
-    def testChangeEventsIsNotAcquiredInPrivateState(self):
-        self.assertEqual(self.workflow.getInfoFor(self.ni, 'review_state'), 'private')
-        # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
-
     def testModifyPrivateEvent(self):
         self.assertEqual(self.workflow.getInfoFor(self.ni, 'review_state'), 'private')
         # Owner is allowed
@@ -235,13 +230,6 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Reader is denied
         self.login('reader')
         self.assertFalse(checkPerm(ChangeEvents, self.ni))
-
-    def testChangeEventsIsNotAcquiredInPublishedState(self):
-        # transition requires Review portal content
-        self.login('manager')
-        self.workflow.doActionFor(self.ni, 'publish')
-        # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
 
     def testModifyPublishEvent(self):
         # transition requires Review portal content
@@ -266,10 +254,3 @@ class TestSimplePublicationWorkflow(WorkflowTestCase):
         # Reader is denied
         self.login('reader')
         self.assertFalse(checkPerm(ChangeEvents, self.ni))
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestSimplePublicationWorkflow))
-    return suite

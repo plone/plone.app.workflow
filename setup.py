@@ -26,7 +26,6 @@ setup(name='plone.app.workflow',
       zip_safe=False,
       extras_require=dict(
         test=[
-            'Products.CMFCalendar',
             'plone.app.testing',
         ]
       ),
