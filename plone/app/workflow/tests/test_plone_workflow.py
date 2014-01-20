@@ -482,3 +482,10 @@ class TestDefaultWorkflow(WorkflowTestCase):
             state = getattr(wf.states, state_id, None)
             if state is not None:
                 self.assertEqual(state.title, title)
+
+
+def test_suite():
+    from unittest import TestSuite, makeSuite
+    suite = TestSuite()
+    suite.addTest(makeSuite(TestDefaultWorkflow))
+    return suite
