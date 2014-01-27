@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.1.7 (unreleased)
+2.1.7 (2014-01-27)
 ------------------
 
 - Show user's login name instead of the user id, which is an internal
