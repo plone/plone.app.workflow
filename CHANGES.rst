@@ -30,6 +30,10 @@ Changelog
 2.2.0 (2014-02-23)
 ------------------
 
+- Remove DL's from portal message in templates.
+  https://github.com/plone/Products.CMFPlone/issues/153
+  [khink]
+
 - Replace deprecated test assert statements.
   [timo]
 
