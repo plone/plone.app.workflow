@@ -8,12 +8,15 @@ from zope.component import getSiteManager
 from zope.component import queryMultiAdapter
 from zope.component.interfaces import IComponentRegistry
 
+from zope.dottedname.resolve import resolve
+
 from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.interfaces import ISetupEnviron
 from Products.GenericSetup.utils import XMLAdapterBase
 
 from zope.i18nmessageid import MessageFactory
 PMF = MessageFactory('plone')
+
 
 
 class PersistentSharingPageRole(Persistent):
@@ -24,10 +27,13 @@ class PersistentSharingPageRole(Persistent):
 
     title = u""
     required_permission = None
+    required_interface = None
 
-    def __init__(self, title=u"", required_permission=None):
+    def __init__(self, title=u"",
+                 required_permission=None, required_interface=None):
         self.title = PMF(title)
         self.required_permission = required_permission
+        self.required_interface = required_interface
 
 
 class SharingXMLAdapter(XMLAdapterBase):
@@ -78,6 +84,9 @@ class SharingXMLAdapter(XMLAdapterBase):
         name = unicode(node.getAttribute('id'))
         title = unicode(node.getAttribute('title'))
         required = node.getAttribute('permission') or None
+        iface = node.getAttribute('interface') or None
+        if iface is not None:
+            iface = resolve(iface)
 
         if node.hasAttribute('remove'):
             utility = self.context.queryUtility(ISharingPageRole, name)
@@ -87,7 +96,8 @@ class SharingXMLAdapter(XMLAdapterBase):
                 self.context.unregisterUtility(utility, ISharingPageRole, name)
             return
 
-        component = PersistentSharingPageRole(title=title, required_permission=required)
+        component = PersistentSharingPageRole(
+            title=title, required_permission=required, required_interface=iface)
 
         self.context.registerUtility(component, ISharingPageRole, name, info=self.info_tag)
 
@@ -101,6 +111,11 @@ class SharingXMLAdapter(XMLAdapterBase):
 
         if component.required_permission:
             node.setAttribute('permission', component.required_permission)
+
+        if component.required_interface:
+            iface = component.required_interface
+            iface = iface.__module__ + '.' + iface.__name__
+            node.setAttribute('interface', iface)
 
         return node
 
