@@ -12,6 +12,7 @@ the "Sharing" page.::
           id="CopyEditor"
           title="Can edit copy"
           permission="Manage portal"
+          interface="Products.CMFPlone.interfaces.ISiteRoot"
           i18n:attributes="title"
           />
   </sharing>

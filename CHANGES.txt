@@ -5,7 +5,9 @@ Changelog
 2.1.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Introduce ``required_interface`` attribute on
+  ``plone.app.workflow.interfaces.ISharingPageRole``.
+  [rnix]
 
 
 2.1.7 (2014-01-27)

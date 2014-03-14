@@ -17,6 +17,7 @@ class ReaderRole(object):
 
     title = _(u"title_can_view", default=u"Can view")
     required_permission = permissions.DelegateReaderRole
+    required_interface = None
 
 
 class EditorRole(object):
@@ -24,6 +25,7 @@ class EditorRole(object):
 
     title = _(u"title_can_edit", default=u"Can edit")
     required_permission = permissions.DelegateEditorRole
+    required_interface = None
 
 
 class ContributorRole(object):
@@ -31,6 +33,7 @@ class ContributorRole(object):
 
     title = _(u"title_can_add", default=u"Can add")
     required_permission = permissions.DelegateContributorRole
+    required_interface = None
 
 
 class ReviewerRole(object):
@@ -38,6 +41,7 @@ class ReviewerRole(object):
 
     title = _(u"title_can_review", default=u"Can review")
     required_permission = permissions.DelegateReviewerRole
+    required_interface = None
 
 # Only managers can manage these
 
