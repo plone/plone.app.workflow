@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.2.1.dev0'
+version = '2.3.dev0'
 
 setup(name='plone.app.workflow',
       version=version,
@@ -34,6 +34,7 @@ setup(name='plone.app.workflow',
         'plone.memoize',
         'transaction',
         'zope.component',
+        'zope.dottedname',
         'zope.i18n',
         'zope.i18nmessageid',
         'zope.interface',

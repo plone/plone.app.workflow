@@ -1,5 +1,6 @@
 import unittest
 from plone.testing.zca import UNIT_TESTING
+from zope.interface import Interface
 from zope.component import provideAdapter, provideUtility, getUtilitiesFor, getSiteManager
 
 from five.localsitemanager import make_objectmanager_site
@@ -56,7 +57,10 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy'
+          interface='zope.interface.Interface' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -66,15 +70,21 @@ class TestImport(ExportImportTest):
         roles = self.roles()
 
         self.assertEqual(1, len(roles))
+
         self.assertEqual('Can copyedit', roles['CopyEditor'].title)
         self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(Interface, roles['CopyEditor'].required_interface)
 
     def test_import_multiple_no_purge(self):
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
-    <role id='Controller' title='Can control' />
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy'
+          interface='zope.interface.Interface' />
+    <role id='Controller'
+          title='Can control' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -86,6 +96,7 @@ class TestImport(ExportImportTest):
         self.assertEqual(2, len(roles))
         self.assertEqual('Can copyedit', roles['CopyEditor'].title)
         self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(Interface, roles['CopyEditor'].required_interface)
         self.assertEqual('Can control', roles['Controller'].title)
         self.assertEqual(None, roles['Controller'].required_permission)
 
@@ -93,7 +104,10 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy'
+          interface='zope.interface.Interface' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -105,10 +119,12 @@ class TestImport(ExportImportTest):
         self.assertEqual(1, len(roles))
         self.assertEqual('Can copyedit', roles['CopyEditor'].title)
         self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(Interface, roles['CopyEditor'].required_interface)
 
         xml = """\
 <sharing>
-    <role id='Controller' title='Can control' />
+    <role id='Controller'
+          title='Can control' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -120,6 +136,7 @@ class TestImport(ExportImportTest):
         self.assertEqual(2, len(roles))
         self.assertEqual('Can copyedit', roles['CopyEditor'].title)
         self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(Interface, roles['CopyEditor'].required_interface)
         self.assertEqual('Can control', roles['Controller'].title)
         self.assertEqual(None, roles['Controller'].required_permission)
 
@@ -127,7 +144,10 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy'
+          interface='zope.interface.Interface' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -139,10 +159,12 @@ class TestImport(ExportImportTest):
         self.assertEqual(1, len(roles))
         self.assertEqual('Can copyedit', roles['CopyEditor'].title)
         self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(Interface, roles['CopyEditor'].required_interface)
 
         xml = """\
 <sharing>
-    <role id='Controller' title='Can control' />
+    <role id='Controller'
+          title='Can control' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=True)
@@ -159,7 +181,10 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy'
+          interface='zope.interface.Interface' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -171,10 +196,13 @@ class TestImport(ExportImportTest):
         self.assertEqual(1, len(roles))
         self.assertEqual('Can copyedit', roles['CopyEditor'].title)
         self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(Interface, roles['CopyEditor'].required_interface)
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can edit copy' permission='Delegate: CopyEditor'/>
+    <role id='CopyEditor'
+          title='Can edit copy'
+          permission='Delegate: CopyEditor' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -186,6 +214,7 @@ class TestImport(ExportImportTest):
         self.assertEqual(1, len(roles))
         self.assertEqual('Can edit copy', roles['CopyEditor'].title)
         self.assertEqual('Delegate: CopyEditor', roles['CopyEditor'].required_permission)
+        self.assertEqual(None, roles['CopyEditor'].required_interface)
 
     def test_import_override_global(self):
 
@@ -193,8 +222,12 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
-    <role id='DoerOfStuff' title='Can do stuff' permission='Delegate doing stuff'/>
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy' />
+    <role id='DoerOfStuff'
+          title='Can do stuff'
+          permission='Delegate doing stuff' />
 </sharing>
 """
         context = DummyImportContext(self.site, purge=False)
@@ -206,6 +239,7 @@ class TestImport(ExportImportTest):
         self.assertEqual(2, len(roles))
         self.assertEqual('Can copyedit', roles['CopyEditor'].title)
         self.assertEqual('Delegate edit copy', roles['CopyEditor'].required_permission)
+        self.assertEqual(None, roles['CopyEditor'].required_interface)
         self.assertEqual('Can do stuff', roles['DoerOfStuff'].title)
         self.assertEqual('Delegate doing stuff', roles['DoerOfStuff'].required_permission)
 
@@ -213,7 +247,9 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy' />
 </sharing>
 """
         context = DummyImportContext(self.sm, purge=False)
@@ -227,7 +263,8 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role remove="True" id='CopyEditor'/>
+    <role remove="True"
+          id='CopyEditor' />
 </sharing>
 """
         context = DummyImportContext(self.sm, purge=False)
@@ -241,8 +278,12 @@ class TestImport(ExportImportTest):
     def test_remove_multiple(self):
         xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
-    <role id='DoerOfStuff' title='Can do stuff' permission='Delegate doing stuff'/>
+    <role id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy' />
+    <role id='DoerOfStuff'
+          title='Can do stuff'
+          permission='Delegate doing stuff' />
 </sharing>
 """
         context = DummyImportContext(self.sm, purge=False)
@@ -251,8 +292,13 @@ class TestImport(ExportImportTest):
 
         xml = """\
 <sharing>
-    <role id='Hacker' title='Can hack' permission='Hack the system'/>
-    <role remove="True" id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
+    <role id='Hacker'
+          title='Can hack'
+          permission='Hack the system' />
+    <role remove="True"
+          id='CopyEditor'
+          title='Can copyedit'
+          permission='Delegate edit copy' />
 </sharing>
 """
         context = DummyImportContext(self.sm, purge=False)
@@ -291,8 +337,9 @@ class TestExport(ExportImportTest):
 
         import_xml = """\
 <sharing>
-    <role id='CopyEditor' title='Can copyedit' permission='Delegate edit copy'/>
-    <role id='Controller' title='Can control' />
+ <role title="Can control" id="Controller"/>
+ <role title="Can copyedit" id="CopyEditor"
+    interface="zope.interface.Interface" permission="Delegate edit copy"/>
 </sharing>
 """
 
@@ -300,7 +347,8 @@ class TestExport(ExportImportTest):
 <?xml version="1.0"?>
 <sharing>
  <role title="Can control" id="Controller"/>
- <role title="Can copyedit" id="CopyEditor" permission="Delegate edit copy"/>
+ <role title="Can copyedit" id="CopyEditor"
+    interface="zope.interface.Interface" permission="Delegate edit copy"/>
 </sharing>
 """
 
@@ -313,6 +361,7 @@ class TestExport(ExportImportTest):
         export_sharing(export_context)
 
         self.assertEqual('sharing.xml', export_context._wrote[0][0])
+
         self.assertEqual(export_xml, export_context._wrote[0][1])
 
 

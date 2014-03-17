@@ -132,8 +132,14 @@ class SharingView(BrowserView):
 
         for name, utility in getUtilitiesFor(ISharingPageRole):
             permission = utility.required_permission
-            if permission is None or portal_membership.checkPermission(permission, context):
-                pairs.append(dict(id = name, title = utility.title))
+            if permission is not None:
+                if not portal_membership.checkPermission(permission, context):
+                    continue
+            # be friendly to utilities implemented without required_interface
+            iface = getattr(utility, 'required_interface', None)
+            if iface is not None and not iface.providedBy(context):
+                continue
+            pairs.append(dict(id = name, title = utility.title))
 
         pairs.sort(key=lambda x: normalizeString(translate(x["title"], context=self.request)))
         return pairs
