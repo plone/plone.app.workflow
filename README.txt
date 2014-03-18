@@ -5,7 +5,7 @@ plone.app.workflow contains workflow- and security-related features for Plone,
 including the sharing view.
 
 It also supports the `sharing.xml` GenericSetup syntax, to add new roles to
-the "Sharing" page.::
+the "Sharing" page::
 
   <sharing xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="plone">
       <role
@@ -16,3 +16,6 @@ the "Sharing" page.::
           i18n:attributes="title"
           />
   </sharing>
+
+The `interface` attribute is optional. It declares the required interface a
+context must implement, so that the given role is displayed in the sharing tab.
