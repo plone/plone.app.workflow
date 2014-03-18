@@ -16,3 +16,6 @@ the "Sharing" page.::
           i18n:attributes="title"
           />
   </sharing>
+
+The `interface` attribute is optional. It declares the required interface a
+context must implement, so that the given role is displayed in the sharing tab.
