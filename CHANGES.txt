@@ -5,6 +5,10 @@ Changelog
 2.1.8 (unreleased)
 ------------------
 
+- Introduce ``plone.app.workflow.interfaces.ILocalrolesModifiedEvent``.
+  ``LocalrolesModifiedEvent`` gets fired after local roles have been changed.
+  [rnix]
+
 - Introduce ``required_interface`` attribute on
   ``plone.app.workflow.interfaces.ISharingPageRole``.
   [rnix]

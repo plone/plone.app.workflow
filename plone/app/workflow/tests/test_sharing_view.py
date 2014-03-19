@@ -135,6 +135,39 @@ class TestSharingView(WorkflowTestCase):
         self.assertEqual('borguser', info[1]['id'])
         self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
 
+    def test_localroles_modified_event(self):
+        from zope.interface import Interface
+        from zope.interface import implementer
+        from zope.event import notify
+        from zope.component import getGlobalSiteManager
+        from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
+        from plone.app.workflow.events import LocalrolesModifiedEvent
+        # define local roles modified sensitive interface and class
+        class ILRMEContext(Interface):
+            pass
+        @implementer(ILRMEContext)
+        class LRMEContext(object):
+            def __init__(self):
+                # gets set by handler
+                self.context = None
+                self.event = None
+        # define handler
+        def lrme_handler(context, event):
+            context.context = context
+            context.event = event
+        # register handler
+        gsm = getGlobalSiteManager()
+        gsm.registerHandler(
+            lrme_handler, (ILRMEContext, ILocalrolesModifiedEvent))
+        # create object and notify subscriber
+        context = LRMEContext()
+        request = self.app.REQUEST
+        event = LocalrolesModifiedEvent(context, request)
+        notify(event)
+        # check subscriber called
+        self.assertEqual(context.context, context)
+        self.assertEqual(context.event, event)
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite
