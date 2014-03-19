@@ -3,6 +3,7 @@ from itertools import chain
 from plone.memoize.instance import memoize, clearafter
 from zope.component import getUtilitiesFor, getMultiAdapter
 from zope.i18n import translate
+from zope.event import notify
 
 from Acquisition import aq_parent, aq_base
 from AccessControl import Unauthorized
@@ -17,6 +18,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.app.workflow import PloneMessageFactory as _
 from plone.app.workflow.interfaces import ISharingPageRole
+from plone.app.workflow.events import LocalrolesModifiedEvent
 
 import json
 
@@ -105,6 +107,7 @@ class SharingView(BrowserView):
                             or reindex
             if reindex:
                 self.context.reindexObjectSecurity()
+                notify(LocalrolesModifiedEvent(self.context, self.request))
             IStatusMessage(self.request).addStatusMessage(
                 _(u"Changes saved."), type='info')
 
