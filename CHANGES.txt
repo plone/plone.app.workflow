@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.1.8 (unreleased)
+2.1.8 (2014-04-30)
 ------------------
 
 - Introduce ``plone.app.workflow.interfaces.ILocalrolesModifiedEvent``.
