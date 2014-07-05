@@ -31,6 +31,8 @@ class TestSharingView(WorkflowTestCase):
         results = view.user_search_results()
         self.failUnless(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched by login name.")
+        self.assertTrue(results[0].get('login') == 'testuser',
+            msg="Didn't display login when I searched by login name.")
         value = JSONDecoder().decode(view.updateSharingInfo(search_term='testuser'))
         self.assertTrue('value="testuser"' in value['body'])
 
@@ -41,6 +43,8 @@ class TestSharingView(WorkflowTestCase):
         results = view.user_search_results()
         self.failUnless(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched for %s as email." % term)
+        self.assertTrue(results[0].get('login') == 'testuser',
+            msg="Didn't display login when I searched for %s as email." % term)
 
     def test_search_by_email(self):
         """Make sure we can search by email on the Sharing tab.
@@ -70,6 +74,7 @@ class TestSharingView(WorkflowTestCase):
         results = view.group_search_results()
         self.failUnless(len(results) and results[0].get('id') == 'testgroup',
             msg="Didn't find testgroup when I searched by group id.")
+        self.assertTrue(results[0].get('login') is None)
 
     def test_search_for_group_by_title(self):
         """ Make sure we can search for groups by title """
@@ -109,10 +114,10 @@ class TestSharingView(WorkflowTestCase):
         class LocalRoleProvider(object):
             def __init__(self, context):
                 self.context = context
-            
+
             def getAllRoles(self):
                 yield 'borguser', ('Contributor',)
-            
+
             def getRoles(self, user_id):
                 if user_id == 'borguser':
                     return ('Contributor',)
@@ -126,7 +131,7 @@ class TestSharingView(WorkflowTestCase):
         self.assertEqual(2, len(info))
         self.assertEqual('borguser', info[1]['id'])
         self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
-        
+
         #check borg local roles works with non-heriting roles policy
         sharing = self.portal.restrictedTraverse('@@sharing')
         setattr(sharing.context, '__ac_local_roles_block__', True)
