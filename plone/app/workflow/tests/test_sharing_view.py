@@ -30,6 +30,8 @@ class TestSharingView(WorkflowTestCase):
         results = view.user_search_results()
         self.assertTrue(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched by login name.")
+        self.assertTrue(results[0].get('login') == 'testuser',
+            msg="Didn't display login when I searched by login name.")
 
     def search_by_email(self, term):
         request = self.app.REQUEST
@@ -38,6 +40,8 @@ class TestSharingView(WorkflowTestCase):
         results = view.user_search_results()
         self.assertTrue(len(results) and results[0].get('id') == 'testuser',
             msg="Didn't find testuser when I searched for %s as email." % term)
+        self.assertTrue(results[0].get('login') == 'testuser',
+            msg="Didn't display login when I searched for %s as email." % term)
 
     def test_search_by_email(self):
         """Make sure we can search by email on the Sharing tab.
@@ -67,6 +71,7 @@ class TestSharingView(WorkflowTestCase):
         results = view.group_search_results()
         self.assertTrue(len(results) and results[0].get('id') == 'testgroup',
             msg="Didn't find testgroup when I searched by group id.")
+        self.assertTrue(results[0].get('login') is None)
 
     def test_search_for_group_by_title(self):
         """ Make sure we can search for groups by title """
