@@ -4,7 +4,9 @@ Changelog
 2.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Show login-name even if it is the same as the user-id.
+  Fixes https://dev.plone.org/ticket/14259
+  [pbauer]
 
 
 2.2.1 (2014-04-13)
@@ -37,7 +39,7 @@ Changelog
 2.1.3 (2013-04-29)
 ------------------
 
-- Add json header to sharing.py. 
+- Add json header to sharing.py.
   [travacic]
 
 
@@ -71,7 +73,7 @@ Changelog
 2.0.8 (2012-10-03)
 ------------------
 
-- Refactor: we can easily customize the sharing view 
+- Refactor: we can easily customize the sharing view
   so that add/remove inherit field is removed.
   [thomasdesvenain]
 
@@ -100,8 +102,8 @@ Changelog
 2.0.5 (2011-08-31)
 ------------------
 
-- User should click the 'Save' button to actually save its changes in the 
-  sharing tab. IOW we dont want to update local roles while searching 
+- User should click the 'Save' button to actually save its changes in the
+  sharing tab. IOW we dont want to update local roles while searching
   for users.
   [jfroche]
 

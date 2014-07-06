@@ -193,7 +193,7 @@ class SharingView(BrowserView):
         current_settings.sort(key=lambda x: safe_unicode(x["type"])+safe_unicode(x["title"]))
 
         return current_settings
-    
+
     def can_edit_inherit(self):
         """If this method returns True, user can change role role inheritance status
         If it is False, inherit checkbox is not displayed on form
@@ -382,7 +382,7 @@ class SharingView(BrowserView):
                     if r in roles:
                         roles[r] = 'global'
                 login = principal.getUserName()
-                if principal_type == 'group' or login == principal_id:
+                if principal_type == 'group':
                     login = None
                 info.append(dict(id = principal_id,
                                  title = get_principal_title(principal,
