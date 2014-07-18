@@ -10,19 +10,19 @@
 <metal:main fill-slot="main"
      tal:define="context_state context/@@plone_context_state">
 
-    <div class="portalMessage info" tal:condition="context_state/is_default_page">
-        <strong i18n:translate="">
+    <dl class="portalMessage info" tal:condition="context_state/is_default_page">
+        <dt i18n:translate="">
             Info
-        </strong>
-        <span i18n:translate="help_sharing_page_default_page">
+        </dt>
+        <dd i18n:translate="help_sharing_page_default_page">
             You are adjusting the sharing privileges for a default view in a container.
             To adjust them for the entire container,
             <a i18n:name="go_here"
                i18n:translate="help_sharing_go_here"
                tal:define="folder context_state/folder"
                tal:attributes="href string:${folder/absolute_url}/sharing">go here</a>.
-        </span>
-    </div>
+        </dd>
+    </dl>
 
     <h1 class="documentFirstHeading"
         i18n:translate="heading_currently_assigned_shares">
