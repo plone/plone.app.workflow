@@ -5,8 +5,8 @@ version = '2.2.2.dev0'
 setup(name='plone.app.workflow',
       version=version,
       description="workflow and security settings for Plone",
-      long_description=open("README.txt").read() + "\n" +
-                       open("CHANGES.txt").read(),
+      long_description=open("README.rst").read() + "\n" +
+                       open("CHANGES.rst").read(),
       classifiers=[
           "Environment :: Web Environment",
           "Framework :: Plone",
