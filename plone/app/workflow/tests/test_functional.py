@@ -5,7 +5,7 @@ from base import WorkflowTestCase
 
 
 def test_suite():
-    tests = ['onestateworkflow.txt', 'sharingpage.txt']
+    tests = ['onestateworkflow.rst', 'sharingpage.rst']
     suite = TestSuite()
     for test in tests:
         suite.addTest(ZopeDocFileSuite(test,
