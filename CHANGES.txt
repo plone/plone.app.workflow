@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.1.9 (unreleased)
+2.1.9 (2014-10-25)
 ------------------
 
 - Show login-name even if it is the same as the user-id.
