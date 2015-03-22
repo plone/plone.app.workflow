@@ -4,7 +4,8 @@ Changelog
 2.2.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove DL's from portal message in templates.
+  [khink]
 
 
 2.2.2 (2014-10-23)
