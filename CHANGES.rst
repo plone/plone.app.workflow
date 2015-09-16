@@ -4,7 +4,9 @@ Changelog
 2.2.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use safe_unicode for search in @@sharing.
+  Fixes https://github.com/plone/Products.CMFPlone/issues/930
+  [pbauer]
 
 
 2.2.3 (2015-03-22)
