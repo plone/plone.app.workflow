@@ -360,7 +360,7 @@ class SharingView(BrowserView):
 
         translated_message = translate(_(u"Search for user or group"),
                 context=self.request)
-        search_term = self.request.form.get('search_term', None)
+        search_term = safe_unicode(self.request.form.get('search_term', None))
         if not search_term or search_term == translated_message:
             return []
 
