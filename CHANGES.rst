@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.4 (unreleased)
+2.2.4 (2015-09-20)
 ------------------
 
 - Use safe_unicode for search in @@sharing.
