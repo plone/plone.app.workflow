@@ -282,6 +282,14 @@ class SharingView(BrowserView):
         # Add the items to the info dict, assigning full name if possible.
         # Also, recut roles in the format specified in the docstring
 
+        # prefetch users in one go
+        user_ids = [x[-1]['id'] for x in dec_users if x[1] == 'user']
+        group_ids = [x[-1]['id'] for x in dec_users if x[1] == 'group']
+        if user_ids:
+            acl_users.prefetchGetUserById(user_ids)
+        if group_ids:
+            acl_users.prefetchGetGroupById(group_ids)
+
         for d in dec_users:
             item = d[-1]
             name = item['name']
@@ -370,7 +378,17 @@ class SharingView(BrowserView):
         info = []
 
         hunter = getMultiAdapter((context, self.request), name='pas_search')
-        for principal_info in search_for_principal(hunter, search_term):
+
+        # pre-fetch principals in one go
+        principal_infos = search_for_principal(hunter, search_term)
+        principal_ids = [x[id_key] for x in principal_infos]
+        if principal_ids:
+            acl_users = getToolByName(self.context, 'acl_users')
+            {'group': acl_users.prefetchGetGroupById,
+             'user': acl_users.prefetchGetUserById
+            }[principal_type](principal_ids)
+
+        for principal_info in principal_infos:
             principal_id = principal_info[id_key]
             if principal_id not in existing_principals:
                 principal = get_principal_by_id(principal_id)
