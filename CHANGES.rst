@@ -4,7 +4,13 @@ Changelog
 2.2.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+New:
+
+- *add item here*
+
+Fixes:
+
+- *add item here*
 
 
 2.2.4 (2015-09-20)
@@ -374,4 +380,3 @@ Changelog
 - Added missing closing head tag to sharing.pt. This closes
   http://dev.plone.org/plone/ticket/7161.
   [hannosch]
-
