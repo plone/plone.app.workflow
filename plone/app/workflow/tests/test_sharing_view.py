@@ -2,15 +2,16 @@
 # Test the sharing browser view.
 #
 
-from zope.component import getMultiAdapter
-
 from base import WorkflowTestCase
+from plone.testing import z2
+from zope.component import getMultiAdapter
 
 
 class TestSharingView(WorkflowTestCase):
 
     def afterSetUp(self):
         self.portal.acl_users._doAddUser('testuser', 'secret', ['Member'], [])
+        self.portal.acl_users._doAddUser('testreviewer', 'secret', ['Reviewer'], [])
         self.portal.acl_users._doAddUser('nonasciiuser', 'secret', ['Member'], [])
         self.portal.acl_users._doAddGroup('testgroup', [], title='Some meaningful title')
         testuser = self.portal.portal_membership.getMemberById('testuser')
@@ -81,6 +82,35 @@ class TestSharingView(WorkflowTestCase):
         results = view.group_search_results()
         self.assertTrue(len(results) and results[0].get('title') == 'Some meaningful title',
             msg="Didn't find testuser when I searched by group title.")
+
+    def test_group_name_links_to_prefs_for_admin(self):
+        """ Make sure that for admins  group name links to group prefs """
+        request = self.app.REQUEST
+        request.form['search_term'] = 'testgroup'
+        view = getMultiAdapter((self.portal, request), name='sharing')
+        self.assertIn('<a href="http://nohost/plone/'
+                      '@@usergroup-groupmembership?groupname=testgroup">',
+                      view(), msg="Group name was not linked to group prefs.")
+
+    def test_group_name_links_not_include_authusers(self):
+        """ Make sure that for admins  group name links to group prefs """
+        request = self.app.REQUEST
+        request.form['search_term'] = 'testgroup'
+        view = getMultiAdapter((self.portal, request), name='sharing')
+        self.assertNotIn('<a href="http://nohost/plone/'
+                          '@@usergroup-groupmembership?groupname=AuthenticatedUsers">',  # noqa
+                      view(), msg="AuthenticatedUsers was linked to group prefs.")  # noqa
+
+    def test_group_name_doesnt_link_to_prefs_for_reviewer(self):
+        """ Make sure that for admins  group name links to group prefs """
+        z2.login(self.portal['acl_users'], 'testreviewer')
+        request = self.app.REQUEST
+        request.form['search_term'] = 'testgroup'
+        view = getMultiAdapter((self.portal, request), name='sharing')
+        self.assertNotIn('<a href="http://nohost/plone/'
+                         '@@usergroup-groupmembership?groupname=testgroup">',
+                         view(), msg="Group name link was unexpectedly shown "
+                                      "to reviewer.")
 
     def test_local_manager_removes_inheritance(self):
         """When a user that inherits the right to remove inheritance do it,

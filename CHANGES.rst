@@ -6,7 +6,9 @@ Changelog
 
 New:
 
-- *add item here*
+- Add a direct link from a group name on Sharing ab to that group's
+  member list for users with sufficient permissions [PLIP #1310]
+  [datakurre]
 
 Fixes:
 
