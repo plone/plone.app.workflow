@@ -92,6 +92,15 @@ class TestSharingView(WorkflowTestCase):
                       '@@usergroup-groupmembership?groupname=testgroup">',
                       view(), msg="Group name was not linked to group prefs.")
 
+    def test_group_name_links_not_include_authusers(self):
+        """ Make sure that for admins  group name links to group prefs """
+        request = self.app.REQUEST
+        request.form['search_term'] = 'testgroup'
+        view = getMultiAdapter((self.portal, request), name='sharing')
+        self.assertNotIn('<a href="http://nohost/plone/'
+                          '@@usergroup-groupmembership?groupname=AuthenticatedUsers">',  # noqa
+                      view(), msg="AuthenticatedUsers was linked to group prefs.")  # noqa
+
     def test_group_name_doesnt_link_to_prefs_for_reviewer(self):
         """ Make sure that for admins  group name links to group prefs """
         z2.login(self.portal['acl_users'], 'testreviewer')
