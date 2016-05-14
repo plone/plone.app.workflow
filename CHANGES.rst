@@ -10,10 +10,6 @@ New:
   member list for users with sufficient permissions [PLIP #1310]
   [datakurre]
 
-Fixes:
-
-- *add item here*
-
 
 2.2.4 (2015-09-20)
 ------------------
