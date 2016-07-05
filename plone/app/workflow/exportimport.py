@@ -1,5 +1,5 @@
 from persistent import Persistent
-from zope.interface import implements
+from zope.interface import implementer
 
 from plone.app.workflow.interfaces import ISharingPageRole
 
@@ -19,11 +19,11 @@ PMF = MessageFactory('plone')
 
 
 
+@implementer(ISharingPageRole)
 class PersistentSharingPageRole(Persistent):
     """These are registered as local utilities when managing the sharing
     page roles.
     """
-    implements(ISharingPageRole)
 
     title = u""
     required_permission = None
