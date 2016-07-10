@@ -1,4 +1,4 @@
-from zope.interface import implements
+from zope.interface import implementer
 from plone.app.workflow.interfaces import ISharingPageRole
 from plone.app.workflow import permissions
 #from Products.CMFCore import permissions as core_permissions
@@ -11,32 +11,32 @@ XXX: policy explanation
 
 # These are for everyone
 
+@implementer(ISharingPageRole)
 class ReaderRole(object):
-    implements(ISharingPageRole)
 
     title = _(u"title_can_view", default=u"Can view")
     required_permission = permissions.DelegateReaderRole
     required_interface = None
 
 
+@implementer(ISharingPageRole)
 class EditorRole(object):
-    implements(ISharingPageRole)
 
     title = _(u"title_can_edit", default=u"Can edit")
     required_permission = permissions.DelegateEditorRole
     required_interface = None
 
 
+@implementer(ISharingPageRole)
 class ContributorRole(object):
-    implements(ISharingPageRole)
 
     title = _(u"title_can_add", default=u"Can add")
     required_permission = permissions.DelegateContributorRole
     required_interface = None
 
 
+@implementer(ISharingPageRole)
 class ReviewerRole(object):
-    implements(ISharingPageRole)
 
     title = _(u"title_can_review", default=u"Can review")
     required_permission = permissions.DelegateReviewerRole
