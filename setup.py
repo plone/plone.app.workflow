@@ -19,7 +19,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
     ],
-    keywords='',
+    keywords='workflow sharing plone',
     author='Plone Foundation',
     author_email='plone-developers@lists.sourceforge.net',
     url='https://pypi.python.org/pypi/plone.app.workflow',
