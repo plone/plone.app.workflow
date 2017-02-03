@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fixed test failure for LookupError, having extra 'available items' (Zope 4)
+  [davisagli]
 
 
 2.2.6 (2016-08-18)
