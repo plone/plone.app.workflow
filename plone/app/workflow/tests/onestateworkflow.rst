@@ -63,12 +63,12 @@ We shouldn't see the edit tab
     >>> browser.getControl('Edit')
     Traceback (most recent call last):
     ...
-    LookupError: label 'Edit'
+    LookupError: label 'Edit'...
     >>> browser.open('%s' % self.folder.document1.absolute_url())
     >>> browser.getControl('Edit')
     Traceback (most recent call last):
     ...
-    LookupError: label 'Edit'
+    LookupError: label 'Edit'...
 
 Or have the "Modify portal content" permission in any scenario
 
@@ -110,12 +110,12 @@ We shouldn't see the edit tab
     >>> browser.getControl('Edit')
     Traceback (most recent call last):
     ...
-    LookupError: label 'Edit'
+    LookupError: label 'Edit'...
     >>> browser.open('%s' % self.folder.document1.absolute_url())
     >>> browser.getControl('Edit')
     Traceback (most recent call last):
     ...
-    LookupError: label 'Edit'
+    LookupError: label 'Edit'...
 
 Or have the "Modify portal content" permission in any scenario
 
