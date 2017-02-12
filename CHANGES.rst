@@ -4,14 +4,6 @@ Changelog
 2.2.7 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fixed test failure for LookupError, having extra 'available items' (Zope 4)
