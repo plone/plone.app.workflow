@@ -1,12 +1,13 @@
 Changelog
 =========
 
-2.2.8 (unreleased)
-------------------
+3.0 (unreleased)
+----------------
 
 Breaking changes:
 
-- *add item here*
+- Removed long time deprecated and unused permission "Change portal events".
+  [kakshay21]
 
 New features:
 
@@ -14,8 +15,7 @@ New features:
 
 Bug fixes:
 
-- removed "change portal events"
-  [kakshay21]
+- *add item here*
 
 
 2.2.7 (2017-02-12)
