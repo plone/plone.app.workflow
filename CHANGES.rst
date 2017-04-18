@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Remove usage of 'Change portal events' permission.
+  [gforcada]
 
 
 2.2.7 (2017-02-12)
