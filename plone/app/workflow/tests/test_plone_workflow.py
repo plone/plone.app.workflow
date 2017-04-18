@@ -5,7 +5,6 @@ from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
 from Products.CMFCore.permissions import ModifyPortalContent
-ChangeEvents = 'Change portal events'
 
 
 class TestDefaultWorkflow(WorkflowTestCase):
@@ -337,65 +336,6 @@ class TestDefaultWorkflow(WorkflowTestCase):
         self.login('reviewer')
         self.workflow.doActionFor(self.doc, 'publish')
         self.assertEqual(self.doc.acquiredRolesAreUsedBy(ModifyPortalContent), '')
-
-    # Check change events permission
-
-    def testModifyVisibleEvent(self):
-        # Owner is allowed
-        self.assertTrue(checkPerm(ChangeEvents, self.ni))
-        # Member is denied
-        self.login('member')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Reviewer is denied
-        self.login('reviewer')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Anonymous is denied
-        self.logout()
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-
-    def testModifyPrivateEvent(self):
-        self.workflow.doActionFor(self.ni, 'hide')
-        # Owner is allowed
-        self.assertTrue(checkPerm(ChangeEvents, self.ni))
-        # Member is denied
-        self.login('member')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Reviewer is denied
-        self.login('reviewer')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Anonymous is denied
-        self.logout()
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-
-    def testModifyPendingEvent(self):
-        self.workflow.doActionFor(self.ni, 'submit')
-        # Owner is denied
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Member is denied
-        self.login('member')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Reviewer is allowed
-        self.login('reviewer')
-        self.assertTrue(checkPerm(ChangeEvents, self.ni))
-        # Anonymous is denied
-        self.logout()
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-
-    def testModifyPublishedEvent(self):
-        self.login('reviewer')
-        self.workflow.doActionFor(self.ni, 'publish')
-        # Owner is denied
-        self.login(TEST_USER_NAME)
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Member is denied
-        self.login('member')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Reviewer is denied
-        self.login('reviewer')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Anonymous is denied
-        self.logout()
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
     # Check catalog search
 

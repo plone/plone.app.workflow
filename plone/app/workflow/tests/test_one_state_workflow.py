@@ -4,7 +4,6 @@ from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
 from Products.CMFCore.permissions import View
 from Products.CMFCore.permissions import ModifyPortalContent
-ChangeEvents = 'Change portal events'
 
 
 class TestOneStateWorkflow(WorkflowTestCase):
@@ -103,31 +102,6 @@ class TestOneStateWorkflow(WorkflowTestCase):
         # Reader is denied
         self.login('reader')
         self.assertFalse(checkPerm(ModifyPortalContent, self.doc))
-
-    # Check change events permission
-
-    def testChangeEventsIsNotAcquiredInPublishedState(self):
-        # since r104169 event content doesn't use `ChangeEvents` anymore...
-        self.assertEqual(self.ni.acquiredRolesAreUsedBy(ModifyPortalContent), '')
-
-    def testModifyPublishEvent(self):
-        # Owner is allowed
-        self.assertTrue(checkPerm(ChangeEvents, self.ni))
-        # Member is denied
-        self.login('member')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Reviewer is denied
-        self.login('reviewer')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Anonymous is denied
-        self.logout()
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
-        # Editor is allowed
-        self.login('editor')
-        self.assertTrue(checkPerm(ChangeEvents, self.ni))
-        # Reader is denied
-        self.login('reader')
-        self.assertFalse(checkPerm(ChangeEvents, self.ni))
 
 
 def test_suite():
