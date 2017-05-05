@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '3.0.1.dev0'
+version = '4.0.dev0'
 
 setup(
     name='plone.app.workflow',
@@ -11,7 +11,7 @@ setup(
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Plone",
-        "Framework :: Plone :: 5.1",
+        "Framework :: Plone :: 5.2",
         "Framework :: Zope2",
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",
@@ -48,7 +48,7 @@ setup(
         'Acquisition',
         'DateTime',
         'Products.CMFPlone',
-        'Products.CMFCore',
+        'Products.CMFCore>=2.4.0b2',
         'Products.DCWorkflow',
         'Products.GenericSetup',
         'Products.statusmessages',
