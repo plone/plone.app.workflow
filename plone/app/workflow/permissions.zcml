@@ -1,12 +1,6 @@
 <configure xmlns="http://namespaces.zope.org/zope"
     i18n_domain="plone.app.workflow">
 
-    <!-- Permissions that Five don't give us -->
-    <permission
-        id="cmf.ChangeLocalRoles"
-        title="Change local roles"
-        />
-
     <!-- Our custom permissions -->
     <permission
         id="plone.DelegateRoles"

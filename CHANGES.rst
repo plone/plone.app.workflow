@@ -8,6 +8,9 @@ Breaking changes:
 
 - *add item here*
 
+- No need to define cmf.ChangeLocalRoles in zcml since this is in by Products.CMFCore>=2.4.0b2
+  [jensens]
+
 New features:
 
 - *add item here*
