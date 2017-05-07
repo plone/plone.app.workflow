@@ -4,14 +4,6 @@ Changelog
 2.2.8 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Remove usage of 'Change portal events' permission.
