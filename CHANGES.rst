@@ -9,14 +9,6 @@ Breaking changes:
 - Removed long time deprecated and unused permission "Change portal events".
   [kakshay21]
 
-New features:
-
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
-
 
 2.2.7 (2017-02-12)
 ------------------
