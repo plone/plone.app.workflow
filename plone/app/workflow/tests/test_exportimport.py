@@ -1,21 +1,24 @@
-import unittest
-from plone.testing.zca import UNIT_TESTING
-from zope.interface import Interface
-from zope.component import provideAdapter, provideUtility, getUtilitiesFor, getSiteManager
-
+# -*- coding: utf-8 -*-
 from five.localsitemanager import make_objectmanager_site
-from zope.site.hooks import setHooks, setSite, clearSite
-
-from plone.app.workflow.exportimport import import_sharing, export_sharing
+from OFS.Folder import Folder
+from plone.app.workflow.exportimport import export_sharing
+from plone.app.workflow.exportimport import import_sharing
 from plone.app.workflow.exportimport import SharingXMLAdapter
 from plone.app.workflow.exportimport import PersistentSharingPageRole
-
 from plone.app.workflow.interfaces import ISharingPageRole
-
+from plone.testing.zca import UNIT_TESTING
 from Products.GenericSetup.tests.common import DummyImportContext
 from Products.GenericSetup.tests.common import DummyExportContext
+from zope.component import getSiteManager
+from zope.component import getUtilitiesFor
+from zope.component import provideAdapter
+from zope.component import provideUtility
+from zope.interface import Interface
+from zope.site.hooks import clearSite
+from zope.site.hooks import setHooks
+from zope.site.hooks import setSite
 
-from OFS.Folder import Folder
+import unittest
 
 
 class ExportImportTest(unittest.TestCase):
@@ -363,7 +366,3 @@ class TestExport(ExportImportTest):
         self.assertEqual('sharing.xml', export_context._wrote[0][0])
 
         self.assertEqual(export_xml, export_context._wrote[0][1])
-
-
-def test_suite():
-    return unittest.defaultTestLoader.loadTestsFromName(__name__)
