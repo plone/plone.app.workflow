@@ -18,7 +18,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Update tests to use testing best practices (and stop using the bbb module from p.a.testing).
+  [gforcada]
 
 
 3.0 (2017-05-29)
