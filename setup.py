@@ -48,7 +48,7 @@ setup(
         'Acquisition',
         'DateTime',
         'Products.CMFPlone',
-        'Products.CMFCore>=2.4.0b2',
+        'Products.CMFCore>=2.4.0dev',
         'Products.DCWorkflow',
         'Products.GenericSetup',
         'Products.statusmessages',
