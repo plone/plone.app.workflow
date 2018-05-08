@@ -319,14 +319,14 @@ class TestExport(ExportImportTest):
 
     def test_export_empty(self):
 
-        xml = """\
-<?xml version="1.0"?>
+        xml = b"""\
+<?xml version="1.0" encoding="utf-8"?>
 <sharing/>
 """
         context = DummyExportContext(self.site)
         export_sharing(context)
 
-        self.assertEqual('sharing.xml', context._wrote[0][0])
+        self.assertEqual(u'sharing.xml', context._wrote[0][0])
         self.assertEqual(xml, context._wrote[0][1])
 
     def test_export_multiple(self):
@@ -338,7 +338,7 @@ class TestExport(ExportImportTest):
         # Will not be exported, as it wasn't imported with this handler
         sm.registerUtility(PersistentSharingPageRole("Do other Stuff"), ISharingPageRole, "DoerOfOtherStuff")
 
-        import_xml = """\
+        import_xml = b"""\
 <sharing>
  <role title="Can control" id="Controller"/>
  <role title="Can copyedit" id="CopyEditor"
@@ -346,8 +346,8 @@ class TestExport(ExportImportTest):
 </sharing>
 """
 
-        export_xml = """\
-<?xml version="1.0"?>
+        export_xml = b"""\
+<?xml version="1.0" encoding="utf-8"?>
 <sharing>
  <role title="Can control" id="Controller"/>
  <role title="Can copyedit" id="CopyEditor"

@@ -90,7 +90,7 @@ class TestSharingView(unittest.TestCase):
         self.assertTrue(len(results))
         self.assertEqual(
             results[-1].get('title'),
-            '\xc3\x84\xc3\x9c\xc3\x9f',
+            b'\xc3\x84\xc3\x9c\xc3\x9f',
             msg="Umlaute",
         )
 
