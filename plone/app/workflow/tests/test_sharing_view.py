@@ -31,7 +31,7 @@ class TestSharingView(unittest.TestCase):
         testuser = self.portal.portal_membership.getMemberById('testuser')
         testuser.setMemberProperties(dict(email='testuser@plone.org'))
         nonasciiuser = self.portal.portal_membership.getMemberById('nonasciiuser')
-        nonasciiuser.setMemberProperties(dict(fullname=u'\xc4\xdc\xdf'.encode('utf-8')))
+        nonasciiuser.setMemberProperties(dict(fullname=u'\xc4\xdc\xdf'))
         login(self.portal, 'manager')
 
     def test_search_by_login_name(self):
