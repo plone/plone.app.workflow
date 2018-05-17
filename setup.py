@@ -50,7 +50,7 @@ setup(
         'Products.CMFPlone',
         'Products.CMFCore>=2.4.0dev',
         'Products.DCWorkflow',
-        'Products.GenericSetup',
+        'Products.GenericSetup >= 2.0.dev0',
         'Products.statusmessages',
         'Zope2',
     ],
