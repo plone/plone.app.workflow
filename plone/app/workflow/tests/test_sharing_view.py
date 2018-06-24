@@ -13,6 +13,7 @@ from zope.event import notify
 from zope.interface import implementer
 from zope.interface import Interface
 
+import six
 import unittest
 
 
@@ -88,9 +89,12 @@ class TestSharingView(unittest.TestCase):
         view = getMultiAdapter((self.portal, self.request), name='sharing')
         results = view.role_settings()
         self.assertTrue(len(results))
+        expected = u'ÄÜß'
+        if six.PY2:
+            expected = expected.encode('utf8')
         self.assertEqual(
             results[-1].get('title'),
-            b'\xc3\x84\xc3\x9c\xc3\x9f',
+            expected,
             msg="Umlaute",
         )
 

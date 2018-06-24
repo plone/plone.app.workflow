@@ -37,7 +37,7 @@ We shouldn't see the Sharing tab
     >>> browser.getLink('Sharing')
     Traceback (most recent call last):
     ...
-    LinkNotFoundError
+    zope.testbrowser.browser.LinkNotFoundError
 
 Manager
 -------
@@ -157,7 +157,7 @@ Sharing tab.
     >>> browser.getLink('Sharing')
     Traceback (most recent call last):
     ...
-    LinkNotFoundError
+    zope.testbrowser.browser.LinkNotFoundError
 
 Delegated Editor
 ----------------
@@ -198,7 +198,7 @@ A delegated Contributor cannot assign any further rights.
     >>> browser.getLink('Sharing').click()
     Traceback (most recent call last):
     ...
-    LinkNotFoundError
+    zope.testbrowser.browser.LinkNotFoundError
 
 Delegated Reviewer
 ------------------
