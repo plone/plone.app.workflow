@@ -17,6 +17,8 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
     keywords='workflow sharing plone',
     author='Plone Foundation',
@@ -35,6 +37,7 @@ setup(
     install_requires=[
         'setuptools',
         'plone.memoize',
+        'six',
         'transaction',
         'zope.component',
         'zope.dottedname',

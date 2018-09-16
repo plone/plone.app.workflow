@@ -15,7 +15,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Python3 compatibility
+  [jessesnyder, pbauer]
 
 Bug fixes:
 
