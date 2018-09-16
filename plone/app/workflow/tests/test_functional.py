@@ -8,6 +8,8 @@ from plone.testing import layered
 from Products.CMFCore.utils import getToolByName
 
 import doctest
+import re
+import six
 import transaction
 import unittest
 
@@ -37,6 +39,13 @@ def setup(doctest):
     transaction.commit()
 
 
+class Py23DocChecker(doctest.OutputChecker):
+    def check_output(self, want, got, optionflags):
+        if six.PY2:
+            want = re.sub('zope.testbrowser.browser.LinkNotFoundError', 'LinkNotFoundError', want)  # noqa: E501
+        return doctest.OutputChecker.check_output(self, want, got, optionflags)
+
+
 def test_suite():
     suite = unittest.TestSuite()
     tests = [
@@ -46,6 +55,7 @@ def test_suite():
                 package='plone.app.workflow',
                 optionflags=optionflags,
                 setUp=setup,
+                checker=Py23DocChecker(),
             ),
             layer=PLONE_APP_WORKFLOW_FUNCTIONAL_TESTING,
         )

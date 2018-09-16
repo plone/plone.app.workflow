@@ -1,3 +1,4 @@
+import six
 from persistent import Persistent
 from zope.interface import implementer
 
@@ -16,7 +17,6 @@ from Products.GenericSetup.utils import XMLAdapterBase
 
 from zope.i18nmessageid import MessageFactory
 PMF = MessageFactory('plone')
-
 
 
 @implementer(ISharingPageRole)
@@ -68,7 +68,7 @@ class SharingXMLAdapter(XMLAdapterBase):
     def _iterRoleRegistrations(self):
         for reg in tuple(self.context.registeredUtilities()):
             if reg.provided.isOrExtends(ISharingPageRole) \
-                    and isinstance(reg.info, basestring)  \
+                    and isinstance(reg.info, six.string_types)  \
                     and self.info_tag in reg.info:
                 yield reg
 
@@ -81,8 +81,8 @@ class SharingXMLAdapter(XMLAdapterBase):
         if node.nodeName != 'role':
             return
 
-        name = unicode(node.getAttribute('id'))
-        title = unicode(node.getAttribute('title'))
+        name = six.text_type(node.getAttribute('id'))
+        title = six.text_type(node.getAttribute('title'))
         required = node.getAttribute('permission') or None
         iface = node.getAttribute('interface') or None
         if iface is not None:

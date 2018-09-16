@@ -13,6 +13,7 @@ from zope.event import notify
 from zope.interface import implementer
 from zope.interface import Interface
 
+import six
 import unittest
 
 
@@ -31,7 +32,7 @@ class TestSharingView(unittest.TestCase):
         testuser = self.portal.portal_membership.getMemberById('testuser')
         testuser.setMemberProperties(dict(email='testuser@plone.org'))
         nonasciiuser = self.portal.portal_membership.getMemberById('nonasciiuser')
-        nonasciiuser.setMemberProperties(dict(fullname=u'\xc4\xdc\xdf'.encode('utf-8')))
+        nonasciiuser.setMemberProperties(dict(fullname=u'\xc4\xdc\xdf'))
         login(self.portal, 'manager')
 
     def test_search_by_login_name(self):
@@ -88,9 +89,12 @@ class TestSharingView(unittest.TestCase):
         view = getMultiAdapter((self.portal, self.request), name='sharing')
         results = view.role_settings()
         self.assertTrue(len(results))
+        expected = u'ÄÜß'
+        if six.PY2:
+            expected = expected.encode('utf8')
         self.assertEqual(
             results[-1].get('title'),
-            '\xc3\x84\xc3\x9c\xc3\x9f',
+            expected,
             msg="Umlaute",
         )
 

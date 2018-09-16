@@ -9,12 +9,14 @@ Breaking changes:
 - No need to define cmf.ChangeLocalRoles in zcml since this is in by Products.CMFCore>=2.4.0b2
   [jensens]
 
-- No need to define cmf.ChangeLocalRoles in zcml since this is in by Products.CMFCore>=2.4.0b2
-  [jensens]
+- Adapt tests to `Products.GenericSetup >= 2.0` thus requiring at least that
+  version.
+  [jessesnyder]
 
 New features:
 
-- *add item here*
+- Python3 compatibility
+  [jessesnyder, pbauer]
 
 Bug fixes:
 
