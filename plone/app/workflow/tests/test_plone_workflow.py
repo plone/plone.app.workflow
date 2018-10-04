@@ -482,11 +482,11 @@ class TestDefaultWorkflow(unittest.TestCase):
         self.workflow.doActionFor(self.doc, 'submit')
         self.doc.manage_addLocalRoles('member', ['Reviewer'])
         login(self.portal, 'reviewer')
-        worklist = self.portal.my_worklist()
+        worklist = self.portal.portal_workflow.getWorklistsResults()
         self.assertTrue(len(worklist) == 1)
         self.assertTrue(worklist[0] == self.doc)
         login(self.portal, 'member')
-        worklist = self.portal.my_worklist()
+        worklist = self.portal.portal_workflow.getWorklistsResults()
         self.assertTrue(len(worklist) == 1)
         self.assertTrue(worklist[0] == self.doc)
 
