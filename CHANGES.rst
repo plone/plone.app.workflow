@@ -15,6 +15,10 @@ Breaking changes:
 
 New features:
 
+- Replaced usages of my_worklist.py skin script.
+  https://github.com/plone/Products.CMFPlone/issues/1801
+  [reinhardt]
+
 - Python3 compatibility
   [jessesnyder, pbauer]
 
