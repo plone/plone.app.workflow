@@ -57,7 +57,7 @@
                        placeholder="Search for user or group"
                        i18n:attributes="title; placeholder"
                        class="searchField"
-                       value=""
+                       value="${request/search_term|nothing}"
                        />
                 <input type="submit"
                        id="sharing-search-button"
