@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.1 (2019-03-03)
+------------------
+
+Bug fixes:
+
+
+- The sharing search form remembers the search term [ale-rt] (#19)
+
+
 4.0.0 (2018-11-02)
 ------------------
 
