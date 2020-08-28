@@ -7,9 +7,8 @@ from plone.app.workflow.interfaces import ISharingPageRole
 from zope.component import adapts
 from zope.component import getSiteManager
 from zope.component import queryMultiAdapter
-from zope.component.interfaces import IComponentRegistry
-
 from zope.dottedname.resolve import resolve
+from zope.interface.interfaces import IComponentRegistry
 
 from Products.GenericSetup.interfaces import IBody
 from Products.GenericSetup.interfaces import ISetupEnviron
