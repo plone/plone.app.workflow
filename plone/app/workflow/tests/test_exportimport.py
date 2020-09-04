@@ -14,9 +14,9 @@ from zope.component import getUtilitiesFor
 from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import Interface
-from zope.site.hooks import clearSite
-from zope.site.hooks import setHooks
-from zope.site.hooks import setSite
+from zope.component.hooks import clearSite
+from zope.component.hooks import setHooks
+from zope.component.hooks import setSite
 
 import unittest
 
