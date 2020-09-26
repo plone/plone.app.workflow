@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.3 (2020-09-26)
+------------------
+
+Bug fixes:
+
+
+- Fixed deprecation warning for ``zope.component.interfaces.IComponentRegistry``.
+  Fixed deprecation warning for zope.site.hooks.
+  [maurits] (#3130)
+
+
 4.0.2 (2020-04-20)
 ------------------
 

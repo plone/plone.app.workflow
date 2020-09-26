@@ -1,3 +1,0 @@
-Fixed deprecation warning for ``zope.component.interfaces.IComponentRegistry``.
-Fixed deprecation warning for zope.site.hooks.
-[maurits]
