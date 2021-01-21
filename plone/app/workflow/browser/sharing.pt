@@ -95,8 +95,8 @@
                                     sticky python:entry['id'] in view.STICKY"
                         tal:attributes="class python:oddrow and 'odd' or 'even'">
                         <td tal:attributes="title entry/id">
-                            <img tal:condition="is_group" tal:replace="structure context/group.png" />
-                            <img tal:condition="not:is_group" tal:replace="structure context/user.png" />
+                            <img tal:condition="is_group" tal:replace="structure portal/group.png" />
+                            <img tal:condition="not:is_group" tal:replace="structure portal/user.png" />
 
                             <a tal:omit-tag="python:not is_group or not can_view_groups or entry.get('id') == 'AuthenticatedUsers'"
                                tal:attributes="href string:${portal_url}/@@usergroup-groupmembership?groupname=${entry/id}">
