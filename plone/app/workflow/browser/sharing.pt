@@ -103,8 +103,8 @@
                                                     </tal:sticky>
                                                     <tal:nonsticky condition="not:sticky">
                                                         <span tal:replace="entry/title" />
-                                                        <span class="text-muted" condition="entry/login|nothing">
-                                                            (${entry/login})
+                                                        <span class="text-muted" condition="entry/id|nothing">
+                                                            (${entry/id})
                                                         </span>
                                                     </tal:nonsticky>
                                                 </a>
