@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.4 (2021-02-16)
+------------------
+
+New features:
+
+
+- Have the icons from the sharing tab to have their URL relative to the site root
+  [frapell] (#25)
+
+
 4.0.3 (2020-09-26)
 ------------------
 
