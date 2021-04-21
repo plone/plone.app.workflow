@@ -8,6 +8,23 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0a1 (2021-04-21)
+--------------------
+
+Breaking changes:
+
+
+- Update for Plone 6 with Bootstrap markup
+  [petschki, agitator] (#29)
+
+
+New features:
+
+
+- Have the icons from the sharing tab to have their URL relative to the site root
+  [frapell] (#25)
+
+
 4.0.3 (2020-09-26)
 ------------------
 
