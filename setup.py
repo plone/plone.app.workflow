@@ -51,7 +51,6 @@ setup(
         'zope.testing',
         'Acquisition',
         'DateTime',
-        'Products.CMFPlone',
         'Products.CMFCore>=2.4.0dev',
         'Products.DCWorkflow',
         'Products.GenericSetup >= 2.0.dev0',
