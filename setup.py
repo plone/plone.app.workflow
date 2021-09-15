@@ -52,7 +52,7 @@ setup(
         'zope.testing',
         'Acquisition',
         'DateTime',
-        'Products.CMFCore>=2.4.0dev',
+        'Products.CMFCore>=2.4.0',
         'Products.DCWorkflow',
         'Products.GenericSetup >= 2.0',
         'Products.statusmessages',
