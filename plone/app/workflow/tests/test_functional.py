@@ -15,26 +15,43 @@ import unittest
 
 
 doctests = (
-    'onestateworkflow.rst',
-    'sharingpage.rst',
+    "onestateworkflow.rst",
+    "sharingpage.rst",
 )
 
 
 def setup(doctest):
 
-    portal = doctest.globs['layer']['portal']
-    login(portal, 'member')
-    setRoles(portal, 'member', ['Manager', ])
-    workflow = getToolByName(portal, 'portal_workflow')
-    workflow.setChainForPortalTypes(
-        ('Folder', 'Document', 'News Item', 'Event', ),
-        ('one_state_workflow', ),
+    portal = doctest.globs["layer"]["portal"]
+    login(portal, "member")
+    setRoles(
+        portal,
+        "member",
+        [
+            "Manager",
+        ],
     )
-    portal.invokeFactory('Folder', 'folder1')
+    workflow = getToolByName(portal, "portal_workflow")
+    workflow.setChainForPortalTypes(
+        (
+            "Folder",
+            "Document",
+            "News Item",
+            "Event",
+        ),
+        ("one_state_workflow",),
+    )
+    portal.invokeFactory("Folder", "folder1")
     folder = portal.folder1
-    folder.invokeFactory('Document', 'document1')
-    folder.invokeFactory('News Item', 'newsitem1')
-    setRoles(portal, 'member', ['Member', ])
+    folder.invokeFactory("Document", "document1")
+    folder.invokeFactory("News Item", "newsitem1")
+    setRoles(
+        portal,
+        "member",
+        [
+            "Member",
+        ],
+    )
     logout()
     transaction.commit()
 
@@ -42,7 +59,9 @@ def setup(doctest):
 class Py23DocChecker(doctest.OutputChecker):
     def check_output(self, want, got, optionflags):
         if six.PY2:
-            want = re.sub('zope.testbrowser.browser.LinkNotFoundError', 'LinkNotFoundError', want)  # noqa: E501
+            want = re.sub(
+                "zope.testbrowser.browser.LinkNotFoundError", "LinkNotFoundError", want
+            )  # noqa: E501
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
 
 
@@ -51,8 +70,8 @@ def test_suite():
     tests = [
         layered(
             doctest.DocFileSuite(
-                'tests/{0}'.format(test_file),
-                package='plone.app.workflow',
+                "tests/{0}".format(test_file),
+                package="plone.app.workflow",
                 optionflags=optionflags,
                 setUp=setup,
                 checker=Py23DocChecker(),
@@ -63,4 +82,3 @@ def test_suite():
     ]
     suite.addTests(tests)
     return suite
-

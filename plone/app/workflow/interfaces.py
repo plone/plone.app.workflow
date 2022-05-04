@@ -22,10 +22,11 @@ class ISharingPageRole(Interface):
     title = schema.TextLine(title=u"A friendly name for the role")
 
     required_permission = schema.TextLine(
-        title=u"Permission required to manage this local role",
-        required=False)
+        title=u"Permission required to manage this local role", required=False
+    )
 
     required_interface = schema.Object(
         schema=Interface,
         title=u"Context interface required to display this role",
-        required=False)
+        required=False,
+    )

@@ -4,7 +4,7 @@ from plone.app.workflow.interfaces import ISharingPageRole
 from zope.interface import implementer
 
 
-#from Products.CMFCore import permissions as core_permissions
+# from Products.CMFCore import permissions as core_permissions
 
 
 """
@@ -12,6 +12,7 @@ XXX: policy explanation
 """
 
 # These are for everyone
+
 
 @implementer(ISharingPageRole)
 class ReaderRole(object):
@@ -44,9 +45,10 @@ class ReviewerRole(object):
     required_permission = permissions.DelegateReviewerRole
     required_interface = None
 
+
 # Only managers can manage these
 
-#class ManagerRole(object):
+# class ManagerRole(object):
 #    implements(ISharingPageRole)
 #
 #    title = _(u"title_can_manage", default=u"Can manage")
@@ -54,13 +56,13 @@ class ReviewerRole(object):
 
 # Low level role that should never be dispayed
 
-#class OwnerRole(object):
+# class OwnerRole(object):
 #    implements(ISharingPageRole)
 #
 #    title = _(u"title_can_own", default=u"Can own")
 #    required_permission = core_permissions.ManagePortal
 
-#class MemberRole(object):
+# class MemberRole(object):
 #    implements(ISharingPageRole)
 #
 #    title = _(u"title_can_subscribe", default=u"Can subscribe")
