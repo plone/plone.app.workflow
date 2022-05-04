@@ -23,11 +23,11 @@ class PersistentSharingPageRole(Persistent):
     page roles.
     """
 
-    title = u""
+    title = ""
     required_permission = None
     required_interface = None
 
-    def __init__(self, title=u"", required_permission=None, required_interface=None):
+    def __init__(self, title="", required_permission=None, required_interface=None):
         self.title = PMF(title)
         self.required_permission = required_permission
         self.required_interface = required_interface
@@ -39,7 +39,7 @@ class SharingXMLAdapter(XMLAdapterBase):
     _LOGGER_ID = "plone.app.workflow"
 
     name = "plone.app.workflow.sharing"
-    info_tag = u"__sharing_gs__"
+    info_tag = "__sharing_gs__"
 
     def _importNode(self, node):
 
@@ -68,7 +68,7 @@ class SharingXMLAdapter(XMLAdapterBase):
         for reg in tuple(self.context.registeredUtilities()):
             if (
                 reg.provided.isOrExtends(ISharingPageRole)
-                and isinstance(reg.info, six.string_types)
+                and isinstance(reg.info, str)
                 and self.info_tag in reg.info
             ):
                 yield reg
@@ -82,8 +82,8 @@ class SharingXMLAdapter(XMLAdapterBase):
         if node.nodeName != "role":
             return
 
-        name = six.text_type(node.getAttribute("id"))
-        title = six.text_type(node.getAttribute("title"))
+        name = str(node.getAttribute("id"))
+        title = str(node.getAttribute("title"))
         required = node.getAttribute("permission") or None
         iface = node.getAttribute("interface") or None
         if iface is not None:
@@ -136,7 +136,7 @@ def import_sharing(context):
         return
 
     importer = queryMultiAdapter(
-        (sm, context), IBody, name=u"plone.app.workflow.sharing"
+        (sm, context), IBody, name="plone.app.workflow.sharing"
     )
     if importer:
         body = context.readDataFile("sharing.xml")
@@ -154,7 +154,7 @@ def export_sharing(context):
         return
 
     exporter = queryMultiAdapter(
-        (sm, context), IBody, name=u"plone.app.workflow.sharing"
+        (sm, context), IBody, name="plone.app.workflow.sharing"
     )
     if exporter:
         body = exporter.body

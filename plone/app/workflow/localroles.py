@@ -15,33 +15,33 @@ XXX: policy explanation
 
 
 @implementer(ISharingPageRole)
-class ReaderRole(object):
+class ReaderRole:
 
-    title = _(u"title_can_view", default=u"Can view")
+    title = _("title_can_view", default="Can view")
     required_permission = permissions.DelegateReaderRole
     required_interface = None
 
 
 @implementer(ISharingPageRole)
-class EditorRole(object):
+class EditorRole:
 
-    title = _(u"title_can_edit", default=u"Can edit")
+    title = _("title_can_edit", default="Can edit")
     required_permission = permissions.DelegateEditorRole
     required_interface = None
 
 
 @implementer(ISharingPageRole)
-class ContributorRole(object):
+class ContributorRole:
 
-    title = _(u"title_can_add", default=u"Can add")
+    title = _("title_can_add", default="Can add")
     required_permission = permissions.DelegateContributorRole
     required_interface = None
 
 
 @implementer(ISharingPageRole)
-class ReviewerRole(object):
+class ReviewerRole:
 
-    title = _(u"title_can_review", default=u"Can review")
+    title = _("title_can_review", default="Can review")
     required_permission = permissions.DelegateReviewerRole
     required_interface = None
 

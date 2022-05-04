@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from five.localsitemanager import make_objectmanager_site
 from OFS.Folder import Folder
 from plone.app.workflow.exportimport import export_sharing
@@ -332,7 +331,7 @@ class TestExport(ExportImportTest):
         context = DummyExportContext(self.site)
         export_sharing(context)
 
-        self.assertEqual(u"sharing.xml", context._wrote[0][0])
+        self.assertEqual("sharing.xml", context._wrote[0][0])
         self.assertEqual(xml, context._wrote[0][1])
 
     def test_export_multiple(self):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from AccessControl import ModuleSecurityInfo
 from AccessControl.Permission import addPermission
 

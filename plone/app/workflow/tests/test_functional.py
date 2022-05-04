@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.testing import login
 from plone.app.testing import logout
 from plone.app.testing import setRoles
@@ -70,7 +69,7 @@ def test_suite():
     tests = [
         layered(
             doctest.DocFileSuite(
-                "tests/{0}".format(test_file),
+                f"tests/{test_file}",
                 package="plone.app.workflow",
                 optionflags=optionflags,
                 setUp=setup,

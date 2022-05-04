@@ -27,7 +27,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     chains_by_type = dict(portal_workflow.listChainOverrides())
 
     # Build a dictionary of type id -> chain before we made changes
-    old_chains = dict([(t, chains_by_type.get(t, default_chain)) for t in type_ids])
+    old_chains = {t: chains_by_type.get(t, default_chain) for t in type_ids}
 
     # Work out which permissions were managed by the old chain, but not
     # by the new chain. This may vary by type id.

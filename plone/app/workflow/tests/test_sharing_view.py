@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from borg.localrole.interfaces import ILocalRoleProvider
 from plone.app.testing import login
 from plone.app.workflow.events import LocalrolesModifiedEvent
@@ -34,7 +33,7 @@ class TestSharingView(unittest.TestCase):
         testuser = self.portal.portal_membership.getMemberById("testuser")
         testuser.setMemberProperties(dict(email="testuser@plone.org"))
         nonasciiuser = self.portal.portal_membership.getMemberById("nonasciiuser")
-        nonasciiuser.setMemberProperties(dict(fullname=u"\xc4\xdc\xdf"))
+        nonasciiuser.setMemberProperties(dict(fullname="\xc4\xdc\xdf"))
         login(self.portal, "manager")
 
     def test_search_by_login_name(self):
@@ -91,7 +90,7 @@ class TestSharingView(unittest.TestCase):
         view = getMultiAdapter((self.portal, self.request), name="sharing")
         results = view.role_settings()
         self.assertTrue(len(results))
-        expected = u"ÄÜß"
+        expected = "ÄÜß"
         if six.PY2:
             expected = expected.encode("utf8")
         self.assertEqual(
@@ -183,7 +182,7 @@ class TestSharingView(unittest.TestCase):
     def test_borg_localroles(self):
         @adapter(ISiteRoot)
         @implementer(ILocalRoleProvider)
-        class LocalRoleProvider(object):
+        class LocalRoleProvider:
             def __init__(self, context):
                 self.context = context
 
@@ -203,7 +202,7 @@ class TestSharingView(unittest.TestCase):
         info = sharing.existing_role_settings()
         self.assertEqual(2, len(info))
         self.assertEqual("borguser", info[1]["id"])
-        self.assertEqual("acquired", info[1]["roles"][u"Contributor"])
+        self.assertEqual("acquired", info[1]["roles"]["Contributor"])
 
         # check borg local roles works with non-heriting roles policy
         sharing = self.portal.restrictedTraverse("@@sharing")
@@ -211,7 +210,7 @@ class TestSharingView(unittest.TestCase):
         info = sharing.existing_role_settings()
         self.assertEqual(2, len(info))
         self.assertEqual("borguser", info[1]["id"])
-        self.assertEqual("acquired", info[1]["roles"][u"Contributor"])
+        self.assertEqual("acquired", info[1]["roles"]["Contributor"])
 
     def test_localroles_modified_event(self):
         # define local roles modified sensitive interface and class
@@ -219,7 +218,7 @@ class TestSharingView(unittest.TestCase):
             pass
 
         @implementer(ILRMEContext)
-        class LRMEContext(object):
+        class LRMEContext:
             def __init__(self):
                 # gets set by handler
                 self.context = None

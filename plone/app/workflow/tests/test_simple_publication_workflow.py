@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.testing import login
 from plone.app.testing import logout
 from plone.app.workflow.testing import PLONE_APP_WORKFLOW_INTEGRATION_TESTING
@@ -40,7 +39,7 @@ class TestSimplePublicationWorkflow(unittest.TestCase):
         self.assertEqual(
             current_state,
             expected_review_state,
-            "Object {0} should have review state {1} but has {2}".format(
+            "Object {} should have review state {} but has {}".format(
                 obj,
                 expected_review_state,
                 current_state,

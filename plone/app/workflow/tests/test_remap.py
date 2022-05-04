@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.app.testing import login
 from plone.app.workflow.remap import remap_workflow
 from plone.app.workflow.testing import PLONE_APP_WORKFLOW_INTEGRATION_TESTING

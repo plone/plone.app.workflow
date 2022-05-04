@@ -108,7 +108,7 @@ class SharingView(BrowserView):
                 self.context.reindexObjectSecurity()
                 notify(LocalrolesModifiedEvent(self.context, self.request))
             IStatusMessage(self.request).addStatusMessage(
-                _(u"Changes saved."), type="info"
+                _("Changes saved."), type="info"
             )
 
         # Other buttons return to the sharing page
@@ -264,7 +264,7 @@ class SharingView(BrowserView):
         if AUTH_GROUP not in items:
             items[AUTH_GROUP] = dict(
                 id=AUTH_GROUP,
-                name=_(u"Logged-in users"),
+                name=_("Logged-in users"),
                 type="group",
                 sitewide=[],
                 acquired=[],
@@ -313,7 +313,7 @@ class SharingView(BrowserView):
 
                 # This isn't a proper group, so it needs special treatment :(
                 if rid == AUTH_GROUP:
-                    name = _(u"Logged-in users")
+                    name = _("Logged-in users")
 
             info_item = dict(
                 id=item["id"],
@@ -373,20 +373,18 @@ class SharingView(BrowserView):
         context = self.context
 
         translated_message = translate(
-            _(u"Search for user or group"), context=self.request
+            _("Search for user or group"), context=self.request
         )
         search_term = safe_unicode(self.request.form.get("search_term", None))
         if not search_term or search_term == translated_message:
             return []
 
-        existing_principals = set(
-            [
-                p["id"]
-                for p in self.existing_role_settings()
-                if p["type"] == principal_type
-            ]
-        )
-        empty_roles = dict([(r["id"], False) for r in self.roles()])
+        existing_principals = {
+            p["id"]
+            for p in self.existing_role_settings()
+            if p["type"] == principal_type
+        }
+        empty_roles = {r["id"]: False for r in self.roles()}
         info = []
 
         hunter = getMultiAdapter((context, self.request), name="pas_search")
@@ -612,7 +610,7 @@ class SharingView(BrowserView):
         changed = False
         context = self.context
 
-        managed_roles = frozenset([r["id"] for r in self.roles()])
+        managed_roles = frozenset(r["id"] for r in self.roles())
         member_ids_to_clear = []
 
         for s in new_settings:
