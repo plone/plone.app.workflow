@@ -38,7 +38,8 @@ setup(
         ]
     ),
     install_requires=[
-        "plone.base" "plone.memoize",
+        "plone.base",
+        "plone.memoize",
         "Products.statusmessages",
         "setuptools",
     ],
