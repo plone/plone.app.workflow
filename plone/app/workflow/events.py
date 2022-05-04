@@ -1,6 +1,6 @@
+from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
 from zope.interface import implementer
 from zope.lifecycleevent import ObjectModifiedEvent
-from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
 
 
 @implementer(ILocalrolesModifiedEvent)

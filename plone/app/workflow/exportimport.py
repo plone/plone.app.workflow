@@ -1,20 +1,19 @@
-import six
 from persistent import Persistent
-from zope.interface import implementer
-
 from plone.app.workflow.interfaces import ISharingPageRole
-
+from Products.GenericSetup.interfaces import IBody
+from Products.GenericSetup.interfaces import ISetupEnviron
+from Products.GenericSetup.utils import XMLAdapterBase
 from zope.component import adapts
 from zope.component import getSiteManager
 from zope.component import queryMultiAdapter
 from zope.dottedname.resolve import resolve
+from zope.i18nmessageid import MessageFactory
+from zope.interface import implementer
 from zope.interface.interfaces import IComponentRegistry
 
-from Products.GenericSetup.interfaces import IBody
-from Products.GenericSetup.interfaces import ISetupEnviron
-from Products.GenericSetup.utils import XMLAdapterBase
+import six
 
-from zope.i18nmessageid import MessageFactory
+
 PMF = MessageFactory('plone')
 
 

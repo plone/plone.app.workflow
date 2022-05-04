@@ -1,9 +1,11 @@
-from zope.interface import implementer
-from plone.app.workflow.interfaces import ISharingPageRole
 from plone.app.workflow import permissions
+from plone.app.workflow import PloneMessageFactory as _
+from plone.app.workflow.interfaces import ISharingPageRole
+from zope.interface import implementer
+
+
 #from Products.CMFCore import permissions as core_permissions
 
-from plone.app.workflow import PloneMessageFactory as _
 
 """
 XXX: policy explanation

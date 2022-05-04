@@ -3,20 +3,20 @@ from five.localsitemanager import make_objectmanager_site
 from OFS.Folder import Folder
 from plone.app.workflow.exportimport import export_sharing
 from plone.app.workflow.exportimport import import_sharing
-from plone.app.workflow.exportimport import SharingXMLAdapter
 from plone.app.workflow.exportimport import PersistentSharingPageRole
+from plone.app.workflow.exportimport import SharingXMLAdapter
 from plone.app.workflow.interfaces import ISharingPageRole
 from plone.testing.zca import UNIT_TESTING
-from Products.GenericSetup.tests.common import DummyImportContext
 from Products.GenericSetup.tests.common import DummyExportContext
+from Products.GenericSetup.tests.common import DummyImportContext
 from zope.component import getSiteManager
 from zope.component import getUtilitiesFor
 from zope.component import provideAdapter
 from zope.component import provideUtility
-from zope.interface import Interface
 from zope.component.hooks import clearSite
 from zope.component.hooks import setHooks
 from zope.component.hooks import setSite
+from zope.interface import Interface
 
 import unittest
 

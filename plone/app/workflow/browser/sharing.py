@@ -1,26 +1,27 @@
-from itertools import chain
-
-from plone.memoize.instance import memoize, clearafter
-from zope.component import getUtilitiesFor, getMultiAdapter
-from zope.i18n import translate
-from zope.event import notify
-
-from Acquisition import aq_parent, aq_base
 from AccessControl import Unauthorized
-from zExceptions import Forbidden
-
-from Products.CMFCore.utils import getToolByName
+from Acquisition import aq_base
+from Acquisition import aq_parent
+from itertools import chain
+from plone.app.workflow import PloneMessageFactory as _
+from plone.app.workflow.events import LocalrolesModifiedEvent
+from plone.app.workflow.interfaces import ISharingPageRole
+from plone.memoize.instance import clearafter
+from plone.memoize.instance import memoize
 from Products.CMFCore import permissions
-from Products.CMFPlone.utils import normalizeString, safe_unicode
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import normalizeString
+from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-
-from plone.app.workflow import PloneMessageFactory as _
-from plone.app.workflow.interfaces import ISharingPageRole
-from plone.app.workflow.events import LocalrolesModifiedEvent
+from zExceptions import Forbidden
+from zope.component import getMultiAdapter
+from zope.component import getUtilitiesFor
+from zope.event import notify
+from zope.i18n import translate
 
 import json
+
 
 AUTH_GROUP = 'AuthenticatedUsers'
 STICKY = (AUTH_GROUP, )

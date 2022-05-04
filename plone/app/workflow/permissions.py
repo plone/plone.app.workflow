@@ -2,6 +2,7 @@
 from AccessControl import ModuleSecurityInfo
 from AccessControl.Permission import addPermission
 
+
 security = ModuleSecurityInfo("plone.app.workflow.permissions")
 
 # Controls access to the "sharing" page

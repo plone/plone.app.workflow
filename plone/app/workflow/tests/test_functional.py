@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from plone.app.testing import setRoles
 from plone.app.testing import login
 from plone.app.testing import logout
-from plone.app.workflow.testing import PLONE_APP_WORKFLOW_FUNCTIONAL_TESTING
+from plone.app.testing import setRoles
 from plone.app.workflow.testing import optionflags
+from plone.app.workflow.testing import PLONE_APP_WORKFLOW_FUNCTIONAL_TESTING
 from plone.testing import layered
 from Products.CMFCore.utils import getToolByName
 

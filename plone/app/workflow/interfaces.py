@@ -1,6 +1,6 @@
+from zope import schema
 from zope.interface import Interface
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
-from zope import schema
 
 
 class ILocalrolesModifiedEvent(IObjectModifiedEvent):

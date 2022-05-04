@@ -4,10 +4,10 @@ from plone.app.testing import logout
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_NAME
 from plone.app.workflow.testing import PLONE_APP_WORKFLOW_INTEGRATION_TESTING
-from Products.CMFCore.utils import _checkPermission as checkPerm
 from Products.CMFCore.permissions import AccessContentsInformation
-from Products.CMFCore.permissions import View
 from Products.CMFCore.permissions import ModifyPortalContent
+from Products.CMFCore.permissions import View
+from Products.CMFCore.utils import _checkPermission as checkPerm
 
 import unittest
 
