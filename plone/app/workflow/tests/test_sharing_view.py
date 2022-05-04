@@ -12,7 +12,6 @@ from zope.event import notify
 from zope.interface import implementer
 from zope.interface import Interface
 
-import six
 import unittest
 
 
@@ -91,8 +90,6 @@ class TestSharingView(unittest.TestCase):
         results = view.role_settings()
         self.assertTrue(len(results))
         expected = "ÄÜß"
-        if six.PY2:
-            expected = expected.encode("utf8")
         self.assertEqual(
             results[-1].get("title"),
             expected,

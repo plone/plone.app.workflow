@@ -11,8 +11,6 @@ from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 from zope.interface.interfaces import IComponentRegistry
 
-import six
-
 
 PMF = MessageFactory("plone")
 
