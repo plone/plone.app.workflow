@@ -1,14 +1,12 @@
+from DateTime import DateTime
+from Products.CMFCore.utils import getToolByName
+from Products.DCWorkflow.utils import modifyRolesForPermission
+
 import transaction
 
 
 SAVE_THRESHOLD = 100  # Do a savepoint every so often
 _marker = object()
-
-# from Persistence import PersistentMapping
-# from Acquisition import aq_base
-from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
-from Products.DCWorkflow.utils import modifyRolesForPermission
 
 
 def remap_workflow(context, type_ids, chain, state_map={}):

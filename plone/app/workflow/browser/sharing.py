@@ -5,18 +5,19 @@ from itertools import chain
 from plone.app.workflow import PloneMessageFactory as _
 from plone.app.workflow.events import LocalrolesModifiedEvent
 from plone.app.workflow.interfaces import ISharingPageRole
+from plone.base.utils import safe_text
+from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.memoize.instance import clearafter
 from plone.memoize.instance import memoize
 from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import normalizeString
-from Products.CMFPlone.utils import safe_unicode
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from zExceptions import Forbidden
 from zope.component import getMultiAdapter
 from zope.component import getUtilitiesFor
+from zope.component import getUtility
 from zope.event import notify
 from zope.i18n import translate
 
@@ -144,8 +145,11 @@ class SharingView(BrowserView):
                 continue
             pairs.append(dict(id=name, title=utility.title))
 
+        normalizer = getUtility(IIDNormalizer)
         pairs.sort(
-            key=lambda x: normalizeString(translate(x["title"], context=self.request))
+            key=lambda x: normalizer.normalize(
+                translate(x["title"], context=self.request)
+            )
         )
         return pairs
 
@@ -192,7 +196,7 @@ class SharingView(BrowserView):
                         entry["roles"][role] = role in desired_roles
 
         current_settings.sort(
-            key=lambda x: safe_unicode(x["type"]) + safe_unicode(x["title"])
+            key=lambda x: safe_text(x["type"]) + safe_text(x["title"])
         )
 
         return current_settings
@@ -207,9 +211,7 @@ class SharingView(BrowserView):
         """Return True if local roles are inherited here."""
         if context is None:
             context = self.context
-        if getattr(aq_base(context), "__ac_local_roles_block__", None):
-            return False
-        return True
+        return not getattr(aq_base(context), "__ac_local_roles_block__", None)
 
     # helper functions
 
@@ -375,7 +377,7 @@ class SharingView(BrowserView):
         translated_message = translate(
             _("Search for user or group"), context=self.request
         )
-        search_term = safe_unicode(self.request.form.get("search_term", None))
+        search_term = safe_text(self.request.form.get("search_term", None))
         if not search_term or search_term == translated_message:
             return []
 
