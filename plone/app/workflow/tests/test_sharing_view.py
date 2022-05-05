@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from borg.localrole.interfaces import ILocalRoleProvider
 from plone.app.testing import login
 from plone.app.workflow.events import LocalrolesModifiedEvent
@@ -13,7 +12,6 @@ from zope.event import notify
 from zope.interface import implementer
 from zope.interface import Interface
 
-import six
 import unittest
 
 
@@ -22,52 +20,54 @@ class TestSharingView(unittest.TestCase):
     layer = PLONE_APP_WORKFLOW_INTEGRATION_TESTING
 
     def setUp(self):
-        self.portal = self.layer['portal']
-        self.request = self.layer['request']
+        self.portal = self.layer["portal"]
+        self.request = self.layer["request"]
 
-        self.portal.acl_users._doAddUser('testuser', 'secret', ['Member'], [])
-        self.portal.acl_users._doAddUser('testreviewer', 'secret', ['Reviewer'], [])
-        self.portal.acl_users._doAddUser('nonasciiuser', 'secret', ['Member'], [])
-        self.portal.acl_users._doAddGroup('testgroup', [], title='Some meaningful title')
-        testuser = self.portal.portal_membership.getMemberById('testuser')
-        testuser.setMemberProperties(dict(email='testuser@plone.org'))
-        nonasciiuser = self.portal.portal_membership.getMemberById('nonasciiuser')
-        nonasciiuser.setMemberProperties(dict(fullname=u'\xc4\xdc\xdf'))
-        login(self.portal, 'manager')
+        self.portal.acl_users._doAddUser("testuser", "secret", ["Member"], [])
+        self.portal.acl_users._doAddUser("testreviewer", "secret", ["Reviewer"], [])
+        self.portal.acl_users._doAddUser("nonasciiuser", "secret", ["Member"], [])
+        self.portal.acl_users._doAddGroup(
+            "testgroup", [], title="Some meaningful title"
+        )
+        testuser = self.portal.portal_membership.getMemberById("testuser")
+        testuser.setMemberProperties(dict(email="testuser@plone.org"))
+        nonasciiuser = self.portal.portal_membership.getMemberById("nonasciiuser")
+        nonasciiuser.setMemberProperties(dict(fullname="\xc4\xdc\xdf"))
+        login(self.portal, "manager")
 
     def test_search_by_login_name(self):
         """Make sure we can search by login name on the Sharing tab.
 
         Prevents regressions of #6853.
         """
-        self.request.form['search_term'] = 'testuser'
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        self.request.form["search_term"] = "testuser"
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         results = view.user_search_results()
         self.assertTrue(len(results))
         self.assertEqual(
-            results[0].get('id'),
-            'testuser',
+            results[0].get("id"),
+            "testuser",
             msg="Didn't find testuser when I searched by login name.",
         )
         self.assertEqual(
-            results[0].get('login'),
-            'testuser',
+            results[0].get("login"),
+            "testuser",
             msg="Didn't display login when I searched by login name.",
         )
 
     def _search_by_email(self, term):
-        self.request.form['search_term'] = term
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        self.request.form["search_term"] = term
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         results = view.user_search_results()
         self.assertTrue(len(results))
         self.assertEqual(
-            results[0].get('id'),
-            'testuser',
+            results[0].get("id"),
+            "testuser",
             msg="Didn't find testuser when I searched for %s as email." % term,
         )
         self.assertEqual(
-            results[0].get('login'),
-            'testuser',
+            results[0].get("login"),
+            "testuser",
             msg="Didn't display login when I searched for %s as email." % term,
         )
 
@@ -76,57 +76,55 @@ class TestSharingView(unittest.TestCase):
 
         Prevents regressions of #11631.
         """
-        self._search_by_email('testuser@plone.org')
-        self._search_by_email('plone.org')
-        self._search_by_email('plone')
+        self._search_by_email("testuser@plone.org")
+        self._search_by_email("plone.org")
+        self._search_by_email("plone")
 
     def test_search_with_nonascii_users(self):
         """Make sure we can search with users that have non-ascii-chars in their fullname.
 
         Prevents regressions of #7576.
         """
-        self.request.form['search_term'] = 'nonasciiuser'
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        self.request.form["search_term"] = "nonasciiuser"
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         results = view.role_settings()
         self.assertTrue(len(results))
-        expected = u'ÄÜß'
-        if six.PY2:
-            expected = expected.encode('utf8')
+        expected = "ÄÜß"
         self.assertEqual(
-            results[-1].get('title'),
+            results[-1].get("title"),
             expected,
             msg="Umlaute",
         )
 
     def test_search_for_group_by_id(self):
-        """ Make sure we can search for groups by id """
-        self.request.form['search_term'] = 'testgroup'
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        """Make sure we can search for groups by id"""
+        self.request.form["search_term"] = "testgroup"
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         results = view.group_search_results()
         self.assertTrue(len(results))
         self.assertEqual(
-            results[0].get('id'),
-            'testgroup',
+            results[0].get("id"),
+            "testgroup",
             msg="Didn't find testgroup when I searched by group id.",
         )
-        self.assertIsNone(results[0].get('login'))
+        self.assertIsNone(results[0].get("login"))
 
     def test_search_for_group_by_title(self):
-        """ Make sure we can search for groups by title """
-        self.request.form['search_term'] = 'meaningful'
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        """Make sure we can search for groups by title"""
+        self.request.form["search_term"] = "meaningful"
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         results = view.group_search_results()
         self.assertTrue(len(results))
         self.assertEqual(
-            results[0].get('title'),
-            'Some meaningful title',
+            results[0].get("title"),
+            "Some meaningful title",
             msg="Didn't find testuser when I searched by group title.",
         )
 
     def test_group_name_links_to_prefs_for_admin(self):
-        """ Make sure that for admins  group name links to group prefs """
-        self.request.form['search_term'] = 'testgroup'
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        """Make sure that for admins  group name links to group prefs"""
+        self.request.form["search_term"] = "testgroup"
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         self.assertIn(
             '<a href="http://nohost/plone/@@usergroup-groupmembership?'
             'groupname=testgroup">',
@@ -135,9 +133,9 @@ class TestSharingView(unittest.TestCase):
         )
 
     def test_group_name_links_not_include_authusers(self):
-        """ Make sure that for admins  group name links to group prefs """
-        self.request.form['search_term'] = 'testgroup'
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        """Make sure that for admins  group name links to group prefs"""
+        self.request.form["search_term"] = "testgroup"
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         self.assertNotIn(
             '<a href="http://nohost/plone/@@usergroup-groupmembership?'
             'groupname=AuthenticatedUsers">',
@@ -146,10 +144,10 @@ class TestSharingView(unittest.TestCase):
         )
 
     def test_group_name_doesnt_link_to_prefs_for_reviewer(self):
-        """ Make sure that for admins  group name links to group prefs """
-        login(self.portal, 'testreviewer')
-        self.request.form['search_term'] = 'testgroup'
-        view = getMultiAdapter((self.portal, self.request), name='sharing')
+        """Make sure that for admins  group name links to group prefs"""
+        login(self.portal, "testreviewer")
+        self.request.form["search_term"] = "testgroup"
+        view = getMultiAdapter((self.portal, self.request), name="sharing")
         self.assertNotIn(
             '<a href="http://nohost/plone/@@usergroup-groupmembership?'
             'groupname=testgroup">',
@@ -163,49 +161,53 @@ class TestSharingView(unittest.TestCase):
         to avoid him to loose rights on the content itself
         Refs #11945
         """
-        self.portal.acl_users._doAddUser('localmanager', 'secret', ['Member'], [])
-        folder = self.portal[self.portal.invokeFactory('Folder', 'folder')]
-        subfolder = folder[folder.invokeFactory('Folder', 'subfolder')]
-        folder.manage_setLocalRoles('localmanager', ('Manager',))
+        self.portal.acl_users._doAddUser("localmanager", "secret", ["Member"], [])
+        folder = self.portal[self.portal.invokeFactory("Folder", "folder")]
+        subfolder = folder[folder.invokeFactory("Folder", "subfolder")]
+        folder.manage_setLocalRoles("localmanager", ("Manager",))
 
-        login(self.portal, 'localmanager')
-        sharing = subfolder.restrictedTraverse('@@sharing')
+        login(self.portal, "localmanager")
+        sharing = subfolder.restrictedTraverse("@@sharing")
         sharing.update_inherit(status=False, reindex=True)
 
         user = self.portal.portal_membership.getAuthenticatedMember()
-        self.assertIn('Manager', user.getRolesInContext(subfolder), )
+        self.assertIn(
+            "Manager",
+            user.getRolesInContext(subfolder),
+        )
 
     def test_borg_localroles(self):
         @adapter(ISiteRoot)
         @implementer(ILocalRoleProvider)
-        class LocalRoleProvider(object):
+        class LocalRoleProvider:
             def __init__(self, context):
                 self.context = context
 
             def getAllRoles(self):
-                yield 'borguser', ('Contributor',)
+                yield "borguser", ("Contributor",)
 
             def getRoles(self, user_id):
-                if user_id == 'borguser':
-                    return ('Contributor',)
+                if user_id == "borguser":
+                    return ("Contributor",)
                 return ()
+
         provideAdapter(LocalRoleProvider)
 
-        self.portal.acl_users._doAddUser('borguser', 'secret', ['Member'], [])
-        login(self.portal, 'manager')
-        sharing = self.portal.restrictedTraverse('@@sharing')
+        self.portal.acl_users._doAddUser("borguser", "secret", ["Member"], [])
+        login(self.portal, "manager")
+        sharing = self.portal.restrictedTraverse("@@sharing")
         info = sharing.existing_role_settings()
         self.assertEqual(2, len(info))
-        self.assertEqual('borguser', info[1]['id'])
-        self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
+        self.assertEqual("borguser", info[1]["id"])
+        self.assertEqual("acquired", info[1]["roles"]["Contributor"])
 
         # check borg local roles works with non-heriting roles policy
-        sharing = self.portal.restrictedTraverse('@@sharing')
-        setattr(sharing.context, '__ac_local_roles_block__', True)
+        sharing = self.portal.restrictedTraverse("@@sharing")
+        setattr(sharing.context, "__ac_local_roles_block__", True)
         info = sharing.existing_role_settings()
         self.assertEqual(2, len(info))
-        self.assertEqual('borguser', info[1]['id'])
-        self.assertEqual('acquired', info[1]['roles'][u'Contributor'])
+        self.assertEqual("borguser", info[1]["id"])
+        self.assertEqual("acquired", info[1]["roles"]["Contributor"])
 
     def test_localroles_modified_event(self):
         # define local roles modified sensitive interface and class
@@ -213,7 +215,7 @@ class TestSharingView(unittest.TestCase):
             pass
 
         @implementer(ILRMEContext)
-        class LRMEContext(object):
+        class LRMEContext:
             def __init__(self):
                 # gets set by handler
                 self.context = None
@@ -226,8 +228,7 @@ class TestSharingView(unittest.TestCase):
 
         # register handler
         gsm = getGlobalSiteManager()
-        gsm.registerHandler(
-            lrme_handler, (ILRMEContext, ILocalrolesModifiedEvent))
+        gsm.registerHandler(lrme_handler, (ILRMEContext, ILocalrolesModifiedEvent))
         # create object and notify subscriber
         context = LRMEContext()
         event = LocalrolesModifiedEvent(context, self.request)

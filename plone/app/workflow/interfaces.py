@@ -1,6 +1,6 @@
+from zope import schema
 from zope.interface import Interface
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
-from zope import schema
 
 
 class ILocalrolesModifiedEvent(IObjectModifiedEvent):
@@ -19,13 +19,14 @@ class ISharingPageRole(Interface):
     and the user has the required_permission (or it's None).
     """
 
-    title = schema.TextLine(title=u"A friendly name for the role")
+    title = schema.TextLine(title="A friendly name for the role")
 
     required_permission = schema.TextLine(
-        title=u"Permission required to manage this local role",
-        required=False)
+        title="Permission required to manage this local role", required=False
+    )
 
     required_interface = schema.Object(
         schema=Interface,
-        title=u"Context interface required to display this role",
-        required=False)
+        title="Context interface required to display this role",
+        required=False,
+    )

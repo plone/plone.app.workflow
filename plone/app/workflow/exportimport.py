@@ -1,21 +1,18 @@
-import six
 from persistent import Persistent
-from zope.interface import implementer
-
 from plone.app.workflow.interfaces import ISharingPageRole
-
+from Products.GenericSetup.interfaces import IBody
+from Products.GenericSetup.interfaces import ISetupEnviron
+from Products.GenericSetup.utils import XMLAdapterBase
 from zope.component import adapts
 from zope.component import getSiteManager
 from zope.component import queryMultiAdapter
 from zope.dottedname.resolve import resolve
+from zope.i18nmessageid import MessageFactory
+from zope.interface import implementer
 from zope.interface.interfaces import IComponentRegistry
 
-from Products.GenericSetup.interfaces import IBody
-from Products.GenericSetup.interfaces import ISetupEnviron
-from Products.GenericSetup.utils import XMLAdapterBase
 
-from zope.i18nmessageid import MessageFactory
-PMF = MessageFactory('plone')
+PMF = MessageFactory("plone")
 
 
 @implementer(ISharingPageRole)
@@ -24,12 +21,11 @@ class PersistentSharingPageRole(Persistent):
     page roles.
     """
 
-    title = u""
+    title = ""
     required_permission = None
     required_interface = None
 
-    def __init__(self, title=u"",
-                 required_permission=None, required_interface=None):
+    def __init__(self, title="", required_permission=None, required_interface=None):
         self.title = PMF(title)
         self.required_permission = required_permission
         self.required_interface = required_interface
@@ -38,10 +34,10 @@ class PersistentSharingPageRole(Persistent):
 class SharingXMLAdapter(XMLAdapterBase):
     adapts(IComponentRegistry, ISetupEnviron)
 
-    _LOGGER_ID = 'plone.app.workflow'
+    _LOGGER_ID = "plone.app.workflow"
 
-    name = 'plone.app.workflow.sharing'
-    info_tag = u"__sharing_gs__"
+    name = "plone.app.workflow.sharing"
+    info_tag = "__sharing_gs__"
 
     def _importNode(self, node):
 
@@ -56,9 +52,11 @@ class SharingXMLAdapter(XMLAdapterBase):
         for reg in self._iterRoleRegistrations():
             regs.append(self._extractRole(reg))
 
-        node = self._doc.createElement('sharing')
+        node = self._doc.createElement("sharing")
+
         def _sort(key):
-            return (key.getAttribute('id'), key.getAttribute('title'))
+            return (key.getAttribute("id"), key.getAttribute("title"))
+
         regs.sort(key=_sort)
         for reg in regs:
             node.appendChild(reg)
@@ -66,9 +64,11 @@ class SharingXMLAdapter(XMLAdapterBase):
 
     def _iterRoleRegistrations(self):
         for reg in tuple(self.context.registeredUtilities()):
-            if reg.provided.isOrExtends(ISharingPageRole) \
-                    and isinstance(reg.info, six.string_types)  \
-                    and self.info_tag in reg.info:
+            if (
+                reg.provided.isOrExtends(ISharingPageRole)
+                and isinstance(reg.info, str)
+                and self.info_tag in reg.info
+            ):
                 yield reg
 
     def _purgeRoles(self):
@@ -77,17 +77,17 @@ class SharingXMLAdapter(XMLAdapterBase):
 
     def _initRole(self, node):
 
-        if node.nodeName != 'role':
+        if node.nodeName != "role":
             return
 
-        name = six.text_type(node.getAttribute('id'))
-        title = six.text_type(node.getAttribute('title'))
-        required = node.getAttribute('permission') or None
-        iface = node.getAttribute('interface') or None
+        name = str(node.getAttribute("id"))
+        title = str(node.getAttribute("title"))
+        required = node.getAttribute("permission") or None
+        iface = node.getAttribute("interface") or None
         if iface is not None:
             iface = resolve(iface)
 
-        if node.hasAttribute('remove'):
+        if node.hasAttribute("remove"):
             utility = self.context.queryUtility(ISharingPageRole, name)
             if utility is not None:
                 if name in self.context.objectIds():
@@ -96,25 +96,28 @@ class SharingXMLAdapter(XMLAdapterBase):
             return
 
         component = PersistentSharingPageRole(
-            title=title, required_permission=required, required_interface=iface)
+            title=title, required_permission=required, required_interface=iface
+        )
 
-        self.context.registerUtility(component, ISharingPageRole, name, info=self.info_tag)
+        self.context.registerUtility(
+            component, ISharingPageRole, name, info=self.info_tag
+        )
 
     def _extractRole(self, reg):
 
         component = reg.component
 
-        node = self._doc.createElement('role')
-        node.setAttribute('id', reg.name)
-        node.setAttribute('title', component.title)
+        node = self._doc.createElement("role")
+        node.setAttribute("id", reg.name)
+        node.setAttribute("title", component.title)
 
         if component.required_permission:
-            node.setAttribute('permission', component.required_permission)
+            node.setAttribute("permission", component.required_permission)
 
         if component.required_interface:
             iface = component.required_interface
-            iface = iface.__module__ + '.' + iface.__name__
-            node.setAttribute('interface', iface)
+            iface = iface.__module__ + "." + iface.__name__
+            node.setAttribute("interface", iface)
 
         return node
 
@@ -122,15 +125,19 @@ class SharingXMLAdapter(XMLAdapterBase):
 def import_sharing(context):
 
     sm = getSiteManager(context.getSite())
-    logger = context.getLogger('plone.app.workflow')
+    logger = context.getLogger("plone.app.workflow")
 
     if sm is None or not IComponentRegistry.providedBy(sm):
-        logger.info("Can not register sharing page roles, as no component registry was found.")
+        logger.info(
+            "Can not register sharing page roles, as no component registry was found."
+        )
         return
 
-    importer = queryMultiAdapter((sm, context), IBody, name=u"plone.app.workflow.sharing")
+    importer = queryMultiAdapter(
+        (sm, context), IBody, name="plone.app.workflow.sharing"
+    )
     if importer:
-        body = context.readDataFile('sharing.xml')
+        body = context.readDataFile("sharing.xml")
         if body is not None:
             importer.body = body
 
@@ -138,14 +145,16 @@ def import_sharing(context):
 def export_sharing(context):
 
     sm = getSiteManager(context.getSite())
-    logger = context.getLogger('plone.app.workflow')
+    logger = context.getLogger("plone.app.workflow")
 
     if sm is None or not IComponentRegistry.providedBy(sm):
         logger.debug("Nothing to export.")
         return
 
-    exporter = queryMultiAdapter((sm, context), IBody, name=u"plone.app.workflow.sharing")
+    exporter = queryMultiAdapter(
+        (sm, context), IBody, name="plone.app.workflow.sharing"
+    )
     if exporter:
         body = exporter.body
         if body is not None:
-            context.writeDataFile('sharing.xml', body, exporter.mime_type)
+            context.writeDataFile("sharing.xml", body, exporter.mime_type)

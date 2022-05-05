@@ -16,7 +16,7 @@ page. Local roles are defined in ``sharing.xml`` and looks as follows::
           id="CopyEditor"
           title="Can edit copy"
           permission="Manage portal"
-          interface="Products.CMFPlone.interfaces.ISiteRoot"
+          interface="plone.base.interfaces.ISiteRoot"
           i18n:attributes="title"
           />
   </sharing>

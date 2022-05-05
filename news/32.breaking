@@ -1,0 +1,2 @@
+Isort, black, Pyupgrade, no six and use plone.base plus some minor manual cleanup.
+[jensens]

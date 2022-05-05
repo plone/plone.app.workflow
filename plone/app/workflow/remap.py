@@ -1,13 +1,12 @@
-import transaction
-
-SAVE_THRESHOLD = 100 # Do a savepoint every so often
-_marker = object()
-
+from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.utils import modifyRolesForPermission
-#from Persistence import PersistentMapping
-#from Acquisition import aq_base
-from DateTime import DateTime
+
+import transaction
+
+
+SAVE_THRESHOLD = 100  # Do a savepoint every so often
+_marker = object()
 
 
 def remap_workflow(context, type_ids, chain, state_map={}):
@@ -18,15 +17,15 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     """
 
     if chain is None:
-        chain = '(Default)'
+        chain = "(Default)"
 
-    portal_workflow = getToolByName(context, 'portal_workflow')
+    portal_workflow = getToolByName(context, "portal_workflow")
 
     default_chain = portal_workflow.getDefaultChain()
     chains_by_type = dict(portal_workflow.listChainOverrides())
 
     # Build a dictionary of type id -> chain before we made changes
-    old_chains = dict([(t, chains_by_type.get(t, default_chain)) for t in type_ids])
+    old_chains = {t: chains_by_type.get(t, default_chain) for t in type_ids}
 
     # Work out which permissions were managed by the old chain, but not
     # by the new chain. This may vary by type id.
@@ -34,7 +33,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     # Update the workflow chain in portal_workflows.
 
     # XXX: There is no decent API for this it seems :-(
-    if chain == '(Default)':
+    if chain == "(Default)":
         cbt = portal_workflow._chains_by_type
         for type_id in type_ids:
             if type_id in cbt:
@@ -52,7 +51,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
     new_chain_permissions = set()
     permissions_to_reset = {}
 
-    if chain == '(Default)':
+    if chain == "(Default)":
         chain = default_chain
     for c in chain:
         if c not in chain_workflows:
@@ -61,7 +60,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
                 new_chain_permissions.add(permission)
 
     for typeid, oc in old_chains.items():
-        if oc == '(Default)':
+        if oc == "(Default)":
             oc = default_chain
         permissions_to_reset[typeid] = set()
         for c in oc:
@@ -71,7 +70,7 @@ def remap_workflow(context, type_ids, chain, state_map={}):
                 if permission not in new_chain_permissions:
                     permissions_to_reset[typeid].add(permission)
 
-    portal_catalog = getToolByName(context, 'portal_catalog')
+    portal_catalog = getToolByName(context, "portal_catalog")
 
     # Then update the state of each
     remapped_count = 0
@@ -97,26 +96,30 @@ def remap_workflow(context, type_ids, chain, state_map={}):
             if old_wf is not None:
                 old_status = portal_workflow.getStatusOf(old_wf.getId(), obj)
                 if old_status is not None:
-                    old_state = old_status.get('review_state', None)
+                    old_state = old_status.get("review_state", None)
 
             # Now add a transition
             for new_wf_name in chain:
                 new_wf = chain_workflows[new_wf_name]
-                new_status = {'action': None,
-                              'actor': None,
-                              'comments': 'State remapped from control panel',
-                              'review_state': state_map.get(old_state, new_wf.initial_state),
-                              'time': DateTime()}
+                new_status = {
+                    "action": None,
+                    "actor": None,
+                    "comments": "State remapped from control panel",
+                    "review_state": state_map.get(old_state, new_wf.initial_state),
+                    "time": DateTime(),
+                }
                 portal_workflow.setStatusOf(new_wf_name, obj, new_status)
 
                 # Trigger any automatic transitions, or else just make sure the role mappings are right
-                auto_transition = new_wf._findAutomaticTransition(obj, new_wf._getWorkflowStateOf(obj))
+                auto_transition = new_wf._findAutomaticTransition(
+                    obj, new_wf._getWorkflowStateOf(obj)
+                )
                 if auto_transition is not None:
                     new_wf._changeStateOf(obj, auto_transition)
                 else:
                     new_wf.updateRoleMappingsFor(obj)
 
-        obj.reindexObject(idxs=['allowedRolesAndUsers', 'review_state'])
+        obj.reindexObject(idxs=["allowedRolesAndUsers", "review_state"])
 
         remapped_count += 1
         threshold_count += 1
