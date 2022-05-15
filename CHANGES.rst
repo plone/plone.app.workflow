@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0a3 (2022-05-15)
+--------------------
+
+Breaking changes:
+
+
+- Isort, black, Pyupgrade, no six and use plone.base plus some minor manual cleanup.
+  [jensens] (#32)
+
+
 5.0.0a2 (2021-09-15)
 --------------------
 
