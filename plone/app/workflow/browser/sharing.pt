@@ -161,11 +161,11 @@
                                 class="btn btn-primary"
                                 type="submit"
                                 name="form.button.Save"
-                                i18n:translate="value label_save">Save</button>
+                                i18n:translate="label_save">Save</button>
                         <button class="btn btn-secondary"
                                 type="submit"
                                 name="form.button.Cancel"
-                                i18n:translate="value label_cancel">Cancel</button>
+                                i18n:translate="label_cancel">Cancel</button>
                         <input tal:replace="structure context/@@authenticator/authenticator" />
                     </form>
                 </div>
