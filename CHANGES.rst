@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0b1 (2022-07-21)
+--------------------
+
+Bug fixes:
+
+
+- Fix translation of `sharing` buttons.
+  [petschki] (#33)
+
+
 5.0.0a3 (2022-05-15)
 --------------------
 
