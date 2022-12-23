@@ -6,7 +6,7 @@
 
 <body>
 
-    <metal:main fill-slot="main"
+    <metal:main fill-slot="body"
                 tal:define="context_state context/@@plone_context_state;
                             portal_state context/@@plone_portal_state;
                             portal portal_state/portal;
