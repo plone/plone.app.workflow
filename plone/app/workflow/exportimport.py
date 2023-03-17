@@ -40,7 +40,6 @@ class SharingXMLAdapter(XMLAdapterBase):
     info_tag = "__sharing_gs__"
 
     def _importNode(self, node):
-
         if self.environ.shouldPurge():
             self._purgeRoles()
 
@@ -76,7 +75,6 @@ class SharingXMLAdapter(XMLAdapterBase):
             self.context.unregisterUtility(provided=reg.provided, name=reg.name)
 
     def _initRole(self, node):
-
         if node.nodeName != "role":
             return
 
@@ -104,7 +102,6 @@ class SharingXMLAdapter(XMLAdapterBase):
         )
 
     def _extractRole(self, reg):
-
         component = reg.component
 
         node = self._doc.createElement("role")
@@ -123,7 +120,6 @@ class SharingXMLAdapter(XMLAdapterBase):
 
 
 def import_sharing(context):
-
     sm = getSiteManager(context.getSite())
     logger = context.getLogger("plone.app.workflow")
 
@@ -143,7 +139,6 @@ def import_sharing(context):
 
 
 def export_sharing(context):
-
     sm = getSiteManager(context.getSite())
     logger = context.getLogger("plone.app.workflow")
 

@@ -16,7 +16,6 @@ import unittest
 
 
 class TestSharingView(unittest.TestCase):
-
     layer = PLONE_APP_WORKFLOW_INTEGRATION_TESTING
 
     def setUp(self):

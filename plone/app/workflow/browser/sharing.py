@@ -47,7 +47,6 @@ def merge_search_results(results, key):
 
 
 class SharingView(BrowserView):
-
     # Actions
 
     template = ViewPageTemplateFile("sharing.pt")

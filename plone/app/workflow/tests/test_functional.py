@@ -19,7 +19,6 @@ doctests = (
 
 
 def setup(doctest):
-
     portal = doctest.globs["layer"]["portal"]
     login(portal, "member")
     setRoles(
