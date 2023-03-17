@@ -36,13 +36,21 @@ setup(
     python_requires=">=3.8",
     extras_require=dict(
         test=[
+            "borg.localrole",
+            "five.localsitemanager",
             "plone.app.testing",
+            "plone.testing",
         ]
     ),
     install_requires=[
+        "setuptools",
+        "persistent",
         "plone.base",
+        "plone.i18n",
         "plone.memoize",
         "Products.statusmessages",
-        "setuptools",
+        "Products.DCWorkflow",
+        "Products.GenericSetup",
+        "zope.dottedname",
     ],
 )
