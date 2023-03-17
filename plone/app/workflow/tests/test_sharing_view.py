@@ -125,8 +125,7 @@ class TestSharingView(unittest.TestCase):
         self.request.form["search_term"] = "testgroup"
         view = getMultiAdapter((self.portal, self.request), name="sharing")
         self.assertIn(
-            '<a href="http://nohost/plone/@@usergroup-groupmembership?'
-            'groupname=testgroup">',
+            '<a href="http://nohost/plone/@@usergroup-groupmembership?groupname=testgroup" >',
             view(),
             msg="Group name was not linked to group prefs.",
         )
