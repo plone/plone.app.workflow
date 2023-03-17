@@ -47,7 +47,6 @@ def merge_search_results(results, key):
 
 
 class SharingView(BrowserView):
-
     # Actions
 
     template = ViewPageTemplateFile("sharing.pt")
@@ -502,7 +501,7 @@ class SharingView(BrowserView):
                         if user2 == user:
                             # Check which roles must be added to roles2
                             for role in roles:
-                                if not role in roles2:
+                                if role not in roles2:
                                     roles2.append(role)
                             found = 1
                             break
@@ -533,7 +532,7 @@ class SharingView(BrowserView):
         pas = getToolByName(self.context, "acl_users")
         editable_local_roles = dict(self.context.get_local_roles())
 
-        # Calculate borg_local_roles by substracting editable local
+        # Calculate borg_local_roles by subtracting editable local
         # roles from all available local roles (including the
         # borg.localrole provided roles):
         borg_local_roles = pas._getAllLocalRoles(self.context)

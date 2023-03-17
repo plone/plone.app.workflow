@@ -14,7 +14,6 @@ SIMPLE = "simple_publication_workflow"
 
 
 class TestSimplePublicationWorkflow(unittest.TestCase):
-
     layer = PLONE_APP_WORKFLOW_INTEGRATION_TESTING
 
     def setUp(self):

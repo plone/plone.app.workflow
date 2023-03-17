@@ -13,7 +13,6 @@ import unittest
 
 
 class TestFolderWorkflow(unittest.TestCase):
-
     layer = PLONE_APP_WORKFLOW_INTEGRATION_TESTING
 
     def setUp(self):

@@ -7,7 +7,6 @@ from plone.testing import layered
 from Products.CMFCore.utils import getToolByName
 
 import doctest
-import re
 import transaction
 import unittest
 
@@ -19,7 +18,6 @@ doctests = (
 
 
 def setup(doctest):
-
     portal = doctest.globs["layer"]["portal"]
     login(portal, "member")
     setRoles(

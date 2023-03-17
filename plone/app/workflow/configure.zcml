@@ -1,34 +1,35 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="plone">
+    i18n_domain="plone"
+    >
 
-    <include file="permissions.zcml" />
-    <include file="exportimport.zcml" />
+  <include file="permissions.zcml" />
+  <include file="exportimport.zcml" />
 
-    <include package=".browser" />
+  <include package=".browser" />
 
-    <!-- Local roles managed in the @@sharing view -->
-    <utility
-        name="Reader"
-        factory=".localroles.ReaderRole"
-        />
+  <!-- Local roles managed in the @@sharing view -->
+  <utility
+      factory=".localroles.ReaderRole"
+      name="Reader"
+      />
 
-    <utility
-        name="Editor"
-        factory=".localroles.EditorRole"
-        />
+  <utility
+      factory=".localroles.EditorRole"
+      name="Editor"
+      />
 
-    <utility
-        name="Contributor"
-        factory=".localroles.ContributorRole"
-        />
+  <utility
+      factory=".localroles.ContributorRole"
+      name="Contributor"
+      />
 
-    <utility
-        name="Reviewer"
-        factory=".localroles.ReviewerRole"
-        />
+  <utility
+      factory=".localroles.ReviewerRole"
+      name="Reviewer"
+      />
 
-    <!--
+  <!--
     <utility
         name="Manager"
         factory=".localroles.ManagerRole"

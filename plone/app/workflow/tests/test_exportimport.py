@@ -21,7 +21,6 @@ import unittest
 
 
 class ExportImportTest(unittest.TestCase):
-
     layer = UNIT_TESTING
 
     def setUp(self):
@@ -45,7 +44,6 @@ class ExportImportTest(unittest.TestCase):
 
 class TestImport(ExportImportTest):
     def test_empty_import_no_purge(self):
-
         xml = "<sharing />"
         context = DummyImportContext(self.site, purge=False)
         context._files = {"sharing.xml": xml}
@@ -55,7 +53,6 @@ class TestImport(ExportImportTest):
         self.assertEqual(0, len(self.roles()))
 
     def test_import_single_no_purge(self):
-
         xml = """\
 <sharing>
     <role id='CopyEditor'
@@ -77,7 +74,6 @@ class TestImport(ExportImportTest):
         self.assertEqual(Interface, roles["CopyEditor"].required_interface)
 
     def test_import_multiple_no_purge(self):
-
         xml = """\
 <sharing>
     <role id='CopyEditor'
@@ -102,7 +98,6 @@ class TestImport(ExportImportTest):
         self.assertEqual(None, roles["Controller"].required_permission)
 
     def test_import_multiple_times_no_purge(self):
-
         xml = """\
 <sharing>
     <role id='CopyEditor'
@@ -142,7 +137,6 @@ class TestImport(ExportImportTest):
         self.assertEqual(None, roles["Controller"].required_permission)
 
     def test_import_multiples_times_purge(self):
-
         xml = """\
 <sharing>
     <role id='CopyEditor'
@@ -179,7 +173,6 @@ class TestImport(ExportImportTest):
         self.assertEqual(None, roles["Controller"].required_permission)
 
     def test_import_multiples_times_no_purge_overwrite(self):
-
         xml = """\
 <sharing>
     <role id='CopyEditor'
@@ -220,7 +213,6 @@ class TestImport(ExportImportTest):
         self.assertEqual(None, roles["CopyEditor"].required_interface)
 
     def test_import_override_global(self):
-
         provideUtility(
             PersistentSharingPageRole("Do stuff", "A permission"),
             ISharingPageRole,
@@ -253,7 +245,6 @@ class TestImport(ExportImportTest):
         )
 
     def test_remove_one(self):
-
         xml = """\
 <sharing>
     <role id='CopyEditor'
@@ -323,7 +314,6 @@ class TestImport(ExportImportTest):
 
 class TestExport(ExportImportTest):
     def test_export_empty(self):
-
         xml = b"""\
 <?xml version="1.0" encoding="utf-8"?>
 <sharing/>
