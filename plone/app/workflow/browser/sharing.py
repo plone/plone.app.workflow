@@ -501,7 +501,7 @@ class SharingView(BrowserView):
                         if user2 == user:
                             # Check which roles must be added to roles2
                             for role in roles:
-                                if not role in roles2:
+                                if role not in roles2:
                                     roles2.append(role)
                             found = 1
                             break
