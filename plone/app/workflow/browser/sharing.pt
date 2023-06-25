@@ -177,6 +177,7 @@
                               <span tal:replace="entry/title"></span>
                               <span class="text-muted"
                                     condition="entry/id|nothing"
+                                    i18n:ignore="true"
                               >
                                                             (${entry/id})
                               </span>
