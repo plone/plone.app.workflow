@@ -4,7 +4,7 @@ Functional Testing of the One State Workflow Definition
 
 First, some set-up of our site for testing:
 
-    >>> from plone.testing.z2 import Browser
+    >>> from plone.testing.zope import Browser
 
     >>> app = layer['app']
     >>> portal = layer['portal']

@@ -5,7 +5,7 @@ Functional Testing of the Sharing Page
 The test setup has already ensured that we have a number of users available.
 Let's also create some
 
-    >>> from plone.testing.z2 import Browser
+    >>> from plone.testing.zope import Browser
 
     >>> app = layer['app']
     >>> portal = layer['portal']
