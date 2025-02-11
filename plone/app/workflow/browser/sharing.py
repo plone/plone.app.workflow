@@ -50,7 +50,6 @@ class SharingView(BrowserView):
     # Actions
 
     template = ViewPageTemplateFile("sharing.pt")
-    macro_wrapper = ViewPageTemplateFile("macro_wrapper.pt")
 
     STICKY = STICKY
 
@@ -654,12 +653,3 @@ class SharingView(BrowserView):
             self.context.reindexObjectSecurity()
 
         return changed
-
-    def updateSharingInfo(self, search_term=""):
-        self.handle_form()
-        the_id = "user-group-sharing"
-        macro = self.template.macros[the_id]
-        res = self.macro_wrapper(the_macro=macro, instance=self.context, view=self)
-        messages = self.context.restrictedTraverse("global_statusmessage")()
-        self.request.response.setHeader("Content-type", "application/json")
-        return json.dumps({"body": res, "messages": messages})
