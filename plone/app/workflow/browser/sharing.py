@@ -21,8 +21,6 @@ from zope.component import getUtility
 from zope.event import notify
 from zope.i18n import translate
 
-import json
-
 
 AUTH_GROUP = "AuthenticatedUsers"
 STICKY = (AUTH_GROUP,)
