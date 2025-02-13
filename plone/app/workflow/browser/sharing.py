@@ -3,7 +3,6 @@ from Acquisition import aq_base
 from Acquisition import aq_parent
 from itertools import chain
 from plone.app.workflow import PloneMessageFactory as _
-from plone.app.workflow.events import LocalrolesModifiedEvent
 from plone.app.workflow.interfaces import ISharingPageRole
 from plone.base.utils import safe_text
 from plone.i18n.normalizer.interfaces import IIDNormalizer
@@ -12,16 +11,10 @@ from plone.memoize.instance import memoize
 from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.statusmessages.interfaces import IStatusMessage
-from zExceptions import Forbidden
 from zope.component import getMultiAdapter
 from zope.component import getUtilitiesFor
 from zope.component import getUtility
-from zope.event import notify
 from zope.i18n import translate
-
-import json
 
 
 AUTH_GROUP = "AuthenticatedUsers"
@@ -48,76 +41,19 @@ def merge_search_results(results, key):
 
 class SharingView(BrowserView):
     # Actions
-
-    template = ViewPageTemplateFile("sharing.pt")
-    macro_wrapper = ViewPageTemplateFile("macro_wrapper.pt")
+    template = None
 
     STICKY = STICKY
 
     def __call__(self):
         """Perform the update and redirect if necessary, or render the page"""
-        postback = self.handle_form()
-        if postback:
-            return self.template()
-        else:
-            context_state = self.context.restrictedTraverse("@@plone_context_state")
-            url = context_state.view_url()
-            self.request.response.redirect(url)
-
-    def handle_form(self):
-        """
-        We split this out so we can reuse this for ajax.
-        Will return a boolean if it was a post or not
-        """
-        postback = True
-
-        form = self.request.form
-        submitted = form.get("form.submitted", False)
-        save_button = form.get("form.button.Save", None) is not None
-        cancel_button = form.get("form.button.Cancel", None) is not None
-        if submitted and save_button and not cancel_button:
-            if not self.request.get("REQUEST_METHOD", "GET") == "POST":
-                raise Forbidden
-
-            authenticator = self.context.restrictedTraverse("@@authenticator", None)
-            if not authenticator.verify():
-                raise Forbidden
-
-            # Update the acquire-roles setting
-            if self.can_edit_inherit():
-                inherit = bool(form.get("inherit", False))
-                reindex = self.update_inherit(inherit, reindex=False)
-            else:
-                reindex = False
-
-            # Update settings for users and groups
-            entries = form.get("entries", [])
-            roles = [r["id"] for r in self.roles()]
-            settings = []
-            for entry in entries:
-                settings.append(
-                    dict(
-                        id=entry["id"],
-                        type=entry["type"],
-                        roles=[r for r in roles if entry.get("role_%s" % r, False)],
-                    )
-                )
-            if settings:
-                reindex = self.update_role_settings(settings, reindex=False) or reindex
-            if reindex:
-                self.context.reindexObjectSecurity()
-                notify(LocalrolesModifiedEvent(self.context, self.request))
-            IStatusMessage(self.request).addStatusMessage(
-                _("Changes saved."), type="info"
+        if self.template is None:
+            raise ValueError(
+                "You are using the base SharingView view in plone.app.workflow,"
+                " for classic UI, override the SharingView from plone.app.layout"
+                " by subclassing your BrowserLayer of"
+                " plone.app.layout.interfaces.IPloneAppLayoutLayer."
             )
-
-        # Other buttons return to the sharing page
-        if cancel_button:
-            postback = False
-
-        return postback
-
-    # View
 
     @memoize
     def roles(self):
@@ -654,12 +590,3 @@ class SharingView(BrowserView):
             self.context.reindexObjectSecurity()
 
         return changed
-
-    def updateSharingInfo(self, search_term=""):
-        self.handle_form()
-        the_id = "user-group-sharing"
-        macro = self.template.macros[the_id]
-        res = self.macro_wrapper(the_macro=macro, instance=self.context, view=self)
-        messages = self.context.restrictedTraverse("global_statusmessage")()
-        self.request.response.setHeader("Content-type", "application/json")
-        return json.dumps({"body": res, "messages": messages})

@@ -120,39 +120,6 @@ class TestSharingView(unittest.TestCase):
             msg="Didn't find testuser when I searched by group title.",
         )
 
-    def test_group_name_links_to_prefs_for_admin(self):
-        """Make sure that for admins  group name links to group prefs"""
-        self.request.form["search_term"] = "testgroup"
-        view = getMultiAdapter((self.portal, self.request), name="sharing")
-        self.assertIn(
-            '<a href="http://nohost/plone/@@usergroup-groupmembership?groupname=testgroup" >',
-            view(),
-            msg="Group name was not linked to group prefs.",
-        )
-
-    def test_group_name_links_not_include_authusers(self):
-        """Make sure that for admins  group name links to group prefs"""
-        self.request.form["search_term"] = "testgroup"
-        view = getMultiAdapter((self.portal, self.request), name="sharing")
-        self.assertNotIn(
-            '<a href="http://nohost/plone/@@usergroup-groupmembership?'
-            'groupname=AuthenticatedUsers">',
-            view(),
-            msg="AuthenticatedUsers was linked to group prefs.",
-        )
-
-    def test_group_name_doesnt_link_to_prefs_for_reviewer(self):
-        """Make sure that for admins  group name links to group prefs"""
-        login(self.portal, "testreviewer")
-        self.request.form["search_term"] = "testgroup"
-        view = getMultiAdapter((self.portal, self.request), name="sharing")
-        self.assertNotIn(
-            '<a href="http://nohost/plone/@@usergroup-groupmembership?'
-            'groupname=testgroup">',
-            view(),
-            msg="Group name link was unexpectedly shown to reviewer.",
-        )
-
     def test_local_manager_removes_inheritance(self):
         """When a user that inherits the right to remove inheritance do it,
         its roles are locally set on content
