@@ -59,6 +59,7 @@ setup(
         "Products.statusmessages",
         "Products.DCWorkflow",
         "Products.GenericSetup",
+        "Products.statusmessages",
         "Zope",
     ],
 )
