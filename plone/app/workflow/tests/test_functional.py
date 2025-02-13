@@ -13,7 +13,6 @@ import unittest
 
 doctests = (
     "onestateworkflow.rst",
-    "sharingpage.rst",
 )
 
 

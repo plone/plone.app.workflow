@@ -52,7 +52,7 @@ class SharingView(BrowserView):
                 "You are using the base SharingView view in plone.app.workflow,"
                 " for classic UI, override the SharingView from plone.app.layout"
                 " by subclassing your BrowserLayer of"
-                " plone.app.layout.interfaces.IBrowserLayer."
+                " plone.app.layout.interfaces.IPloneAppLayoutLayer."
             )
 
     @memoize
