@@ -11,9 +11,7 @@ import transaction
 import unittest
 
 
-doctests = (
-    "onestateworkflow.rst",
-)
+doctests = ("onestateworkflow.rst",)
 
 
 def setup(doctest):
