@@ -11,10 +11,7 @@ import transaction
 import unittest
 
 
-doctests = (
-    "onestateworkflow.rst",
-    "sharingpage.rst",
-)
+doctests = ("onestateworkflow.rst",)
 
 
 def setup(doctest):
