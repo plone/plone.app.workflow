@@ -56,7 +56,6 @@ setup(
         "plone.base",
         "plone.i18n",
         "plone.memoize",
-        "Products.statusmessages",
         "Products.DCWorkflow",
         "Products.GenericSetup",
         "Zope",
