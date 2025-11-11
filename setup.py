@@ -46,7 +46,6 @@ setup(
         ]
     ),
     install_requires=[
-        "setuptools",
         "persistent",
         "plone.base",
         "plone.i18n",
