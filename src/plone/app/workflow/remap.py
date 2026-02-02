@@ -4,7 +4,6 @@ from Products.DCWorkflow.utils import modifyRolesForPermission
 
 import transaction
 
-
 SAVE_THRESHOLD = 100  # Do a savepoint every so often
 _marker = object()
 
