@@ -10,7 +10,6 @@ import doctest
 import transaction
 import unittest
 
-
 doctests = (
     "onestateworkflow.rst",
     "sharingpage.rst",
