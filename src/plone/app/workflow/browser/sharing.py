@@ -23,7 +23,6 @@ from zope.i18n import translate
 
 import json
 
-
 AUTH_GROUP = "AuthenticatedUsers"
 STICKY = (AUTH_GROUP,)
 
