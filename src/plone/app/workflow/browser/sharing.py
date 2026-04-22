@@ -285,7 +285,10 @@ class SharingView(BrowserView):
             (a["id"] not in self.STICKY, a["type"], a["name"], a)
             for a in items.values()
         ]
-        dec_users.sort()
+        # Sort only on the first three entries,
+        # the fourth is a dict and would raise a TypeError
+        # see plone/plone.app.workflow#21
+        dec_users.sort(key=lambda d: (d[0], d[1], d[2]))
 
         # Add the items to the info dict, assigning full name if possible.
         # Also, recut roles in the format specified in the docstring
