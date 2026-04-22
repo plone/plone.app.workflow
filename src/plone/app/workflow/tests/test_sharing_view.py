@@ -234,3 +234,26 @@ class TestSharingView(unittest.TestCase):
         # check subscriber called
         self.assertEqual(context.context, context)
         self.assertEqual(context.event, event)
+
+    def test_existing_role_settings_sort_with_duplicate_names(self):
+        """Regression test for plone/plone.app.workflow#21.
+
+        When two entries tie on (sticky, type, name), the old
+        ``dec_users.sort()`` fell through to comparing the item dicts at
+        index 3, raising ``TypeError: '<' not supported between instances
+        of 'dict' and 'dict'`` on Python 3.
+        """
+        login(self.portal, "manager")
+        sharing = getMultiAdapter((self.portal, self.request), name="sharing")
+
+        def fake_inherited_roles():
+            return (
+                ("shared_name", ("Reader",), "user", "user_a"),
+                ("shared_name", ("Reader",), "user", "user_b"),
+            )
+
+        sharing._inherited_roles = fake_inherited_roles
+        info = sharing.existing_role_settings()
+        ids = {entry["id"] for entry in info}
+        self.assertIn("user_a", ids)
+        self.assertIn("user_b", ids)
