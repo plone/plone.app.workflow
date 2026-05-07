@@ -8,6 +8,23 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.0 (2026-05-07)
+------------------
+
+Bug fixes:
+
+
+- Fix ``TypeError`` in the sharing view when two role entries tie on
+  ``(sticky, type, name)``; [jmevissen] (#21)
+
+
+Internal:
+
+
+- Update configuration files.
+  [plone devs]
+
+
 6.0.0a2 (2025-11-19)
 --------------------
 

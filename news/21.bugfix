@@ -1,2 +1,0 @@
-Fix ``TypeError`` in the sharing view when two role entries tie on
-``(sticky, type, name)``; [jmevissen]
