@@ -9,7 +9,6 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 
 import unittest
 
-
 SIMPLE = "simple_publication_workflow"
 
 

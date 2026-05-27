@@ -8,6 +8,42 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.0 (2026-05-07)
+------------------
+
+Bug fixes:
+
+
+- Fix ``TypeError`` in the sharing view when two role entries tie on
+  ``(sticky, type, name)``; [jmevissen] (#21)
+
+
+Internal:
+
+
+- Update configuration files.
+  [plone devs]
+
+
+6.0.0a2 (2025-11-19)
+--------------------
+
+Breaking changes:
+
+
+- Replace ``pkg_resources`` namespace with PEP 420 native namespace.
+  Support only Plone 6.2 and Python 3.10+. (#3928)
+
+
+6.0.0a1 (2025-09-11)
+--------------------
+
+Internal:
+
+
+- Move distribution to src layout [gforcada] (#4217)
+
+
 5.0.4 (2025-01-24)
 ------------------
 
