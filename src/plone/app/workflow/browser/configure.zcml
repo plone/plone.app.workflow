@@ -10,12 +10,4 @@
       permission="plone.DelegateRoles"
       />
 
-  <browser:page
-      name="updateSharingInfo"
-      for="*"
-      class=".sharing.SharingView"
-      attribute="updateSharingInfo"
-      permission="plone.DelegateRoles"
-      />
-
 </configure>
