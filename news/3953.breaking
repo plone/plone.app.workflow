@@ -1,7 +1,0 @@
-Move the classic UI sharing page template and form handling to ``plone.app.layout``.
-The ``SharingView`` in ``plone.app.workflow`` now provides only the data/API methods;
-the base ``__call__`` raises a ``ValueError`` directing integrators to use the
-``SharingView`` override registered for ``plone.app.layout.interfaces.IPloneAppLayoutLayer``.
-Classic UI installations must depend on a ``plone.app.layout`` version that ships this override.
-The ``updateSharingInfo`` view and the ``Products.statusmessages`` dependency are removed.
-[MrTango]

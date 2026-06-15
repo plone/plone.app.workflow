@@ -8,6 +8,21 @@ Changelog
 
 .. towncrier release notes start
 
+7.0.0a1 (2026-06-15)
+--------------------
+
+Breaking changes:
+
+
+- Move the classic UI sharing page template and form handling to ``plone.app.layout``.
+  The ``SharingView`` in ``plone.app.workflow`` now provides only the data/API methods;
+  the base ``__call__`` raises a ``ValueError`` directing integrators to use the
+  ``SharingView`` override registered for ``plone.app.layout.interfaces.IPloneAppLayoutLayer``.
+  Classic UI installations must depend on a ``plone.app.layout`` version that ships this override.
+  The ``updateSharingInfo`` view and the ``Products.statusmessages`` dependency are removed.
+  [MrTango] (#3953)
+
+
 6.0.0 (2026-05-07)
 ------------------
 
