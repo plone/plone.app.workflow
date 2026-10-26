@@ -3,6 +3,8 @@ from Acquisition import aq_base
 from Acquisition import aq_parent
 from itertools import chain
 from plone.app.workflow import PloneMessageFactory as _
+from plone.app.workflow.events import LocalRolesInheritanceModifiedEvent
+from plone.app.workflow.events import PrincipalLocalRolesModifiedEvent
 from plone.app.workflow.interfaces import ISharingPageRole
 from plone.base.utils import safe_text
 from plone.i18n.normalizer.interfaces import IIDNormalizer
@@ -14,6 +16,7 @@ from Products.Five.browser import BrowserView
 from zope.component import getMultiAdapter
 from zope.component import getUtilitiesFor
 from zope.component import getUtility
+from zope.event import notify
 from zope.i18n import translate
 
 AUTH_GROUP = "AuthenticatedUsers"
@@ -526,12 +529,21 @@ class SharingView(BrowserView):
             global_roles = user.getRoles()
             local_roles = [r for r in context_roles if r not in global_roles]
             if local_roles:
-                context.manage_setLocalRoles(user.getId(), local_roles)
+                user_id = user.getId()
+                old_roles = context.get_local_roles_for_userid(userid=user_id)
+                context.manage_setLocalRoles(user_id, local_roles)
+                if set(old_roles) != set(local_roles):
+                    notify(
+                        PrincipalLocalRolesModifiedEvent(
+                            context, user_id, old_roles, local_roles
+                        )
+                    )
 
         context.__ac_local_roles_block__ = block and True or None
         if reindex:
             context.reindexObjectSecurity()
 
+        notify(LocalRolesInheritanceModifiedEvent(context, not block))
         return True
 
     @clearafter
@@ -551,6 +563,8 @@ class SharingView(BrowserView):
 
         managed_roles = frozenset(r["id"] for r in self.roles())
         member_ids_to_clear = []
+        # (user_id, old roles, new roles), notified when all are applied
+        modified = []
 
         for s in new_settings:
             user_id = s["id"]
@@ -581,8 +595,11 @@ class SharingView(BrowserView):
             if wanted_roles:
                 context.manage_setLocalRoles(user_id, list(wanted_roles))
                 changed = True
+                if wanted_roles != existing_roles:
+                    modified.append((user_id, existing_roles, wanted_roles))
             elif existing_roles:
                 member_ids_to_clear.append(user_id)
+                modified.append((user_id, existing_roles, ()))
 
         if member_ids_to_clear:
             context.manage_delLocalRoles(userids=member_ids_to_clear)
@@ -590,5 +607,10 @@ class SharingView(BrowserView):
 
         if changed and reindex:
             self.context.reindexObjectSecurity()
+
+        for user_id, old_roles, new_roles in modified:
+            notify(
+                PrincipalLocalRolesModifiedEvent(context, user_id, old_roles, new_roles)
+            )
 
         return changed
