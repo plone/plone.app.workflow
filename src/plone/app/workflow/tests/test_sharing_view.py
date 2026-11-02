@@ -1,7 +1,9 @@
 from borg.localrole.interfaces import ILocalRoleProvider
 from plone.app.testing import login
 from plone.app.workflow.events import LocalrolesModifiedEvent
+from plone.app.workflow.interfaces import ILocalRolesInheritanceModifiedEvent
 from plone.app.workflow.interfaces import ILocalrolesModifiedEvent
+from plone.app.workflow.interfaces import IPrincipalLocalRolesModifiedEvent
 from plone.app.workflow.testing import PLONE_APP_WORKFLOW_INTEGRATION_TESTING
 from Products.CMFCore.interfaces import ISiteRoot
 from zope.component import adapter
@@ -201,6 +203,119 @@ class TestSharingView(unittest.TestCase):
         # check subscriber called
         self.assertEqual(context.context, context)
         self.assertEqual(context.event, event)
+
+    def _record_events(self, *interfaces):
+        events = []
+
+        def handler(event):
+            events.append(event)
+
+        gsm = getGlobalSiteManager()
+        for interface in interfaces:
+            gsm.registerHandler(handler, (interface,))
+            self.addCleanup(gsm.unregisterHandler, handler, (interface,))
+        return events
+
+    def test_principal_local_roles_modified_events(self):
+        folder = self.portal[self.portal.invokeFactory("Folder", "folder")]
+        sharing = folder.restrictedTraverse("@@sharing")
+        events = self._record_events(IPrincipalLocalRolesModifiedEvent)
+
+        sharing.update_role_settings(
+            [
+                {"id": "testuser", "type": "user", "roles": ["Editor", "Reader"]},
+                {"id": "testgroup", "type": "group", "roles": ["Reader"]},
+            ]
+        )
+        self.assertEqual(
+            [(e.object, e.principal_id, e.old_roles, e.new_roles) for e in events],
+            [
+                (folder, "testuser", (), ("Editor", "Reader")),
+                (folder, "testgroup", (), ("Reader",)),
+            ],
+        )
+
+        del events[:]
+        sharing.update_role_settings(
+            [
+                {"id": "testuser", "type": "user", "roles": ["Reader"]},
+                {"id": "testgroup", "type": "group", "roles": []},
+            ]
+        )
+        self.assertEqual(
+            [(e.principal_id, e.old_roles, e.new_roles) for e in events],
+            [
+                ("testuser", ("Editor", "Reader"), ("Reader",)),
+                ("testgroup", ("Reader",), ()),
+            ],
+        )
+
+    def test_principal_local_roles_unchanged_no_event(self):
+        folder = self.portal[self.portal.invokeFactory("Folder", "folder")]
+        folder.manage_setLocalRoles("testuser", ["Reader"])
+        sharing = folder.restrictedTraverse("@@sharing")
+        events = self._record_events(IPrincipalLocalRolesModifiedEvent)
+
+        changed = sharing.update_role_settings(
+            [
+                {"id": "testuser", "type": "user", "roles": ["Reader"]},
+                {"id": "testgroup", "type": "group", "roles": []},
+            ]
+        )
+        self.assertFalse(changed)
+        self.assertEqual(events, [])
+
+    def test_principal_local_roles_keeps_unmanaged_roles(self):
+        # Owner is not managed by the sharing view: it is kept, and reported
+        folder = self.portal[self.portal.invokeFactory("Folder", "folder")]
+        folder.manage_setLocalRoles("testuser", ["Owner"])
+        sharing = folder.restrictedTraverse("@@sharing")
+        events = self._record_events(IPrincipalLocalRolesModifiedEvent)
+
+        sharing.update_role_settings(
+            [{"id": "testuser", "type": "user", "roles": ["Editor"]}]
+        )
+        self.assertEqual(
+            [(e.principal_id, e.old_roles, e.new_roles) for e in events],
+            [("testuser", ("Owner",), ("Editor", "Owner"))],
+        )
+
+    def test_local_roles_inheritance_modified_events(self):
+        folder = self.portal[self.portal.invokeFactory("Folder", "folder")]
+        sharing = folder.restrictedTraverse("@@sharing")
+        events = self._record_events(ILocalRolesInheritanceModifiedEvent)
+
+        self.assertFalse(sharing.update_inherit(status=True))
+        self.assertEqual(events, [])
+
+        self.assertTrue(sharing.update_inherit(status=False))
+        self.assertTrue(sharing.update_inherit(status=True))
+        self.assertEqual(
+            [(e.object, e.inherit) for e in events],
+            [(folder, False), (folder, True)],
+        )
+
+    def test_local_manager_removes_inheritance_events(self):
+        # the roles that are set locally to keep access are reported too
+        self.portal.acl_users._doAddUser("localmanager", "secret", ["Member"], [])
+        folder = self.portal[self.portal.invokeFactory("Folder", "folder")]
+        subfolder = folder[folder.invokeFactory("Folder", "subfolder")]
+        folder.manage_setLocalRoles("localmanager", ("Manager",))
+        events = self._record_events(
+            IPrincipalLocalRolesModifiedEvent, ILocalRolesInheritanceModifiedEvent
+        )
+
+        login(self.portal, "localmanager")
+        sharing = subfolder.restrictedTraverse("@@sharing")
+        sharing.update_inherit(status=False)
+
+        self.assertEqual(len(events), 2)
+        self.assertTrue(IPrincipalLocalRolesModifiedEvent.providedBy(events[0]))
+        self.assertEqual(events[0].principal_id, "localmanager")
+        self.assertIn("Manager", events[0].new_roles)
+        self.assertNotIn("Manager", events[0].old_roles)
+        self.assertTrue(ILocalRolesInheritanceModifiedEvent.providedBy(events[1]))
+        self.assertFalse(events[1].inherit)
 
     def test_existing_role_settings_sort_with_duplicate_names(self):
         """Regression test for plone/plone.app.workflow#21.
