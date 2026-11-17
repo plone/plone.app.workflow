@@ -8,6 +8,24 @@ Changelog
 
 .. towncrier release notes start
 
+7.0.0a2 (2026-11-17)
+--------------------
+
+New features:
+
+
+- Fire ``PrincipalLocalRolesModifiedEvent`` for each user or group whose local roles the sharing view changes, with the roles before and after, and ``LocalRolesInheritanceModifiedEvent`` when it switches inheriting local roles on or off.
+  Audit logging needs these to record privilege changes, as required by the NIS2 directive.
+  [jladage] (#93)
+
+
+Internal:
+
+
+- Move package metadata from ``setup.py`` to ``pyproject.toml``.
+  [plone devs]
+
+
 7.0.0a1 (2026-06-15)
 --------------------
 
